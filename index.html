@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+<title>BumpBoy Alien Shooter</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #050714;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+#game {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    min-height: 420px;
+    overflow: hidden;
+    cursor: crosshair;
+
+    background:
+        radial-gradient(circle at 20% 20%, #51246e55, transparent 30%),
+        radial-gradient(circle at 80% 35%, #173b8055, transparent 30%),
+        linear-gradient(#07091b, #10071d);
+}
+
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+}
+
+#hud {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+
+    padding: 14px 18px;
+    font-weight: bold;
+}
+
+#title {
+    position: absolute;
+    z-index: 10;
+    top: 48px;
+    width: 100%;
+
+    text-align: center;
+    font-size: clamp(24px, 5vw, 50px);
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+#arena {
+    position: absolute;
+    inset: 105px 0 70px;
+}
+
+.alien {
+    position: absolute;
+
+    width: 78px;
+    height: 62px;
+
+    border: 0;
+    background: transparent;
+
+    font-size: 52px;
+    cursor: crosshair;
+
+    filter: drop-shadow(0 0 10px #8cff9d);
+}
+
+.alien:active {
+    transform: scale(.82);
+}
+
+#ship {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+
+    text-align: center;
+    font-size: 58px;
+}
+
+#overlay {
+    position: absolute;
+    z-index: 20;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #030510d9;
+    text-align: center;
+    padding: 20px;
+}
+
+.panel {
+    max-width: 520px;
+
+    padding: 26px;
+
+    border: 1px solid #ffffff40;
+    border-radius: 18px;
+
+    background: #11162ef2;
+}
+
+.panel h1 {
+    margin: 0 0 6px;
+    font-size: clamp(28px, 6vw, 48px);
+}
+
+.panel p {
+    line-height: 1.5;
+    color: #d9dced;
+}
+
+.action {
+    border: 0;
+    border-radius: 12px;
+
+    padding: 14px 24px;
+
+    font-size: 18px;
+    font-weight: 900;
+
+    cursor: pointer;
+
+    background: white;
+    color: #111;
+}
+
+#flash {
+    pointer-events: none;
+
+    position: absolute;
+    z-index: 15;
+    inset: 0;
+
+    background: white;
+    opacity: 0;
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+    <div id="hud">
+        <div>
+            SCORE <span id="score">0</span>
+        </div>
+
+        <div>
+            TIME <span id="time">60</span>
+        </div>
+
+        <div>
+            LIVES <span id="lives">❤️❤️❤️</span>
+        </div>
+    </div>
+
+
+    <div id="title">
+        ALIEN SHOOTER
+    </div>
+
+
+    <div id="arena"></div>
+
+
+    <div id="ship">
+        🚀
+    </div>
+
+
+    <div id="flash"></div>
+
+
+    <div id="overlay">
+
+        <div class="panel">
+
+            <h1>👾 BumpBoy</h1>
+
+            <h2>
+                ALIEN SHOOTER
+            </h2>
+
+            <p>
+                Shoot the aliens before they escape.
+                Missing costs a life.
+                Targets get faster as your score rises.
+            </p>
+
+            <button
+                class="action"
+                id="start"
+                type="button">
+
+                START GAME
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+(function () {
+
+    const root =
+        document.getElementById("game");
+
+    const arena =
+        document.getElementById("arena");
+
+    const scoreEl =
+        document.getElementById("score");
+
+    const timeEl =
+        document.getElementById("time");
+
+    const livesEl =
+        document.getElementById("lives");
+
+    const overlay =
+        document.getElementById("overlay");
+
+    const flash =
+        document.getElementById("flash");
+
+
+    let score = 0;
+
+    let lives = 3;
+
+    let timeLeft = 60;
+
+    let playing = false;
+
+    let target = null;
+
+    let spawnTimer = null;
+
+    let clock = null;
+
+
+    // ==========================================
+    // CREATE STAR BACKGROUND
+    // ==========================================
+
+    for (let i = 0; i < 75; i++) {
+
+        let star =
+            document.createElement("i");
+
+        star.className = "star";
+
+        star.style.left =
+            (Math.random() * 100) + "%";
+
+        star.style.top =
+            (Math.random() * 100) + "%";
+
+        star.style.opacity =
+            (0.25 + Math.random() * 0.7);
+
+        root.prepend(star);
+    }
+
+
+    // ==========================================
+    // UPDATE SCORE / TIME / LIVES
+    // ==========================================
+
+    function updateHUD() {
+
+        scoreEl.textContent =
+            score;
+
+        timeEl.textContent =
+            timeLeft;
+
+        livesEl.textContent =
+            "❤️".repeat(Math.max(0, lives))
+            +
+            "♡".repeat(Math.max(0, 3 - lives));
+    }
+
+
+    // ==========================================
+    // REMOVE CURRENT ALIEN
+    // ==========================================
+
+    function clearTarget() {
+
+        if (target) {
+
+            target.remove();
+
+            target = null;
+        }
+
+        if (spawnTimer) {
+
+            clearTimeout(spawnTimer);
+
+            spawnTimer = null;
+        }
+    }
+
+
+    // ==========================================
+    // CREATE RANDOM ALIEN
+    // ==========================================
+
+    function spawnAlien() {
+
+        if (!playing) {
+            return;
+        }
+
+
+        clearTarget();
+
+
+        const alien =
+            document.createElement("button");
+
+
+        alien.type =
+            "button";
+
+
+        alien.className =
+            "alien";
+
+
+        if (Math.random() > 0.5) {
+
+            alien.textContent =
+                "👾";
+
+        } else {
+
+            alien.textContent =
+                "🛸";
+        }
+
+
+        alien.setAttribute(
+            "aria-label",
+            "Alien target"
+        );
+
+
+        const maxX =
+            Math.max(
+                0,
+                arena.clientWidth - 82
+            );
+
+
+        const maxY =
+            Math.max(
+                0,
+                arena.clientHeight - 66
+            );
+
+
+        alien.style.left =
+            (Math.random() * maxX)
+            + "px";
+
+
+        alien.style.top =
+            (Math.random() * maxY)
+            + "px";
+
+
+        // ======================================
+        // ALIEN HIT
+        // ======================================
+
+        alien.addEventListener(
+            "click",
+
+            function (event) {
+
+                event.stopPropagation();
+
+
+                if (!playing) {
+                    return;
+                }
+
+
+                score++;
+
+
+                updateHUD();
+
+
+                flash.style.opacity =
+                    "0.30";
+
+
+                setTimeout(
+                    function () {
+
+                        flash.style.opacity =
+                            "0";
+
+                    },
+
+                    55
+                );
+
+
+                spawnAlien();
+            }
+        );
+
+
+        arena.appendChild(alien);
+
+
+        target =
+            alien;
+
+
+        // Aliens get faster as score increases
+
+        const speed =
+            Math.max(
+                450,
+                1300 - (score * 28)
+            );
+
+
+        spawnTimer =
+            setTimeout(
+
+                function () {
+
+                    if (!playing) {
+                        return;
+                    }
+
+
+                    lives--;
+
+
+                    updateHUD();
+
+
+                    if (lives <= 0) {
+
+                        endGame();
+
+                    } else {
+
+                        spawnAlien();
+                    }
+
+                },
+
+                speed
+            );
+    }
+
+
+    // ==========================================
+    // MISSED SHOT
+    // ==========================================
+
+    function miss() {
+
+        if (!playing) {
+            return;
+        }
+
+
+        lives--;
+
+
+        updateHUD();
+
+
+        if (lives <= 0) {
+
+            endGame();
+        }
+    }
+
+
+    // ==========================================
+    // START GAME
+    // ==========================================
+
+    function startGame() {
+
+        score =
+            0;
+
+        lives =
+            3;
+
+        timeLeft =
+            60;
+
+        playing =
+            true;
+
+
+        overlay.style.display =
+            "none";
+
+
+        updateHUD();
+
+
+        spawnAlien();
+
+
+        if (clock) {
+
+            clearInterval(clock);
+        }
+
+
+        clock =
+            setInterval(
+
+                function () {
+
+                    timeLeft--;
+
+
+                    updateHUD();
+
+
+                    if (timeLeft <= 0) {
+
+                        endGame();
+                    }
+
+                },
+
+                1000
+            );
+    }
+
+
+    // ==========================================
+    // GAME OVER
+    // ==========================================
+
+    function endGame() {
+
+        if (!playing) {
+            return;
+        }
+
+
+        playing =
+            false;
+
+
+        clearTarget();
+
+
+        if (clock) {
+
+            clearInterval(clock);
+
+            clock = null;
+        }
+
+
+        overlay.style.display =
+            "flex";
+
+
+        overlay.innerHTML =
+
+            '<div class="panel">' +
+
+            '<h1>GAME OVER</h1>' +
+
+            '<p>Final score: <strong>'
+            + score
+            + '</strong></p>' +
+
+            '<button class="action" id="again" type="button">' +
+
+            'PLAY AGAIN' +
+
+            '</button>' +
+
+            '</div>';
+
+
+        document
+            .getElementById("again")
+            .addEventListener(
+                "click",
+                startGame
+            );
+    }
+
+
+    // ==========================================
+    // CONTROLS
+    // ==========================================
+
+    arena.addEventListener(
+        "click",
+        miss
+    );
+
+
+    document
+        .getElementById("start")
+        .addEventListener(
+            "click",
+            startGame
+        );
+
+
+    updateHUD();
+
+})();
+
+</script>
+
+</body>
+</html>
