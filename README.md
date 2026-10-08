@@ -1,2 +1,1996 @@
-# bumpboy-games
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+<title>BumpBoy Alien Shooter V2</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #050714;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button {
+    font-family: inherit;
+}
+
+#game {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    min-height: 420px;
+    overflow: hidden;
+    cursor: crosshair;
+
+    background:
+        radial-gradient(circle at 20% 25%, rgba(111,49,146,.40), transparent 28%),
+        radial-gradient(circle at 80% 35%, rgba(27,77,154,.40), transparent 30%),
+        radial-gradient(circle at 50% 85%, rgba(143,33,109,.22), transparent 30%),
+        linear-gradient(#060817, #11071d);
+}
+
+/* =========================================================
+   STARS
+========================================================= */
+
+.star {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    pointer-events: none;
+}
+
+/* =========================================================
+   TOP HUD
+========================================================= */
+
+#topHUD {
+    position: absolute;
+    z-index: 50;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+
+    padding: 12px 16px;
+
+    font-weight: 900;
+    font-size: clamp(12px, 2vw, 18px);
+
+    text-shadow: 0 2px 5px black;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,.65),
+        transparent
+    );
+}
+
+.hudBlock {
+    min-width: 0;
+    white-space: nowrap;
+}
+
+#levelDisplay {
+    text-align: center;
+}
+
+#soundButton {
+    border: 1px solid rgba(255,255,255,.4);
+    border-radius: 8px;
+
+    padding: 6px 10px;
+
+    background: rgba(0,0,0,.35);
+    color: white;
+
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+#gameTitle {
+    position: absolute;
+    z-index: 20;
+    top: 48px;
+    left: 0;
+    width: 100%;
+
+    text-align: center;
+
+    font-size: clamp(22px, 4vw, 44px);
+    font-weight: 900;
+    letter-spacing: 3px;
+
+    text-shadow:
+        0 0 8px rgba(126,207,255,.7),
+        0 3px 5px black;
+
+    pointer-events: none;
+}
+
+/* =========================================================
+   ARENA
+========================================================= */
+
+#arena {
+    position: absolute;
+
+    top: 95px;
+    left: 0;
+    right: 0;
+    bottom: 85px;
+
+    overflow: hidden;
+}
+
+/* =========================================================
+   ALIENS
+========================================================= */
+
+.alien {
+    position: absolute;
+
+    width: 76px;
+    height: 64px;
+
+    border: none;
+    padding: 0;
+
+    background: transparent;
+
+    cursor: crosshair;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 50px;
+
+    transition: filter .1s;
+
+    filter:
+        drop-shadow(0 0 8px rgba(116,255,152,.9));
+
+    touch-action: manipulation;
+}
+
+.alien:hover {
+    filter:
+        drop-shadow(0 0 14px rgba(255,255,255,1));
+}
+
+.alien:active {
+    transform: scale(.85);
+}
+
+.alien.fast {
+    filter:
+        drop-shadow(0 0 10px rgba(102,204,255,1));
+}
+
+.alien.heavy {
+    font-size: 58px;
+
+    filter:
+        drop-shadow(0 0 12px rgba(255,105,180,1));
+}
+
+.alien.boss {
+    width: 130px;
+    height: 100px;
+
+    font-size: 88px;
+
+    filter:
+        drop-shadow(0 0 18px rgba(255,80,80,1));
+}
+
+/* =========================================================
+   BOSS HEALTH
+========================================================= */
+
+#bossHealthWrap {
+    position: absolute;
+    z-index: 40;
+
+    top: 92px;
+    left: 50%;
+
+    width: min(420px, 70%);
+
+    transform: translateX(-50%);
+
+    display: none;
+
+    text-align: center;
+
+    font-size: 12px;
+    font-weight: 900;
+}
+
+#bossHealthBar {
+    height: 12px;
+
+    margin-top: 4px;
+
+    border: 1px solid white;
+    border-radius: 8px;
+
+    overflow: hidden;
+
+    background: rgba(0,0,0,.55);
+}
+
+#bossHealthFill {
+    width: 100%;
+    height: 100%;
+
+    background: linear-gradient(
+        90deg,
+        #ff345f,
+        #ff9a44
+    );
+}
+
+/* =========================================================
+   PLAYER SHIP
+========================================================= */
+
+#ship {
+    position: absolute;
+
+    z-index: 30;
+
+    bottom: 8px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    font-size: 58px;
+
+    filter:
+        drop-shadow(0 0 12px rgba(95,186,255,.9));
+
+    pointer-events: none;
+}
+
+/* =========================================================
+   LASER
+========================================================= */
+
+.laser {
+    position: absolute;
+
+    z-index: 25;
+
+    width: 4px;
+
+    border-radius: 4px;
+
+    pointer-events: none;
+
+    background: white;
+
+    box-shadow:
+        0 0 5px #ffffff,
+        0 0 10px #57c8ff,
+        0 0 18px #57c8ff;
+
+    transform-origin: bottom center;
+
+    animation: laserFade .16s linear forwards;
+}
+
+@keyframes laserFade {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+/* =========================================================
+   EXPLOSION
+========================================================= */
+
+.explosion {
+    position: absolute;
+
+    z-index: 35;
+
+    pointer-events: none;
+
+    font-size: 58px;
+
+    transform: translate(-50%, -50%);
+
+    animation: explode .35s ease-out forwards;
+}
+
+@keyframes explode {
+
+    0% {
+        transform:
+            translate(-50%, -50%)
+            scale(.4);
+
+        opacity: 1;
+    }
+
+    70% {
+        transform:
+            translate(-50%, -50%)
+            scale(1.5);
+
+        opacity: 1;
+    }
+
+    100% {
+        transform:
+            translate(-50%, -50%)
+            scale(2);
+
+        opacity: 0;
+    }
+}
+
+/* =========================================================
+   POINT POPUP
+========================================================= */
+
+.points {
+    position: absolute;
+
+    z-index: 40;
+
+    font-size: 20px;
+    font-weight: 900;
+
+    pointer-events: none;
+
+    transform: translate(-50%, -50%);
+
+    text-shadow: 0 2px 4px black;
+
+    animation: pointsFloat .7s ease-out forwards;
+}
+
+@keyframes pointsFloat {
+
+    from {
+        opacity: 1;
+
+        transform:
+            translate(-50%, -50%);
+    }
+
+    to {
+        opacity: 0;
+
+        transform:
+            translate(-50%, -110%);
+    }
+}
+
+/* =========================================================
+   LEVEL MESSAGE
+========================================================= */
+
+#levelMessage {
+    position: absolute;
+
+    z-index: 60;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    text-align: center;
+
+    font-size: clamp(30px, 7vw, 72px);
+    font-weight: 900;
+
+    text-shadow:
+        0 4px 10px black,
+        0 0 15px rgba(255,255,255,.7);
+
+    pointer-events: none;
+
+    opacity: 0;
+}
+
+/* =========================================================
+   FLASH
+========================================================= */
+
+#flash {
+    position: absolute;
+
+    z-index: 55;
+
+    inset: 0;
+
+    background: white;
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+/* =========================================================
+   OVERLAY / START / GAME OVER
+========================================================= */
+
+#overlay {
+    position: absolute;
+
+    z-index: 100;
+
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(2,4,14,.90);
+
+    text-align: center;
+}
+
+.panel {
+    width: min(520px, 92%);
+
+    padding: 26px;
+
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 20px;
+
+    background: rgba(17,22,46,.96);
+
+    box-shadow:
+        0 0 30px rgba(72,131,255,.18);
+}
+
+.panel h1 {
+    margin: 0;
+
+    font-size: clamp(30px, 6vw, 56px);
+}
+
+.panel h2 {
+    margin:
+        8px 0 14px;
+
+    letter-spacing: 2px;
+}
+
+.panel p {
+    color: #dce1f2;
+
+    line-height: 1.5;
+}
+
+.instructions {
+    margin: 18px 0;
+
+    padding: 12px;
+
+    border-radius: 12px;
+
+    background: rgba(255,255,255,.06);
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+.actionButton {
+    min-width: 160px;
+
+    margin-top: 8px;
+
+    border: none;
+    border-radius: 12px;
+
+    padding: 14px 24px;
+
+    background: white;
+    color: #10131f;
+
+    font-size: 17px;
+    font-weight: 900;
+
+    cursor: pointer;
+}
+
+.actionButton:hover {
+    transform: scale(1.03);
+}
+
+/* =========================================================
+   MOBILE / HUD FRIENDLY
+========================================================= */
+
+@media (max-width: 520px) {
+
+    #topHUD {
+        padding: 8px;
+
+        font-size: 11px;
+    }
+
+    #gameTitle {
+        top: 40px;
+    }
+
+    #arena {
+        top: 82px;
+    }
+
+    .alien {
+        width: 68px;
+        height: 58px;
+
+        font-size: 46px;
+    }
+
+    #ship {
+        font-size: 50px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+    <div id="topHUD">
+
+        <div class="hudBlock">
+            SCORE
+            <span id="score">0</span>
+        </div>
+
+        <div
+            class="hudBlock"
+            id="levelDisplay">
+
+            LEVEL
+            <span id="level">1</span>
+
+        </div>
+
+        <div class="hudBlock">
+            TIME
+            <span id="time">60</span>
+        </div>
+
+        <div class="hudBlock">
+            LIVES
+            <span id="lives">❤️❤️❤️</span>
+        </div>
+
+        <button
+            id="soundButton"
+            type="button">
+
+            🔊
+
+        </button>
+
+    </div>
+
+
+    <div id="gameTitle">
+        ALIEN SHOOTER
+    </div>
+
+
+    <div id="bossHealthWrap">
+
+        BOSS
+
+        <div id="bossHealthBar">
+
+            <div id="bossHealthFill"></div>
+
+        </div>
+
+    </div>
+
+
+    <div id="arena"></div>
+
+
+    <div id="ship">
+        🚀
+    </div>
+
+
+    <div id="levelMessage"></div>
+
+
+    <div id="flash"></div>
+
+
+    <div id="overlay">
+
+        <div class="panel">
+
+            <h1>👾 BUMPBOY</h1>
+
+            <h2>
+                ALIEN SHOOTER V2
+            </h2>
+
+            <p>
+                Protect BumpBoy from the alien invasion!
+            </p>
+
+
+            <div class="instructions">
+
+                👾 Green Alien = 10 points
+                <br>
+
+                🛸 Fast UFO = 20 points
+                <br>
+
+                👽 Heavy Alien = 30 points
+                <br><br>
+
+                ❤️ You have 3 lives.
+                <br>
+
+                Missing an enemy costs a life.
+                <br><br>
+
+                Survive long enough to reach the
+                <strong>BOSS ROUND!</strong>
+
+            </div>
+
+
+            <button
+                class="actionButton"
+                id="startButton"
+                type="button">
+
+                START GAME
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+(function () {
+
+    /* =====================================================
+       ELEMENTS
+    ===================================================== */
+
+    const game =
+        document.getElementById("game");
+
+    const arena =
+        document.getElementById("arena");
+
+    const scoreDisplay =
+        document.getElementById("score");
+
+    const levelDisplay =
+        document.getElementById("level");
+
+    const timeDisplay =
+        document.getElementById("time");
+
+    const livesDisplay =
+        document.getElementById("lives");
+
+    const overlay =
+        document.getElementById("overlay");
+
+    const flash =
+        document.getElementById("flash");
+
+    const levelMessage =
+        document.getElementById("levelMessage");
+
+    const soundButton =
+        document.getElementById("soundButton");
+
+    const bossHealthWrap =
+        document.getElementById("bossHealthWrap");
+
+    const bossHealthFill =
+        document.getElementById("bossHealthFill");
+
+
+    /* =====================================================
+       GAME STATE
+    ===================================================== */
+
+    let score = 0;
+
+    let lives = 3;
+
+    let timeLeft = 60;
+
+    let level = 1;
+
+    let playing = false;
+
+    let muted = false;
+
+    let enemy = null;
+
+    let enemyTimer = null;
+
+    let gameClock = null;
+
+    let bossHealth = 0;
+
+    let bossMaxHealth = 0;
+
+
+    /* =====================================================
+       STAR FIELD
+    ===================================================== */
+
+    for (let i = 0; i < 90; i++) {
+
+        const star =
+            document.createElement("div");
+
+        star.className =
+            "star";
+
+        const size =
+            Math.random() * 2.5 + 1;
+
+
+        star.style.width =
+            size + "px";
+
+        star.style.height =
+            size + "px";
+
+        star.style.left =
+            Math.random() * 100 + "%";
+
+        star.style.top =
+            Math.random() * 100 + "%";
+
+        star.style.opacity =
+            0.2 + Math.random() * 0.7;
+
+
+        game.insertBefore(
+            star,
+            game.firstChild
+        );
+    }
+
+
+    /* =====================================================
+       HUD
+    ===================================================== */
+
+    function updateHUD() {
+
+        scoreDisplay.textContent =
+            score;
+
+        levelDisplay.textContent =
+            level;
+
+        timeDisplay.textContent =
+            timeLeft;
+
+
+        livesDisplay.textContent =
+
+            "❤️".repeat(
+                Math.max(0, lives)
+            )
+
+            +
+
+            "♡".repeat(
+                Math.max(0, 3 - lives)
+            );
+    }
+
+
+    /* =====================================================
+       SIMPLE SOUND
+    ===================================================== */
+
+    function tone(
+        frequency,
+        duration,
+        volume
+    ) {
+
+        if (muted) {
+            return;
+        }
+
+
+        try {
+
+            const AudioContext =
+                window.AudioContext
+                ||
+                window.webkitAudioContext;
+
+
+            const context =
+                new AudioContext();
+
+
+            const oscillator =
+                context.createOscillator();
+
+
+            const gain =
+                context.createGain();
+
+
+            oscillator.frequency.value =
+                frequency;
+
+
+            oscillator.type =
+                "square";
+
+
+            gain.gain.value =
+                volume;
+
+
+            oscillator.connect(gain);
+
+            gain.connect(
+                context.destination
+            );
+
+
+            oscillator.start();
+
+
+            setTimeout(
+                function () {
+
+                    oscillator.stop();
+
+                    context.close();
+
+                },
+
+                duration
+            );
+
+        } catch (error) {
+
+            // Game continues without audio.
+        }
+    }
+
+
+    soundButton.addEventListener(
+        "click",
+
+        function (event) {
+
+            event.stopPropagation();
+
+
+            muted =
+                !muted;
+
+
+            if (muted) {
+
+                soundButton.textContent =
+                    "🔇";
+
+            } else {
+
+                soundButton.textContent =
+                    "🔊";
+
+                tone(
+                    500,
+                    70,
+                    0.03
+                );
+            }
+        }
+    );
+
+
+    /* =====================================================
+       LEVEL ANNOUNCEMENT
+    ===================================================== */
+
+    function announce(text) {
+
+        levelMessage.textContent =
+            text;
+
+
+        levelMessage.style.opacity =
+            "1";
+
+
+        setTimeout(
+            function () {
+
+                levelMessage.style.opacity =
+                    "0";
+
+            },
+
+            1000
+        );
+    }
+
+
+    /* =====================================================
+       LASER
+    ===================================================== */
+
+    function createLaser(
+        targetX,
+        targetY
+    ) {
+
+        const shipRect =
+            document
+                .getElementById("ship")
+                .getBoundingClientRect();
+
+
+        const gameRect =
+            game.getBoundingClientRect();
+
+
+        const startX =
+            shipRect.left
+            +
+            shipRect.width / 2
+            -
+            gameRect.left;
+
+
+        const startY =
+            shipRect.top
+            -
+            gameRect.top;
+
+
+        const deltaX =
+            targetX - startX;
+
+
+        const deltaY =
+            targetY - startY;
+
+
+        const distance =
+            Math.sqrt(
+                deltaX * deltaX
+                +
+                deltaY * deltaY
+            );
+
+
+        const angle =
+            Math.atan2(
+                deltaY,
+                deltaX
+            )
+            *
+            180
+            /
+            Math.PI
+            +
+            90;
+
+
+        const laser =
+            document.createElement("div");
+
+
+        laser.className =
+            "laser";
+
+
+        laser.style.left =
+            startX + "px";
+
+
+        laser.style.top =
+            (startY - distance)
+            + "px";
+
+
+        laser.style.height =
+            distance + "px";
+
+
+        laser.style.transform =
+            "rotate("
+            + angle
+            + "deg)";
+
+
+        game.appendChild(laser);
+
+
+        setTimeout(
+            function () {
+
+                laser.remove();
+
+            },
+
+            180
+        );
+    }
+
+
+    /* =====================================================
+       EXPLOSION
+    ===================================================== */
+
+    function explosion(
+        x,
+        y
+    ) {
+
+        const blast =
+            document.createElement("div");
+
+
+        blast.className =
+            "explosion";
+
+
+        blast.textContent =
+            "💥";
+
+
+        blast.style.left =
+            x + "px";
+
+
+        blast.style.top =
+            y + "px";
+
+
+        game.appendChild(blast);
+
+
+        setTimeout(
+            function () {
+
+                blast.remove();
+
+            },
+
+            400
+        );
+    }
+
+
+    /* =====================================================
+       POINT POPUP
+    ===================================================== */
+
+    function showPoints(
+        x,
+        y,
+        points
+    ) {
+
+        const popup =
+            document.createElement("div");
+
+
+        popup.className =
+            "points";
+
+
+        popup.textContent =
+            "+"
+            + points;
+
+
+        popup.style.left =
+            x + "px";
+
+
+        popup.style.top =
+            y + "px";
+
+
+        game.appendChild(popup);
+
+
+        setTimeout(
+            function () {
+
+                popup.remove();
+
+            },
+
+            750
+        );
+    }
+
+
+    /* =====================================================
+       CLEAR ENEMY
+    ===================================================== */
+
+    function clearEnemy() {
+
+        if (enemy) {
+
+            enemy.remove();
+
+            enemy = null;
+        }
+
+
+        if (enemyTimer) {
+
+            clearTimeout(
+                enemyTimer
+            );
+
+            enemyTimer = null;
+        }
+    }
+
+
+    /* =====================================================
+       DETERMINE LEVEL
+    ===================================================== */
+
+    function calculateLevel() {
+
+        let newLevel = 1;
+
+
+        if (score >= 80) {
+
+            newLevel = 2;
+        }
+
+
+        if (score >= 180) {
+
+            newLevel = 3;
+        }
+
+
+        if (score >= 320) {
+
+            newLevel = 4;
+        }
+
+
+        if (newLevel != level) {
+
+            level =
+                newLevel;
+
+
+            updateHUD();
+
+
+            if (level == 4) {
+
+                announce(
+                    "👾 BOSS ROUND!"
+                );
+
+            } else {
+
+                announce(
+                    "LEVEL "
+                    + level
+                );
+            }
+        }
+    }
+
+
+    /* =====================================================
+       ENEMY TYPES
+    ===================================================== */
+
+    function chooseEnemy() {
+
+        const roll =
+            Math.random();
+
+
+        if (level == 1) {
+
+            return {
+                symbol: "👾",
+                type: "normal",
+                points: 10,
+                speed: 1600
+            };
+        }
+
+
+        if (level == 2) {
+
+            if (roll < 0.65) {
+
+                return {
+                    symbol: "👾",
+                    type: "normal",
+                    points: 10,
+                    speed: 1400
+                };
+
+            } else {
+
+                return {
+                    symbol: "🛸",
+                    type: "fast",
+                    points: 20,
+                    speed: 1050
+                };
+            }
+        }
+
+
+        if (level == 3) {
+
+            if (roll < 0.40) {
+
+                return {
+                    symbol: "👾",
+                    type: "normal",
+                    points: 10,
+                    speed: 1200
+                };
+
+            } else if (roll < 0.75) {
+
+                return {
+                    symbol: "🛸",
+                    type: "fast",
+                    points: 20,
+                    speed: 900
+                };
+
+            } else {
+
+                return {
+                    symbol: "👽",
+                    type: "heavy",
+                    points: 30,
+                    speed: 1250
+                };
+            }
+        }
+
+
+        return {
+            symbol: "👹",
+            type: "boss",
+            points: 250,
+            speed: 5000
+        };
+    }
+
+
+    /* =====================================================
+       SPAWN ENEMY
+    ===================================================== */
+
+    function spawnEnemy() {
+
+        if (!playing) {
+            return;
+        }
+
+
+        clearEnemy();
+
+
+        calculateLevel();
+
+
+        const data =
+            chooseEnemy();
+
+
+        const alien =
+            document.createElement("button");
+
+
+        alien.type =
+            "button";
+
+
+        alien.className =
+            "alien "
+            + data.type;
+
+
+        alien.textContent =
+            data.symbol;
+
+
+        alien.setAttribute(
+            "aria-label",
+            "Alien enemy"
+        );
+
+
+        arena.appendChild(
+            alien
+        );
+
+
+        const arenaWidth =
+            arena.clientWidth;
+
+
+        const arenaHeight =
+            arena.clientHeight;
+
+
+        const enemyWidth =
+            data.type == "boss"
+            ?
+            130
+            :
+            76;
+
+
+        const enemyHeight =
+            data.type == "boss"
+            ?
+            100
+            :
+            64;
+
+
+        const maxX =
+            Math.max(
+                0,
+                arenaWidth
+                -
+                enemyWidth
+            );
+
+
+        const maxY =
+            Math.max(
+                0,
+                arenaHeight
+                -
+                enemyHeight
+            );
+
+
+        alien.style.left =
+            Math.random()
+            *
+            maxX
+            +
+            "px";
+
+
+        alien.style.top =
+            Math.random()
+            *
+            maxY
+            +
+            "px";
+
+
+        enemy =
+            alien;
+
+
+        /* =============================================
+           BOSS SETUP
+        ============================================= */
+
+        if (data.type == "boss") {
+
+            bossMaxHealth =
+                8;
+
+
+            bossHealth =
+                bossMaxHealth;
+
+
+            bossHealthWrap.style.display =
+                "block";
+
+
+            bossHealthFill.style.width =
+                "100%";
+
+        } else {
+
+            bossHealthWrap.style.display =
+                "none";
+        }
+
+
+        /* =============================================
+           SHOOT ENEMY
+        ============================================= */
+
+        alien.addEventListener(
+            "click",
+
+            function (event) {
+
+                event.stopPropagation();
+
+
+                if (!playing) {
+                    return;
+                }
+
+
+                const alienRect =
+                    alien.getBoundingClientRect();
+
+
+                const gameRect =
+                    game.getBoundingClientRect();
+
+
+                const centerX =
+                    alienRect.left
+                    -
+                    gameRect.left
+                    +
+                    alienRect.width / 2;
+
+
+                const centerY =
+                    alienRect.top
+                    -
+                    gameRect.top
+                    +
+                    alienRect.height / 2;
+
+
+                createLaser(
+                    centerX,
+                    centerY
+                );
+
+
+                tone(
+                    750,
+                    70,
+                    0.025
+                );
+
+
+                /* =====================================
+                   BOSS HIT
+                ===================================== */
+
+                if (data.type == "boss") {
+
+                    bossHealth--;
+
+
+                    const percent =
+                        Math.max(
+                            0,
+                            bossHealth
+                            /
+                            bossMaxHealth
+                            *
+                            100
+                        );
+
+
+                    bossHealthFill.style.width =
+                        percent
+                        +
+                        "%";
+
+
+                    flash.style.opacity =
+                        "0.18";
+
+
+                    setTimeout(
+                        function () {
+
+                            flash.style.opacity =
+                                "0";
+
+                        },
+
+                        60
+                    );
+
+
+                    if (bossHealth > 0) {
+
+                        return;
+                    }
+                }
+
+
+                /* =====================================
+                   ENEMY DESTROYED
+                ===================================== */
+
+                score +=
+                    data.points;
+
+
+                updateHUD();
+
+
+                explosion(
+                    centerX,
+                    centerY
+                );
+
+
+                showPoints(
+                    centerX,
+                    centerY,
+                    data.points
+                );
+
+
+                tone(
+                    180,
+                    100,
+                    0.04
+                );
+
+
+                calculateLevel();
+
+
+                if (
+                    data.type
+                    ==
+                    "boss"
+                ) {
+
+                    bossHealthWrap.style.display =
+                        "none";
+
+
+                    winGame();
+
+                    return;
+                }
+
+
+                spawnEnemy();
+            }
+        );
+
+
+        /* =============================================
+           ENEMY ESCAPES
+        ============================================= */
+
+        enemyTimer =
+            setTimeout(
+
+                function () {
+
+                    if (!playing) {
+                        return;
+                    }
+
+
+                    if (
+                        data.type
+                        ==
+                        "boss"
+                    ) {
+
+                        lives = 0;
+
+                    } else {
+
+                        lives--;
+                    }
+
+
+                    updateHUD();
+
+
+                    tone(
+                        90,
+                        180,
+                        0.04
+                    );
+
+
+                    if (lives <= 0) {
+
+                        endGame();
+
+                    } else {
+
+                        spawnEnemy();
+                    }
+
+                },
+
+                data.speed
+            );
+    }
+
+
+    /* =====================================================
+       MISS
+    ===================================================== */
+
+    function missShot(event) {
+
+        if (!playing) {
+            return;
+        }
+
+
+        const gameRect =
+            game.getBoundingClientRect();
+
+
+        const x =
+            event.clientX
+            -
+            gameRect.left;
+
+
+        const y =
+            event.clientY
+            -
+            gameRect.top;
+
+
+        createLaser(
+            x,
+            y
+        );
+
+
+        lives--;
+
+
+        updateHUD();
+
+
+        tone(
+            100,
+            120,
+            0.03
+        );
+
+
+        if (lives <= 0) {
+
+            endGame();
+        }
+    }
+
+
+    /* =====================================================
+       START GAME
+    ===================================================== */
+
+    function startGame() {
+
+        score =
+            0;
+
+        lives =
+            3;
+
+        timeLeft =
+            60;
+
+        level =
+            1;
+
+        bossHealth =
+            0;
+
+
+        playing =
+            true;
+
+
+        overlay.style.display =
+            "none";
+
+
+        bossHealthWrap.style.display =
+            "none";
+
+
+        updateHUD();
+
+
+        announce(
+            "LEVEL 1"
+        );
+
+
+        spawnEnemy();
+
+
+        if (gameClock) {
+
+            clearInterval(
+                gameClock
+            );
+        }
+
+
+        gameClock =
+            setInterval(
+
+                function () {
+
+                    if (!playing) {
+                        return;
+                    }
+
+
+                    timeLeft--;
+
+
+                    updateHUD();
+
+
+                    if (timeLeft <= 0) {
+
+                        endGame();
+                    }
+
+                },
+
+                1000
+            );
+    }
+
+
+    /* =====================================================
+       GAME OVER
+    ===================================================== */
+
+    function endGame() {
+
+        if (!playing) {
+            return;
+        }
+
+
+        playing =
+            false;
+
+
+        clearEnemy();
+
+
+        bossHealthWrap.style.display =
+            "none";
+
+
+        if (gameClock) {
+
+            clearInterval(
+                gameClock
+            );
+
+            gameClock = null;
+        }
+
+
+        overlay.style.display =
+            "flex";
+
+
+        overlay.innerHTML =
+
+            '<div class="panel">'
+
+            +
+
+            '<h1>GAME OVER</h1>'
+
+            +
+
+            '<h2>FINAL SCORE: '
+            +
+            score
+            +
+            '</h2>'
+
+            +
+
+            '<p>You reached Level '
+            +
+            level
+            +
+            '.</p>'
+
+            +
+
+            '<button class="actionButton" id="playAgain" type="button">PLAY AGAIN</button>'
+
+            +
+
+            '</div>';
+
+
+        document
+            .getElementById(
+                "playAgain"
+            )
+            .addEventListener(
+                "click",
+                startGame
+            );
+    }
+
+
+    /* =====================================================
+       WIN
+    ===================================================== */
+
+    function winGame() {
+
+        playing =
+            false;
+
+
+        clearEnemy();
+
+
+        bossHealthWrap.style.display =
+            "none";
+
+
+        if (gameClock) {
+
+            clearInterval(
+                gameClock
+            );
+
+            gameClock = null;
+        }
+
+
+        overlay.style.display =
+            "flex";
+
+
+        overlay.innerHTML =
+
+            '<div class="panel">'
+
+            +
+
+            '<h1>🏆 YOU WIN!</h1>'
+
+            +
+
+            '<h2>ALIEN INVASION DEFEATED</h2>'
+
+            +
+
+            '<p>Final Score: <strong>'
+            +
+            score
+            +
+            '</strong></p>'
+
+            +
+
+            '<p>BumpBoy is safe! 👶🏽🚀</p>'
+
+            +
+
+            '<button class="actionButton" id="playAgain" type="button">PLAY AGAIN</button>'
+
+            +
+
+            '</div>';
+
+
+        document
+            .getElementById(
+                "playAgain"
+            )
+            .addEventListener(
+                "click",
+                startGame
+            );
+    }
+
+
+    /* =====================================================
+       CONTROLS
+    ===================================================== */
+
+    arena.addEventListener(
+        "click",
+        missShot
+    );
+
+
+    document
+        .getElementById(
+            "startButton"
+        )
+        .addEventListener(
+            "click",
+            startGame
+        );
+
+
+    updateHUD();
+
+})();
+</script>
+
+</body>
+</html># bumpboy-games
 BumpBoy Arcade Games
