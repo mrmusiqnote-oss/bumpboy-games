@@ -2758,4 +2758,334 @@ function startClock(){
             },
             1000
         );
+}/* =========================================================
+   START GAME
+========================================================= */
+
+function startGame(){
+
+    clearEnemy();
+
+    if(gameClock){
+
+        clearInterval(
+            gameClock
+        );
+
+        gameClock = null;
+    }
+
+    score = 0;
+    lives = 3;
+    level = 1;
+    timeLeft = 60;
+
+    bossHits = 0;
+    bossTime = 0;
+
+    playing = true;
+
+    bossHealthWrap.style.display =
+        "none";
+
+    bossHealthFill.style.width =
+        "100%";
+
+    overlay.style.display =
+        "none";
+
+    updateHUD();
+
+    showLevelMessage(
+        "LEVEL 1"
+    );
+
+    levelSound();
+
+    setTimeout(
+        function(){
+
+            if(playing){
+
+                spawnEnemy();
+            }
+
+        },
+        500
+    );
+
+    startClock();
 }
+
+/* =========================================================
+   GAME OVER
+========================================================= */
+
+function gameOver(){
+
+    if(!playing){
+        return;
+    }
+
+    playing = false;
+
+    clearEnemy();
+
+    if(gameClock){
+
+        clearInterval(
+            gameClock
+        );
+
+        gameClock = null;
+    }
+
+    bossHealthWrap.style.display =
+        "none";
+
+    overlay.style.display =
+        "flex";
+
+    overlay.innerHTML =
+        `
+        <div class="panel">
+
+            <h1>
+                GAME OVER
+            </h1>
+
+            <h2>
+                SCORE: ${score}
+            </h2>
+
+            <p>
+                The aliens got through this time!
+            </p>
+
+            <p>
+                Get back in your BB Star Cruiser
+                and try again.
+            </p>
+
+            <button
+                id="restartButton"
+                type="button">
+                PLAY AGAIN
+            </button>
+
+        </div>
+        `;
+
+    const restartButton =
+        document.getElementById(
+            "restartButton"
+        );
+
+    restartButton.style.marginTop =
+        "25px";
+
+    restartButton.style.padding =
+        "16px 34px";
+
+    restartButton.style.border =
+        "0";
+
+    restartButton.style.borderRadius =
+        "15px";
+
+    restartButton.style.background =
+        "linear-gradient(135deg,#48caff,#b24cff,#ff4cbd)";
+
+    restartButton.style.color =
+        "white";
+
+    restartButton.style.fontSize =
+        "24px";
+
+    restartButton.style.fontWeight =
+        "900";
+
+    restartButton.style.cursor =
+        "pointer";
+
+    restartButton.addEventListener(
+        "click",
+        function(e){
+
+            e.stopPropagation();
+
+            startGame();
+        }
+    );
+}
+
+/* =========================================================
+   WIN GAME
+========================================================= */
+
+function winGame(){
+
+    playing = false;
+
+    clearEnemy();
+
+    if(gameClock){
+
+        clearInterval(
+            gameClock
+        );
+
+        gameClock = null;
+    }
+
+    bossHealthWrap.style.display =
+        "none";
+
+    updateHUD();
+
+    winSound();
+
+    overlay.style.display =
+        "flex";
+
+    overlay.innerHTML =
+        `
+        <div class="panel">
+
+            <h1>
+                YOU WIN!
+            </h1>
+
+            <h2>
+                👑 BOSS DEFEATED 👑
+            </h2>
+
+            <p>
+                Final Score:
+                <strong>${score}</strong>
+            </p>
+
+            <p>
+                BumpBoy space is safe!
+            </p>
+
+            <button
+                id="restartButton"
+                type="button">
+                PLAY AGAIN
+            </button>
+
+        </div>
+        `;
+
+    const restartButton =
+        document.getElementById(
+            "restartButton"
+        );
+
+    restartButton.style.marginTop =
+        "25px";
+
+    restartButton.style.padding =
+        "16px 34px";
+
+    restartButton.style.border =
+        "0";
+
+    restartButton.style.borderRadius =
+        "15px";
+
+    restartButton.style.background =
+        "linear-gradient(135deg,#48caff,#b24cff,#ff4cbd)";
+
+    restartButton.style.color =
+        "white";
+
+    restartButton.style.fontSize =
+        "24px";
+
+    restartButton.style.fontWeight =
+        "900";
+
+    restartButton.style.cursor =
+        "pointer";
+
+    restartButton.addEventListener(
+        "click",
+        function(e){
+
+            e.stopPropagation();
+
+            startGame();
+        }
+    );
+}
+
+/* =========================================================
+   EXIT GAME — SIGNAL SECOND LIFE HUD
+========================================================= */
+
+exitGameButton.addEventListener(
+    "click",
+    function(e){
+
+        e.stopPropagation();
+
+        playing = false;
+
+        clearEnemy();
+
+        if(gameClock){
+
+            clearInterval(
+                gameClock
+            );
+
+            gameClock = null;
+        }
+
+        bossHealthWrap.style.display =
+            "none";
+
+        /*
+           Signal the BUMPBOY_GAMES_HUD controller
+           by changing the MOAP page's current URL.
+
+           HUD Controller V1.3 will detect:
+           bumpboy_exit=1
+
+           Then it will hide the HUD and reset
+           the game URL for the next launch.
+        */
+
+        window.location.href =
+            "https://mrmusiqnote-oss.github.io/bumpboy-games/?bumpboy_exit=1&t="
+            +
+            Date.now();
+    }
+);
+
+/* =========================================================
+   START BUTTON
+========================================================= */
+
+startButton.addEventListener(
+    "click",
+    function(e){
+
+        e.stopPropagation();
+
+        startGame();
+    }
+);
+
+/* =========================================================
+   INITIAL HUD
+========================================================= */
+
+updateHUD();
+
+</script>
+
+</body>
+</html>
