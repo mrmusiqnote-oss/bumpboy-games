@@ -2087,4 +2087,675 @@ function clearEnemy(){
 
     bossHealthWrap.style.display =
         "none";
+}/* =========================================================
+   LOSE LIFE
+========================================================= */
+
+function loseLife(){
+
+    if(!playing){
+        return;
+    }
+
+    lives--;
+
+    updateHUD();
+
+    loseLifeSound();
+
+    screenFlash();
+
+    if(lives <= 0){
+
+        gameOver();
+
+        return;
+    }
+}
+
+/* =========================================================
+   MOVE ENEMY
+========================================================= */
+
+function moveEnemy(
+    alien,
+    settings
+){
+
+    let directionX =
+        Math.random() < .5
+        ?
+        -1
+        :
+        1;
+
+    let directionY =
+        Math.random() < .5
+        ?
+        -1
+        :
+        1;
+
+    let lastTime =
+        performance.now();
+
+    function animate(now){
+
+        if(
+            !playing
+            ||
+            !alien.isConnected
+        ){
+            return;
+        }
+
+        const delta =
+            Math.min(
+                2.5,
+                (
+                    now
+                    -
+                    lastTime
+                )
+                /
+                16.67
+            );
+
+        lastTime =
+            now;
+
+        let x =
+            parseFloat(
+                alien.style.left
+            )
+            ||
+            0;
+
+        let y =
+            parseFloat(
+                alien.style.top
+            )
+            ||
+            0;
+
+        x +=
+            directionX
+            *
+            settings.speed
+            *
+            delta;
+
+        y +=
+            directionY
+            *
+            settings.speed
+            *
+            delta;
+
+        const alienWidth =
+            alien.offsetWidth;
+
+        const alienHeight =
+            alien.offsetHeight;
+
+        const maxX =
+            Math.max(
+                0,
+                arena.clientWidth
+                -
+                alienWidth
+            );
+
+        const maxY =
+            Math.max(
+                0,
+                arena.clientHeight
+                -
+                alienHeight
+            );
+
+        if(x <= 0){
+
+            x = 0;
+
+            directionX = 1;
+        }
+
+        if(x >= maxX){
+
+            x = maxX;
+
+            directionX = -1;
+        }
+
+        if(y <= 0){
+
+            y = 0;
+
+            directionY = 1;
+        }
+
+        if(y >= maxY){
+
+            y = maxY;
+
+            directionY = -1;
+        }
+
+        alien.style.left =
+            x + "px";
+
+        alien.style.top =
+            y + "px";
+
+        requestAnimationFrame(
+            animate
+        );
+    }
+
+    requestAnimationFrame(
+        animate
+    );
+}
+
+/* =========================================================
+   HIT NORMAL ENEMY
+========================================================= */
+
+function hitEnemy(
+    alien,
+    settings,
+    event
+){
+
+    if(
+        !playing
+        ||
+        alien !== currentAlien
+    ){
+        return;
+    }
+
+    event.stopPropagation();
+
+    const gameRect =
+        game.getBoundingClientRect();
+
+    const rect =
+        alien.getBoundingClientRect();
+
+    const centerX =
+        rect.left
+        +
+        rect.width / 2
+        -
+        gameRect.left;
+
+    const centerY =
+        rect.top
+        +
+        rect.height / 2
+        -
+        gameRect.top;
+
+    fireLaser(
+        centerX,
+        centerY
+    );
+
+    clearTimeout(
+        enemyTimer
+    );
+
+    enemyTimer = null;
+
+    score +=
+        settings.points;
+
+    showPoints(
+        centerX,
+        centerY,
+        settings.points
+    );
+
+    createExplosion(
+        centerX,
+        centerY
+    );
+
+    alien.remove();
+
+    currentAlien =
+        null;
+
+    calculateLevel();
+
+    updateHUD();
+
+    setTimeout(
+        function(){
+
+            if(playing){
+
+                spawnEnemy();
+            }
+
+        },
+        250
+    );
+}
+
+/* =========================================================
+   HIT BOSS
+========================================================= */
+
+function hitBoss(
+    alien,
+    settings,
+    event
+){
+
+    if(
+        !playing
+        ||
+        alien !== currentAlien
+    ){
+        return;
+    }
+
+    event.stopPropagation();
+
+    const gameRect =
+        game.getBoundingClientRect();
+
+    const rect =
+        alien.getBoundingClientRect();
+
+    const centerX =
+        rect.left
+        +
+        rect.width / 2
+        -
+        gameRect.left;
+
+    const centerY =
+        rect.top
+        +
+        rect.height / 2
+        -
+        gameRect.top;
+
+    fireLaser(
+        centerX,
+        centerY
+    );
+
+    bossHits++;
+
+    bossHitSound();
+
+    screenFlash();
+
+    const percent =
+        Math.max(
+            0,
+            100
+            -
+            (
+                bossHits
+                /
+                bossNeeded
+                *
+                100
+            )
+        );
+
+    bossHealthFill.style.width =
+        percent + "%";
+
+    alien.animate(
+        [
+            {
+                transform:
+                    "scale(1)"
+            },
+            {
+                transform:
+                    "scale(.90)"
+            },
+            {
+                transform:
+                    "scale(1.08)"
+            },
+            {
+                transform:
+                    "scale(1)"
+            }
+        ],
+        {
+            duration:180
+        }
+    );
+
+    if(
+        bossHits >=
+        bossNeeded
+    ){
+
+        clearTimeout(
+            enemyTimer
+        );
+
+        enemyTimer =
+            null;
+
+        score +=
+            settings.points;
+
+        updateHUD();
+
+        showPoints(
+            centerX,
+            centerY,
+            settings.points
+        );
+
+        createExplosion(
+            centerX,
+            centerY
+        );
+
+        alien.remove();
+
+        currentAlien =
+            null;
+
+        bossHealthWrap.style.display =
+            "none";
+
+        setTimeout(
+            function(){
+
+                winGame();
+
+            },
+            650
+        );
+    }
+}
+
+/* =========================================================
+   ENEMY ESCAPED
+========================================================= */
+
+function enemyEscaped(
+    alien
+){
+
+    if(
+        !playing
+        ||
+        alien !== currentAlien
+    ){
+        return;
+    }
+
+    alien.remove();
+
+    currentAlien =
+        null;
+
+    enemyTimer =
+        null;
+
+    bossHealthWrap.style.display =
+        "none";
+
+    loseLife();
+
+    if(
+        playing
+        &&
+        lives > 0
+    ){
+
+        setTimeout(
+            function(){
+
+                spawnEnemy();
+
+            },
+            350
+        );
+    }
+}
+
+/* =========================================================
+   SPAWN ENEMY
+========================================================= */
+
+function spawnEnemy(){
+
+    if(!playing){
+        return;
+    }
+
+    clearEnemy();
+
+    calculateLevel();
+
+    const settings =
+        getEnemyType();
+
+    const alien =
+        document.createElement(
+            "button"
+        );
+
+    alien.type =
+        "button";
+
+    alien.className =
+        "alien "
+        +
+        settings.type;
+
+    const image =
+        document.createElement(
+            "img"
+        );
+
+    image.src =
+        settings.image;
+
+    image.alt =
+        settings.type
+        +
+        " alien";
+
+    image.draggable =
+        false;
+
+    alien.appendChild(
+        image
+    );
+
+    arena.appendChild(
+        alien
+    );
+
+    currentAlien =
+        alien;
+
+    /*
+       Wait until the browser knows the alien's
+       real displayed dimensions before positioning it.
+       This keeps the larger V3.1 aliens inside the arena.
+    */
+
+    const width =
+        alien.offsetWidth;
+
+    const height =
+        alien.offsetHeight;
+
+    const position =
+        randomPosition(
+            width,
+            height
+        );
+
+    alien.style.left =
+        position.x + "px";
+
+    alien.style.top =
+        position.y + "px";
+
+    if(
+        settings.type
+        ===
+        "boss"
+    ){
+
+        bossHits = 0;
+
+        bossTime = 15;
+
+        bossHealthFill.style.width =
+            "100%";
+
+        bossHealthWrap.style.display =
+            "block";
+
+        alien.addEventListener(
+            "click",
+            function(event){
+
+                hitBoss(
+                    alien,
+                    settings,
+                    event
+                );
+            }
+        );
+    }
+    else{
+
+        alien.addEventListener(
+            "click",
+            function(event){
+
+                hitEnemy(
+                    alien,
+                    settings,
+                    event
+                );
+            }
+        );
+    }
+
+    moveEnemy(
+        alien,
+        settings
+    );
+
+    enemyTimer =
+        setTimeout(
+            function(){
+
+                enemyEscaped(
+                    alien
+                );
+
+            },
+            settings.lifetime
+        );
+}
+
+/* =========================================================
+   MISSED SHOT
+========================================================= */
+
+arena.addEventListener(
+    "click",
+    function(event){
+
+        if(!playing){
+            return;
+        }
+
+        if(
+            event.target.closest(
+                ".alien"
+            )
+        ){
+            return;
+        }
+
+        const gameRect =
+            game.getBoundingClientRect();
+
+        const x =
+            event.clientX
+            -
+            gameRect.left;
+
+        const y =
+            event.clientY
+            -
+            gameRect.top;
+
+        fireLaser(
+            x,
+            y
+        );
+
+        loseLife();
+    }
+);
+
+/* =========================================================
+   GAME CLOCK
+========================================================= */
+
+function startClock(){
+
+    if(gameClock){
+
+        clearInterval(
+            gameClock
+        );
+    }
+
+    gameClock =
+        setInterval(
+            function(){
+
+                if(!playing){
+                    return;
+                }
+
+                timeLeft--;
+
+                if(
+                    level === 4
+                    &&
+                    currentAlien
+                ){
+
+                    bossTime--;
+                }
+
+                updateHUD();
+
+                if(
+                    timeLeft <= 0
+                ){
+
+                    gameOver();
+                }
+
+            },
+            1000
+        );
 }
