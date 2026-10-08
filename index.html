@@ -3,642 +3,2359 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>BumpBoy Alien Shooter V2.1</title>
+<title>BumpBoy Alien Shooter V3</title>
 
 <style>
-*{box-sizing:border-box;-webkit-user-select:none;user-select:none}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#050714;color:#fff;font-family:Arial,Helvetica,sans-serif}
+*{
+    box-sizing:border-box;
+    -webkit-user-select:none;
+    user-select:none;
+}
+
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#050714;
+    color:white;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
 button{font-family:inherit}
-#game{position:relative;width:100vw;height:100vh;min-height:420px;overflow:hidden;cursor:crosshair;background:radial-gradient(circle at 20% 25%,rgba(111,49,146,.40),transparent 28%),radial-gradient(circle at 80% 35%,rgba(27,77,154,.40),transparent 30%),radial-gradient(circle at 50% 85%,rgba(143,33,109,.22),transparent 30%),linear-gradient(#060817,#11071d)}
-.star{position:absolute;border-radius:50%;background:white;pointer-events:none}
 
-#topHUD{position:absolute;z-index:50;top:0;left:0;width:100%;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 16px;font-weight:900;font-size:clamp(12px,2vw,18px);text-shadow:0 2px 5px #000;background:linear-gradient(to bottom,rgba(0,0,0,.65),transparent)}
-.hudBlock{min-width:0;white-space:nowrap}
-#levelDisplay{text-align:center}
-#soundButton{border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:6px 10px;background:rgba(0,0,0,.35);color:white;font-weight:bold;cursor:pointer}
+#game{
+    position:relative;
+    width:100vw;
+    height:100vh;
+    min-height:420px;
+    overflow:hidden;
+    cursor:crosshair;
 
-#gameTitle{position:absolute;z-index:20;top:48px;left:0;width:100%;text-align:center;font-size:clamp(22px,4vw,44px);font-weight:900;letter-spacing:3px;text-shadow:0 0 8px rgba(126,207,255,.7),0 3px 5px #000;pointer-events:none}
-#arena{position:absolute;top:95px;left:0;right:0;bottom:85px;overflow:hidden}
+    background:
+        radial-gradient(circle at 20% 25%,rgba(111,49,146,.40),transparent 28%),
+        radial-gradient(circle at 80% 35%,rgba(27,77,154,.40),transparent 30%),
+        radial-gradient(circle at 50% 85%,rgba(143,33,109,.22),transparent 30%),
+        linear-gradient(#060817,#11071d);
+}
 
-.alien{position:absolute;width:76px;height:64px;border:0;padding:0;background:transparent;cursor:crosshair;display:flex;align-items:center;justify-content:center;font-size:50px;filter:drop-shadow(0 0 8px rgba(116,255,152,.9));touch-action:manipulation;will-change:left,top,transform}
-.alien:hover{filter:drop-shadow(0 0 14px rgba(255,255,255,1))}
-.alien.fast{filter:drop-shadow(0 0 11px rgba(102,204,255,1))}
-.alien.heavy{font-size:58px;filter:drop-shadow(0 0 13px rgba(255,105,180,1))}
-.alien.boss{width:130px;height:100px;font-size:88px;filter:drop-shadow(0 0 20px rgba(255,80,80,1))}
+.star{
+    position:absolute;
+    border-radius:50%;
+    background:white;
+    pointer-events:none;
+}
 
-#bossHealthWrap{position:absolute;z-index:40;top:92px;left:50%;width:min(420px,70%);transform:translateX(-50%);display:none;text-align:center;font-size:12px;font-weight:900}
-#bossHealthBar{height:12px;margin-top:4px;border:1px solid white;border-radius:8px;overflow:hidden;background:rgba(0,0,0,.55)}
-#bossHealthFill{width:100%;height:100%;background:linear-gradient(90deg,#ff345f,#ff9a44)}
+/* ================= HUD ================= */
 
-#ship{position:absolute;z-index:30;bottom:8px;left:50%;transform:translateX(-50%);font-size:58px;filter:drop-shadow(0 0 12px rgba(95,186,255,.9));pointer-events:none}
+#topHUD{
+    position:absolute;
+    z-index:50;
+    top:0;
+    left:0;
+    width:100%;
 
-.laser{position:absolute;z-index:25;width:5px;border-radius:5px;pointer-events:none;background:#fff;box-shadow:0 0 5px #fff,0 0 10px #57c8ff,0 0 20px #57c8ff;transform-origin:bottom center;animation:laserFade .20s linear forwards}
-@keyframes laserFade{0%{opacity:1}100%{opacity:0}}
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
 
-/* REAL EXPLOSION */
-.explosionCore{position:absolute;z-index:42;width:18px;height:18px;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);background:#fff7a8;box-shadow:0 0 8px #fff,0 0 18px #ffd84a,0 0 35px #ff7a00,0 0 55px #ff2b00;animation:coreBlast .55s ease-out forwards}
+    padding:12px 16px;
+
+    font-weight:900;
+    font-size:clamp(12px,2vw,18px);
+
+    text-shadow:0 2px 5px #000;
+
+    background:
+        linear-gradient(to bottom,rgba(0,0,0,.72),transparent);
+}
+
+.hudBlock{
+    white-space:nowrap;
+}
+
+#soundButton{
+    border:1px solid rgba(255,255,255,.4);
+    border-radius:8px;
+    padding:6px 10px;
+
+    background:rgba(0,0,0,.35);
+    color:white;
+
+    cursor:pointer;
+}
+
+/* ================= TITLE ================= */
+
+#gameTitle{
+    position:absolute;
+    z-index:20;
+
+    top:48px;
+    left:0;
+
+    width:100%;
+
+    text-align:center;
+
+    font-size:clamp(22px,4vw,44px);
+    font-weight:900;
+    letter-spacing:3px;
+
+    text-shadow:
+        0 0 8px #62caff,
+        0 0 20px rgba(225,66,255,.55),
+        0 3px 5px #000;
+
+    pointer-events:none;
+}
+
+/* ================= ARENA ================= */
+
+#arena{
+    position:absolute;
+    top:95px;
+    left:0;
+    right:0;
+    bottom:105px;
+    overflow:hidden;
+}
+
+/* ================= CUSTOM ENEMIES ================= */
+
+.alien{
+    position:absolute;
+
+    border:0;
+    padding:0;
+
+    background:transparent;
+
+    cursor:crosshair;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    touch-action:manipulation;
+
+    will-change:left,top,transform;
+}
+
+.alien img{
+    width:100%;
+    height:100%;
+
+    object-fit:contain;
+
+    pointer-events:none;
+
+    filter:
+        drop-shadow(0 0 10px rgba(109,255,181,.75));
+}
+
+.alien.normal{
+    width:92px;
+    height:92px;
+}
+
+.alien.fast{
+    width:120px;
+    height:86px;
+}
+
+.alien.fast img{
+    filter:
+        drop-shadow(0 0 13px rgba(78,205,255,.9))
+        drop-shadow(0 0 7px rgba(255,60,221,.7));
+}
+
+.alien.heavy{
+    width:112px;
+    height:96px;
+}
+
+.alien.heavy img{
+    filter:
+        drop-shadow(0 0 14px rgba(255,58,113,.85));
+}
+
+.alien.boss{
+    width:220px;
+    height:180px;
+}
+
+.alien.boss img{
+    filter:
+        drop-shadow(0 0 20px rgba(173,68,255,.95))
+        drop-shadow(0 0 12px rgba(255,115,30,.75));
+}
+
+/* ================= BOSS HEALTH ================= */
+
+#bossHealthWrap{
+    position:absolute;
+    z-index:45;
+
+    top:92px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:min(430px,70%);
+
+    display:none;
+
+    text-align:center;
+    font-weight:900;
+    font-size:12px;
+}
+
+#bossHealthBar{
+    height:13px;
+    margin-top:5px;
+
+    border:1px solid white;
+    border-radius:10px;
+
+    overflow:hidden;
+
+    background:rgba(0,0,0,.6);
+}
+
+#bossHealthFill{
+    width:100%;
+    height:100%;
+
+    background:
+        linear-gradient(90deg,#ff315c,#ff8b36,#ffe259);
+}
+
+/* ================= BB SHIP ================= */
+
+#ship{
+    position:absolute;
+
+    z-index:32;
+
+    bottom:4px;
+    left:50%;
+
+    width:125px;
+    height:105px;
+
+    transform:translateX(-50%);
+
+    pointer-events:none;
+
+    animation:hoverShip 1.5s ease-in-out infinite alternate;
+}
+
+#ship img{
+    width:100%;
+    height:100%;
+
+    object-fit:contain;
+
+    filter:
+        drop-shadow(0 0 12px rgba(50,205,255,.85))
+        drop-shadow(0 0 10px rgba(255,40,220,.45));
+}
+
+@keyframes hoverShip{
+    from{
+        transform:translateX(-50%) translateY(1px);
+    }
+
+    to{
+        transform:translateX(-50%) translateY(-6px);
+    }
+}
+
+/* ================= LASER ================= */
+
+.laser{
+    position:absolute;
+
+    z-index:28;
+
+    width:5px;
+
+    border-radius:5px;
+
+    pointer-events:none;
+
+    background:white;
+
+    box-shadow:
+        0 0 5px white,
+        0 0 11px #54d8ff,
+        0 0 20px #d543ff;
+
+    transform-origin:bottom center;
+
+    animation:laserFade .2s linear forwards;
+}
+
+@keyframes laserFade{
+    from{opacity:1}
+    to{opacity:0}
+}
+
+/* ================= EXPLOSION ================= */
+
+.explosionCore{
+    position:absolute;
+
+    z-index:42;
+
+    width:18px;
+    height:18px;
+
+    border-radius:50%;
+
+    pointer-events:none;
+
+    transform:translate(-50%,-50%);
+
+    background:#fff7a8;
+
+    box-shadow:
+        0 0 8px white,
+        0 0 18px #ffd84a,
+        0 0 35px #ff7a00,
+        0 0 55px #ff2b00;
+
+    animation:coreBlast .55s ease-out forwards;
+}
+
 @keyframes coreBlast{
-0%{width:10px;height:10px;opacity:1}
-35%{width:75px;height:75px;opacity:1;background:#ffd84a}
-70%{width:105px;height:105px;opacity:.8;background:#ff6a00}
-100%{width:130px;height:130px;opacity:0;background:#651100}
+    0%{
+        width:10px;
+        height:10px;
+        opacity:1;
+    }
+
+    35%{
+        width:75px;
+        height:75px;
+        opacity:1;
+        background:#ffd84a;
+    }
+
+    70%{
+        width:105px;
+        height:105px;
+        opacity:.8;
+        background:#ff6a00;
+    }
+
+    100%{
+        width:130px;
+        height:130px;
+        opacity:0;
+        background:#651100;
+    }
 }
 
-.shockwave{position:absolute;z-index:41;width:15px;height:15px;border:4px solid rgba(255,215,80,.95);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);box-shadow:0 0 15px #ff7a00;animation:shock .6s ease-out forwards}
+.shockwave{
+    position:absolute;
+
+    z-index:41;
+
+    width:15px;
+    height:15px;
+
+    border:4px solid rgba(255,215,80,.95);
+    border-radius:50%;
+
+    pointer-events:none;
+
+    transform:translate(-50%,-50%);
+
+    box-shadow:0 0 15px #ff7a00;
+
+    animation:shock .6s ease-out forwards;
+}
+
 @keyframes shock{
-0%{width:15px;height:15px;opacity:1}
-100%{width:155px;height:155px;opacity:0;border-width:1px}
+    from{
+        width:15px;
+        height:15px;
+        opacity:1;
+    }
+
+    to{
+        width:155px;
+        height:155px;
+        opacity:0;
+        border-width:1px;
+    }
 }
 
-.spark{position:absolute;z-index:43;width:7px;height:7px;border-radius:50%;pointer-events:none;background:#ffe86b;box-shadow:0 0 8px #ff7a00;transform:translate(-50%,-50%);animation:sparkFly .55s ease-out forwards}
+.spark{
+    position:absolute;
+
+    z-index:43;
+
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    pointer-events:none;
+
+    background:#ffe86b;
+
+    box-shadow:0 0 8px #ff7a00;
+
+    transform:translate(-50%,-50%);
+
+    animation:sparkFly .55s ease-out forwards;
+}
+
 @keyframes sparkFly{
-0%{transform:translate(-50%,-50%) translate(0,0) scale(1);opacity:1}
-100%{transform:translate(-50%,-50%) translate(var(--dx),var(--dy)) scale(.15);opacity:0}
+    from{
+        transform:
+            translate(-50%,-50%)
+            translate(0,0)
+            scale(1);
+
+        opacity:1;
+    }
+
+    to{
+        transform:
+            translate(-50%,-50%)
+            translate(var(--dx),var(--dy))
+            scale(.15);
+
+        opacity:0;
+    }
 }
 
-.smoke{position:absolute;z-index:40;width:25px;height:25px;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);background:rgba(130,130,145,.55);filter:blur(5px);animation:smokeOut .9s ease-out forwards}
+.smoke{
+    position:absolute;
+
+    z-index:40;
+
+    width:25px;
+    height:25px;
+
+    border-radius:50%;
+
+    pointer-events:none;
+
+    transform:translate(-50%,-50%);
+
+    background:rgba(130,130,145,.55);
+
+    filter:blur(5px);
+
+    animation:smokeOut .9s ease-out forwards;
+}
+
 @keyframes smokeOut{
-0%{width:25px;height:25px;opacity:.65;transform:translate(-50%,-50%) translateY(0)}
-100%{width:100px;height:100px;opacity:0;transform:translate(-50%,-50%) translateY(-35px)}
+    from{
+        width:25px;
+        height:25px;
+
+        opacity:.65;
+
+        transform:
+            translate(-50%,-50%)
+            translateY(0);
+    }
+
+    to{
+        width:100px;
+        height:100px;
+
+        opacity:0;
+
+        transform:
+            translate(-50%,-50%)
+            translateY(-35px);
+    }
 }
 
-.points{position:absolute;z-index:50;font-size:22px;font-weight:900;pointer-events:none;transform:translate(-50%,-50%);text-shadow:0 2px 4px #000;animation:pointsFloat .8s ease-out forwards}
-@keyframes pointsFloat{from{opacity:1;transform:translate(-50%,-50%)}to{opacity:0;transform:translate(-50%,-140%)}}
+/* ================= POINTS ================= */
 
-#levelMessage{position:absolute;z-index:60;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;font-size:clamp(30px,7vw,72px);font-weight:900;text-shadow:0 4px 10px #000,0 0 15px rgba(255,255,255,.7);pointer-events:none;opacity:0}
-#flash{position:absolute;z-index:55;inset:0;background:#fff;opacity:0;pointer-events:none}
+.points{
+    position:absolute;
 
-#overlay{position:absolute;z-index:100;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(2,4,14,.90);text-align:center}
-.panel{width:min(520px,92%);padding:26px;border:1px solid rgba(255,255,255,.25);border-radius:20px;background:rgba(17,22,46,.96);box-shadow:0 0 30px rgba(72,131,255,.18)}
-.panel h1{margin:0;font-size:clamp(30px,6vw,56px)}
-.panel h2{margin:8px 0 14px;letter-spacing:2px}
-.panel p{color:#dce1f2;line-height:1.5}
-.instructions{margin:18px 0;padding:12px;border-radius:12px;background:rgba(255,255,255,.06);font-size:14px;line-height:1.5}
-.actionButton{min-width:160px;margin-top:8px;border:0;border-radius:12px;padding:14px 24px;background:#fff;color:#10131f;font-size:17px;font-weight:900;cursor:pointer}
+    z-index:50;
+
+    font-size:22px;
+    font-weight:900;
+
+    pointer-events:none;
+
+    transform:translate(-50%,-50%);
+
+    text-shadow:
+        0 2px 4px black,
+        0 0 8px #ffdd58;
+
+    animation:pointsFloat .8s ease-out forwards;
+}
+
+@keyframes pointsFloat{
+    from{
+        opacity:1;
+        transform:translate(-50%,-50%);
+    }
+
+    to{
+        opacity:0;
+        transform:translate(-50%,-140%);
+    }
+}
+
+/* ================= LEVEL MESSAGE ================= */
+
+#levelMessage{
+    position:absolute;
+
+    z-index:60;
+
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%,-50%);
+
+    text-align:center;
+
+    font-size:clamp(30px,7vw,72px);
+    font-weight:900;
+
+    text-shadow:
+        0 4px 10px black,
+        0 0 15px rgba(255,255,255,.7);
+
+    pointer-events:none;
+
+    opacity:0;
+}
+
+#flash{
+    position:absolute;
+
+    z-index:55;
+
+    inset:0;
+
+    background:white;
+
+    opacity:0;
+
+    pointer-events:none;
+}
+
+/* ================= START / GAME OVER ================= */
+
+#overlay{
+    position:absolute;
+
+    z-index:100;
+
+    inset:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    background:rgba(2,4,14,.92);
+
+    text-align:center;
+}
+
+.panel{
+    width:min(540px,92%);
+
+    padding:26px;
+
+    border:1px solid rgba(255,255,255,.25);
+    border-radius:20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(30,18,65,.98),
+            rgba(10,20,50,.98)
+        );
+
+    box-shadow:
+        0 0 35px rgba(83,128,255,.2),
+        0 0 55px rgba(211,60,255,.12);
+}
+
+.panel h1{
+    margin:0;
+
+    font-size:clamp(30px,6vw,56px);
+
+    text-shadow:
+        0 0 10px #54d8ff,
+        0 0 15px #d543ff;
+}
+
+.panel h2{
+    margin:8px 0 14px;
+
+    letter-spacing:2px;
+}
+
+.panel p{
+    color:#dce1f2;
+
+    line-height:1.5;
+}
+
+.instructions{
+    margin:18px 0;
+
+    padding:12px;
+
+    border-radius:12px;
+
+    background:rgba(255,255,255,.06);
+
+    font-size:14px;
+    line-height:1.6;
+}
+
+.actionButton{
+    min-width:170px;
+
+    margin-top:8px;
+
+    border:0;
+    border-radius:12px;
+
+    padding:14px 24px;
+
+    background:white;
+    color:#10131f;
+
+    font-size:17px;
+    font-weight:900;
+
+    cursor:pointer;
+}
+
+.actionButton:hover{
+    transform:scale(1.04);
+}
 
 @media(max-width:520px){
-#topHUD{padding:8px;font-size:11px}
-#gameTitle{top:40px}
-#arena{top:82px}
-.alien{width:68px;height:58px;font-size:46px}
-#ship{font-size:50px}
+
+    #topHUD{
+        padding:8px;
+        font-size:11px;
+    }
+
+    #gameTitle{
+        top:40px;
+    }
+
+    #arena{
+        top:82px;
+        bottom:90px;
+    }
+
+    .alien.normal{
+        width:75px;
+        height:75px;
+    }
+
+    .alien.fast{
+        width:100px;
+        height:72px;
+    }
+
+    .alien.heavy{
+        width:92px;
+        height:80px;
+    }
+
+    .alien.boss{
+        width:175px;
+        height:145px;
+    }
+
+    #ship{
+        width:105px;
+        height:90px;
+    }
 }
 </style>
 </head>
 
 <body>
+
 <div id="game">
 
-<div id="topHUD">
-<div class="hudBlock">SCORE <span id="score">0</span></div>
-<div class="hudBlock" id="levelDisplay">LEVEL <span id="level">1</span></div>
-<div class="hudBlock">TIME <span id="time">60</span></div>
-<div class="hudBlock">LIVES <span id="lives">❤️❤️❤️</span></div>
-<button id="soundButton" type="button">🔊</button>
+    <div id="topHUD">
+
+        <div class="hudBlock">
+            SCORE <span id="score">0</span>
+        </div>
+
+        <div class="hudBlock">
+            LEVEL <span id="level">1</span>
+        </div>
+
+        <div class="hudBlock">
+            TIME <span id="time">60</span>
+        </div>
+
+        <div class="hudBlock">
+            LIVES <span id="lives">❤️❤️❤️</span>
+        </div>
+
+        <button id="soundButton" type="button">
+            🔊
+        </button>
+
+    </div>
+
+
+    <div id="gameTitle">
+        BUMPBOY ALIEN SHOOTER
+    </div>
+
+
+    <div id="bossHealthWrap">
+
+        👑 BOSS HEALTH
+
+        <div id="bossHealthBar">
+            <div id="bossHealthFill"></div>
+        </div>
+
+    </div>
+
+
+    <div id="arena"></div>
+
+
+    <div id="ship">
+        <img src="ship.png" alt="BumpBoy Star Cruiser">
+    </div>
+
+
+    <div id="levelMessage"></div>
+
+    <div id="flash"></div>
+
+
+    <div id="overlay">
+
+        <div class="panel">
+
+            <h1>BUMPBOY</h1>
+
+            <h2>ALIEN SHOOTER</h2>
+
+            <p>
+                The invasion has begun.
+                Protect the BumpBoy universe!
+            </p>
+
+            <div class="instructions">
+
+                💚 LEVEL 1 ALIEN — 10 POINTS
+                <br>
+
+                🛸 LEVEL 2 UFO — 20 POINTS
+                <br>
+
+                🔥 LEVEL 3 HEAVY — 30 POINTS
+                <br><br>
+
+                ❤️ You have 3 lives.
+                <br>
+
+                Missing a shot costs a life.
+                <br><br>
+
+                Reach Level 4 and defeat the
+                <strong>ALIEN BOSS!</strong>
+
+            </div>
+
+            <button
+                class="actionButton"
+                id="startButton"
+                type="button">
+
+                START GAME
+
+            </button>
+
+        </div>
+
+    </div>
+
 </div>
 
-<div id="gameTitle">ALIEN SHOOTER</div>
-
-<div id="bossHealthWrap">
-BOSS
-<div id="bossHealthBar"><div id="bossHealthFill"></div></div>
-</div>
-
-<div id="arena"></div>
-<div id="ship">🚀</div>
-<div id="levelMessage"></div>
-<div id="flash"></div>
-
-<div id="overlay">
-<div class="panel">
-<h1>👾 BUMPBOY</h1>
-<h2>ALIEN SHOOTER V2.1</h2>
-<p>Protect BumpBoy from the alien invasion!</p>
-
-<div class="instructions">
-👾 Green Alien = 10 points<br>
-🛸 Fast UFO = 20 points<br>
-👽 Heavy Alien = 30 points<br><br>
-❤️ You have 3 lives.<br>
-Missing an enemy costs a life.<br><br>
-Reach Level 4 and defeat the <strong>ALIEN BOSS!</strong>
-</div>
-
-<button class="actionButton" id="startButton">START GAME</button>
-</div>
-</div>
-
-</div>
 
 <script>
 (function(){
 
-const game=document.getElementById("game");
-const arena=document.getElementById("arena");
-const scoreDisplay=document.getElementById("score");
-const levelDisplay=document.getElementById("level");
-const timeDisplay=document.getElementById("time");
-const livesDisplay=document.getElementById("lives");
-const overlay=document.getElementById("overlay");
-const flash=document.getElementById("flash");
-const levelMessage=document.getElementById("levelMessage");
-const soundButton=document.getElementById("soundButton");
-const bossHealthWrap=document.getElementById("bossHealthWrap");
-const bossHealthFill=document.getElementById("bossHealthFill");
+const game =
+    document.getElementById("game");
 
-let score=0;
-let lives=3;
-let timeLeft=60;
-let level=1;
-let playing=false;
-let muted=false;
-let enemy=null;
-let enemyTimer=null;
-let gameClock=null;
-let moveFrame=null;
-let bossHealth=0;
-let bossMaxHealth=0;
+const arena =
+    document.getElementById("arena");
 
-/* STARS */
-for(let i=0;i<90;i++){
-const star=document.createElement("div");
-star.className="star";
-const size=Math.random()*2.5+1;
-star.style.width=size+"px";
-star.style.height=size+"px";
-star.style.left=Math.random()*100+"%";
-star.style.top=Math.random()*100+"%";
-star.style.opacity=.2+Math.random()*.7;
-game.insertBefore(star,game.firstChild);
+const scoreDisplay =
+    document.getElementById("score");
+
+const levelDisplay =
+    document.getElementById("level");
+
+const timeDisplay =
+    document.getElementById("time");
+
+const livesDisplay =
+    document.getElementById("lives");
+
+const overlay =
+    document.getElementById("overlay");
+
+const flash =
+    document.getElementById("flash");
+
+const levelMessage =
+    document.getElementById("levelMessage");
+
+const soundButton =
+    document.getElementById("soundButton");
+
+const bossHealthWrap =
+    document.getElementById("bossHealthWrap");
+
+const bossHealthFill =
+    document.getElementById("bossHealthFill");
+
+
+let score = 0;
+let lives = 3;
+let timeLeft = 60;
+let level = 1;
+
+let playing = false;
+let muted = false;
+
+let enemy = null;
+let enemyTimer = null;
+let gameClock = null;
+let moveFrame = null;
+
+let bossHealth = 0;
+let bossMaxHealth = 0;
+
+
+/* ==========================================
+   STARS
+========================================== */
+
+for(let i=0;i<100;i++){
+
+    const star =
+        document.createElement("div");
+
+    star.className =
+        "star";
+
+    const size =
+        Math.random()*2.5+1;
+
+    star.style.width =
+        size+"px";
+
+    star.style.height =
+        size+"px";
+
+    star.style.left =
+        Math.random()*100+"%";
+
+    star.style.top =
+        Math.random()*100+"%";
+
+    star.style.opacity =
+        .2+Math.random()*.7;
+
+    game.insertBefore(
+        star,
+        game.firstChild
+    );
 }
 
-/* HUD */
+
+/* ==========================================
+   HUD
+========================================== */
+
 function updateHUD(){
-scoreDisplay.textContent=score;
-levelDisplay.textContent=level;
-timeDisplay.textContent=timeLeft;
-livesDisplay.textContent="❤️".repeat(Math.max(0,lives))+"♡".repeat(Math.max(0,3-lives));
+
+    scoreDisplay.textContent =
+        score;
+
+    levelDisplay.textContent =
+        level;
+
+    timeDisplay.textContent =
+        timeLeft;
+
+    livesDisplay.textContent =
+        "❤️".repeat(
+            Math.max(0,lives)
+        )
+        +
+        "♡".repeat(
+            Math.max(0,3-lives)
+        );
 }
 
-/* SOUND */
-function tone(frequency,duration,volume){
-if(muted)return;
-try{
-const AC=window.AudioContext||window.webkitAudioContext;
-const ctx=new AC();
-const osc=ctx.createOscillator();
-const gain=ctx.createGain();
-osc.frequency.value=frequency;
-osc.type="square";
-gain.gain.value=volume;
-osc.connect(gain);
-gain.connect(ctx.destination);
-osc.start();
-setTimeout(()=>{osc.stop();ctx.close();},duration);
-}catch(e){}
+
+/* ==========================================
+   SOUND
+========================================== */
+
+function tone(
+    frequency,
+    duration,
+    volume
+){
+
+    if(muted){
+        return;
+    }
+
+    try{
+
+        const AC =
+            window.AudioContext
+            ||
+            window.webkitAudioContext;
+
+        const ctx =
+            new AC();
+
+        const osc =
+            ctx.createOscillator();
+
+        const gain =
+            ctx.createGain();
+
+        osc.frequency.value =
+            frequency;
+
+        osc.type =
+            "square";
+
+        gain.gain.value =
+            volume;
+
+        osc.connect(gain);
+
+        gain.connect(
+            ctx.destination
+        );
+
+        osc.start();
+
+        setTimeout(
+            function(){
+
+                osc.stop();
+                ctx.close();
+
+            },
+            duration
+        );
+
+    }catch(e){}
 }
 
-soundButton.addEventListener("click",function(e){
-e.stopPropagation();
-muted=!muted;
-soundButton.textContent=muted?"🔇":"🔊";
-if(!muted)tone(500,70,.03);
-});
 
-/* ANNOUNCEMENT */
-function announce(text){
-levelMessage.textContent=text;
-levelMessage.style.opacity="1";
-setTimeout(()=>levelMessage.style.opacity="0",1100);
-}
-
-/* LASER */
-function createLaser(targetX,targetY){
-const shipRect=document.getElementById("ship").getBoundingClientRect();
-const gameRect=game.getBoundingClientRect();
-
-const startX=shipRect.left+shipRect.width/2-gameRect.left;
-const startY=shipRect.top-gameRect.top;
-
-const dx=targetX-startX;
-const dy=targetY-startY;
-const distance=Math.sqrt(dx*dx+dy*dy);
-const angle=Math.atan2(dy,dx)*180/Math.PI+90;
-
-const laser=document.createElement("div");
-laser.className="laser";
-laser.style.left=startX+"px";
-laser.style.top=(startY-distance)+"px";
-laser.style.height=distance+"px";
-laser.style.transform="rotate("+angle+"deg)";
-game.appendChild(laser);
-setTimeout(()=>laser.remove(),220);
-}
-
-/* REAL EXPLOSION */
-function explosion(x,y){
-
-const core=document.createElement("div");
-core.className="explosionCore";
-core.style.left=x+"px";
-core.style.top=y+"px";
-game.appendChild(core);
-
-const wave=document.createElement("div");
-wave.className="shockwave";
-wave.style.left=x+"px";
-wave.style.top=y+"px";
-game.appendChild(wave);
-
-for(let i=0;i<12;i++){
-const spark=document.createElement("div");
-spark.className="spark";
-spark.style.left=x+"px";
-spark.style.top=y+"px";
-
-const angle=Math.random()*Math.PI*2;
-const distance=35+Math.random()*75;
-
-spark.style.setProperty("--dx",(Math.cos(angle)*distance)+"px");
-spark.style.setProperty("--dy",(Math.sin(angle)*distance)+"px");
-
-game.appendChild(spark);
-setTimeout(()=>spark.remove(),650);
-}
-
-setTimeout(function(){
-const smoke=document.createElement("div");
-smoke.className="smoke";
-smoke.style.left=x+"px";
-smoke.style.top=y+"px";
-game.appendChild(smoke);
-setTimeout(()=>smoke.remove(),950);
-},130);
-
-setTimeout(()=>core.remove(),650);
-setTimeout(()=>wave.remove(),650);
-}
-
-/* POINTS */
-function showPoints(x,y,points){
-const p=document.createElement("div");
-p.className="points";
-p.textContent="+"+points;
-p.style.left=x+"px";
-p.style.top=y+"px";
-game.appendChild(p);
-setTimeout(()=>p.remove(),850);
-}
-
-/* CLEAR ENEMY */
-function clearEnemy(){
-if(enemy){
-enemy.remove();
-enemy=null;
-}
-if(enemyTimer){
-clearTimeout(enemyTimer);
-enemyTimer=null;
-}
-if(moveFrame){
-cancelAnimationFrame(moveFrame);
-moveFrame=null;
-}
-}
-
-/* LEVELS */
-function calculateLevel(){
-let newLevel=1;
-if(score>=80)newLevel=2;
-if(score>=180)newLevel=3;
-if(score>=320)newLevel=4;
-
-if(newLevel!==level){
-level=newLevel;
-updateHUD();
-announce(level===4?"👾 BOSS ROUND!":"LEVEL "+level);
-}
-}
-
-/* ENEMY TYPE */
-function chooseEnemy(){
-const r=Math.random();
-
-if(level===1)
-return {symbol:"👾",type:"normal",points:10,speed:65,life:4200};
-
-if(level===2){
-if(r<.65)return {symbol:"👾",type:"normal",points:10,speed:78,life:3800};
-return {symbol:"🛸",type:"fast",points:20,speed:135,life:3000};
-}
-
-if(level===3){
-if(r<.4)return {symbol:"👾",type:"normal",points:10,speed:92,life:3300};
-if(r<.75)return {symbol:"🛸",type:"fast",points:20,speed:155,life:2600};
-return {symbol:"👽",type:"heavy",points:30,speed:58,life:4200};
-}
-
-return {symbol:"👹",type:"boss",points:250,speed:72,life:15000};
-}
-
-/* MOVEMENT */
-function startMovement(alien,data,x,y,w,h){
-
-let px=x;
-let py=y;
-
-let angle=Math.random()*Math.PI*2;
-let vx=Math.cos(angle)*data.speed;
-let vy=Math.sin(angle)*data.speed;
-
-let last=performance.now();
-
-function move(now){
-
-if(!playing || enemy!==alien)return;
-
-const dt=Math.min((now-last)/1000,.05);
-last=now;
-
-px+=vx*dt;
-py+=vy*dt;
-
-/* Fast UFO changes direction more */
-if(data.type==="fast" && Math.random()<.025){
-const a=Math.random()*Math.PI*2;
-vx=Math.cos(a)*data.speed;
-vy=Math.sin(a)*data.speed;
-}
-
-/* Heavy alien gently drifts */
-if(data.type==="heavy"){
-py+=Math.sin(now/350)*.35;
-}
-
-/* Boss moves unpredictably */
-if(data.type==="boss" && Math.random()<.012){
-const a=Math.random()*Math.PI*2;
-vx=Math.cos(a)*data.speed;
-vy=Math.sin(a)*data.speed;
-}
-
-const maxX=Math.max(0,arena.clientWidth-w);
-const maxY=Math.max(0,arena.clientHeight-h);
-
-if(px<=0){
-px=0;
-vx=Math.abs(vx);
-}
-
-if(px>=maxX){
-px=maxX;
-vx=-Math.abs(vx);
-}
-
-if(py<=0){
-py=0;
-vy=Math.abs(vy);
-}
-
-if(py>=maxY){
-py=maxY;
-vy=-Math.abs(vy);
-}
-
-alien.style.left=px+"px";
-alien.style.top=py+"px";
-
-/* little flying tilt */
-alien.style.transform="rotate("+(vx/18)+"deg)";
-
-moveFrame=requestAnimationFrame(move);
-}
-
-moveFrame=requestAnimationFrame(move);
-}
-
-/* SPAWN */
-function spawnEnemy(){
-
-if(!playing)return;
-
-clearEnemy();
-calculateLevel();
-
-const data=chooseEnemy();
-
-const alien=document.createElement("button");
-alien.type="button";
-alien.className="alien "+data.type;
-alien.textContent=data.symbol;
-
-arena.appendChild(alien);
-
-const w=data.type==="boss"?130:76;
-const h=data.type==="boss"?100:64;
-
-const maxX=Math.max(0,arena.clientWidth-w);
-const maxY=Math.max(0,arena.clientHeight-h);
-
-const x=Math.random()*maxX;
-const y=Math.random()*maxY;
-
-alien.style.left=x+"px";
-alien.style.top=y+"px";
-
-enemy=alien;
-
-if(data.type==="boss"){
-bossMaxHealth=8;
-bossHealth=bossMaxHealth;
-bossHealthWrap.style.display="block";
-bossHealthFill.style.width="100%";
-}else{
-bossHealthWrap.style.display="none";
-}
-
-/* START REAL MOVEMENT */
-startMovement(alien,data,x,y,w,h);
-
-/* HIT */
-alien.addEventListener("click",function(e){
-
-e.stopPropagation();
-
-if(!playing)return;
-
-const ar=alien.getBoundingClientRect();
-const gr=game.getBoundingClientRect();
-
-const cx=ar.left-gr.left+ar.width/2;
-const cy=ar.top-gr.top+ar.height/2;
-
-createLaser(cx,cy);
-tone(750,70,.025);
-
-if(data.type==="boss"){
-
-bossHealth--;
-
-bossHealthFill.style.width=
-Math.max(0,bossHealth/bossMaxHealth*100)+"%";
-
-flash.style.opacity=".13";
-setTimeout(()=>flash.style.opacity="0",55);
-
-if(bossHealth>0){
-/* Boss gets a smaller impact burst every hit */
-explosion(cx,cy);
-return;
-}
-}
-
-score+=data.points;
-updateHUD();
-
-explosion(cx,cy);
-showPoints(cx,cy,data.points);
-tone(180,100,.04);
-
-calculateLevel();
-
-if(data.type==="boss"){
-bossHealthWrap.style.display="none";
-setTimeout(winGame,450);
-return;
-}
-
-setTimeout(spawnEnemy,250);
-});
-
-/* ESCAPE */
-enemyTimer=setTimeout(function(){
-
-if(!playing || enemy!==alien)return;
-
-lives--;
-updateHUD();
-tone(90,180,.04);
-
-if(lives<=0){
-endGame();
-}else{
-spawnEnemy();
-}
-
-},data.life);
-}
-
-/* MISSED SHOT */
-arena.addEventListener("click",function(e){
-
-if(!playing)return;
-
-const gr=game.getBoundingClientRect();
-
-createLaser(
-e.clientX-gr.left,
-e.clientY-gr.top
+soundButton.addEventListener(
+    "click",
+    function(e){
+
+        e.stopPropagation();
+
+        muted =
+            !muted;
+
+        soundButton.textContent =
+            muted
+            ?
+            "🔇"
+            :
+            "🔊";
+
+        if(!muted){
+
+            tone(
+                500,
+                70,
+                .03
+            );
+        }
+    }
 );
 
-lives--;
-updateHUD();
-tone(100,120,.03);
 
-if(lives<=0)endGame();
-});
+/* ==========================================
+   ANNOUNCEMENTS
+========================================== */
 
-/* START */
+function announce(text){
+
+    levelMessage.textContent =
+        text;
+
+    levelMessage.style.opacity =
+        "1";
+
+    setTimeout(
+        function(){
+
+            levelMessage.style.opacity =
+                "0";
+
+        },
+        1100
+    );
+}
+
+
+/* ==========================================
+   LASER
+========================================== */
+
+function createLaser(
+    targetX,
+    targetY
+){
+
+    const shipRect =
+        document
+        .getElementById("ship")
+        .getBoundingClientRect();
+
+    const gameRect =
+        game.getBoundingClientRect();
+
+    const startX =
+        shipRect.left
+        +
+        shipRect.width/2
+        -
+        gameRect.left;
+
+    const startY =
+        shipRect.top
+        -
+        gameRect.top;
+
+    const dx =
+        targetX-startX;
+
+    const dy =
+        targetY-startY;
+
+    const distance =
+        Math.sqrt(
+            dx*dx
+            +
+            dy*dy
+        );
+
+    const angle =
+        Math.atan2(
+            dy,
+            dx
+        )
+        *
+        180
+        /
+        Math.PI
+        +
+        90;
+
+    const laser =
+        document.createElement("div");
+
+    laser.className =
+        "laser";
+
+    laser.style.left =
+        startX+"px";
+
+    laser.style.top =
+        (startY-distance)+"px";
+
+    laser.style.height =
+        distance+"px";
+
+    laser.style.transform =
+        "rotate("+angle+"deg)";
+
+    game.appendChild(
+        laser
+    );
+
+    setTimeout(
+        function(){
+
+            laser.remove();
+
+        },
+        220
+    );
+}
+
+
+/* ==========================================
+   EXPLOSION
+========================================== */
+
+function explosion(x,y){
+
+    const core =
+        document.createElement("div");
+
+    core.className =
+        "explosionCore";
+
+    core.style.left =
+        x+"px";
+
+    core.style.top =
+        y+"px";
+
+    game.appendChild(core);
+
+
+    const wave =
+        document.createElement("div");
+
+    wave.className =
+        "shockwave";
+
+    wave.style.left =
+        x+"px";
+
+    wave.style.top =
+        y+"px";
+
+    game.appendChild(wave);
+
+
+    for(let i=0;i<12;i++){
+
+        const spark =
+            document.createElement("div");
+
+        spark.className =
+            "spark";
+
+        spark.style.left =
+            x+"px";
+
+        spark.style.top =
+            y+"px";
+
+        const angle =
+            Math.random()
+            *
+            Math.PI
+            *
+            2;
+
+        const distance =
+            35
+            +
+            Math.random()*75;
+
+        spark.style.setProperty(
+            "--dx",
+            Math.cos(angle)
+            *
+            distance
+            +
+            "px"
+        );
+
+        spark.style.setProperty(
+            "--dy",
+            Math.sin(angle)
+            *
+            distance
+            +
+            "px"
+        );
+
+        game.appendChild(
+            spark
+        );
+
+        setTimeout(
+            function(){
+
+                spark.remove();
+
+            },
+            650
+        );
+    }
+
+
+    setTimeout(
+        function(){
+
+            const smoke =
+                document.createElement("div");
+
+            smoke.className =
+                "smoke";
+
+            smoke.style.left =
+                x+"px";
+
+            smoke.style.top =
+                y+"px";
+
+            game.appendChild(
+                smoke
+            );
+
+            setTimeout(
+                function(){
+
+                    smoke.remove();
+
+                },
+                950
+            );
+
+        },
+        130
+    );
+
+
+    setTimeout(
+        function(){
+            core.remove();
+        },
+        650
+    );
+
+    setTimeout(
+        function(){
+            wave.remove();
+        },
+        650
+    );
+}
+
+
+/* ==========================================
+   POINT POPUP
+========================================== */
+
+function showPoints(
+    x,
+    y,
+    points
+){
+
+    const popup =
+        document.createElement("div");
+
+    popup.className =
+        "points";
+
+    popup.textContent =
+        "+"
+        +
+        points;
+
+    popup.style.left =
+        x+"px";
+
+    popup.style.top =
+        y+"px";
+
+    game.appendChild(
+        popup
+    );
+
+    setTimeout(
+        function(){
+
+            popup.remove();
+
+        },
+        850
+    );
+}
+
+
+/* ==========================================
+   CLEAR CURRENT ENEMY
+========================================== */
+
+function clearEnemy(){
+
+    if(enemy){
+
+        enemy.remove();
+
+        enemy =
+            null;
+    }
+
+    if(enemyTimer){
+
+        clearTimeout(
+            enemyTimer
+        );
+
+        enemyTimer =
+            null;
+    }
+
+    if(moveFrame){
+
+        cancelAnimationFrame(
+            moveFrame
+        );
+
+        moveFrame =
+            null;
+    }
+}
+
+
+/* ==========================================
+   LEVELS
+========================================== */
+
+function calculateLevel(){
+
+    let newLevel =
+        1;
+
+    if(score>=80){
+
+        newLevel =
+            2;
+    }
+
+    if(score>=180){
+
+        newLevel =
+            3;
+    }
+
+    if(score>=320){
+
+        newLevel =
+            4;
+    }
+
+
+    if(newLevel!==level){
+
+        level =
+            newLevel;
+
+        updateHUD();
+
+        if(level===4){
+
+            announce(
+                "👑 BOSS ROUND!"
+            );
+
+        }else{
+
+            announce(
+                "LEVEL "
+                +
+                level
+            );
+        }
+    }
+}
+
+
+/* ==========================================
+   ENEMY TYPES
+========================================== */
+
+function chooseEnemy(){
+
+    const r =
+        Math.random();
+
+
+    if(level===1){
+
+        return{
+            image:"alien1.png",
+            type:"normal",
+            points:10,
+            speed:65,
+            life:4200
+        };
+    }
+
+
+    if(level===2){
+
+        if(r<.65){
+
+            return{
+                image:"alien1.png",
+                type:"normal",
+                points:10,
+                speed:78,
+                life:3800
+            };
+
+        }else{
+
+            return{
+                image:"alien2.png",
+                type:"fast",
+                points:20,
+                speed:135,
+                life:3000
+            };
+        }
+    }
+
+
+    if(level===3){
+
+        if(r<.4){
+
+            return{
+                image:"alien1.png",
+                type:"normal",
+                points:10,
+                speed:92,
+                life:3300
+            };
+
+        }else if(r<.75){
+
+            return{
+                image:"alien2.png",
+                type:"fast",
+                points:20,
+                speed:155,
+                life:2600
+            };
+
+        }else{
+
+            return{
+                image:"alien3.png",
+                type:"heavy",
+                points:30,
+                speed:58,
+                life:4200
+            };
+        }
+    }
+
+
+    return{
+        image:"boss.png",
+        type:"boss",
+        points:250,
+        speed:72,
+        life:15000
+    };
+}
+
+
+/* ==========================================
+   MOVEMENT
+========================================== */
+
+function startMovement(
+    alien,
+    data,
+    x,
+    y,
+    w,
+    h
+){
+
+    let px =
+        x;
+
+    let py =
+        y;
+
+    let angle =
+        Math.random()
+        *
+        Math.PI
+        *
+        2;
+
+    let vx =
+        Math.cos(angle)
+        *
+        data.speed;
+
+    let vy =
+        Math.sin(angle)
+        *
+        data.speed;
+
+    let last =
+        performance.now();
+
+
+    function move(now){
+
+        if(
+            !playing
+            ||
+            enemy!==alien
+        ){
+            return;
+        }
+
+
+        const dt =
+            Math.min(
+                (now-last)/1000,
+                .05
+            );
+
+        last =
+            now;
+
+
+        px +=
+            vx*dt;
+
+        py +=
+            vy*dt;
+
+
+        if(
+            data.type==="fast"
+            &&
+            Math.random()<.025
+        ){
+
+            const a =
+                Math.random()
+                *
+                Math.PI
+                *
+                2;
+
+            vx =
+                Math.cos(a)
+                *
+                data.speed;
+
+            vy =
+                Math.sin(a)
+                *
+                data.speed;
+        }
+
+
+        if(
+            data.type==="heavy"
+        ){
+
+            py +=
+                Math.sin(now/350)
+                *
+                .35;
+        }
+
+
+        if(
+            data.type==="boss"
+            &&
+            Math.random()<.012
+        ){
+
+            const a =
+                Math.random()
+                *
+                Math.PI
+                *
+                2;
+
+            vx =
+                Math.cos(a)
+                *
+                data.speed;
+
+            vy =
+                Math.sin(a)
+                *
+                data.speed;
+        }
+
+
+        const maxX =
+            Math.max(
+                0,
+                arena.clientWidth-w
+            );
+
+        const maxY =
+            Math.max(
+                0,
+                arena.clientHeight-h
+            );
+
+
+        if(px<=0){
+
+            px=0;
+
+            vx=
+                Math.abs(vx);
+        }
+
+
+        if(px>=maxX){
+
+            px=maxX;
+
+            vx=
+                -Math.abs(vx);
+        }
+
+
+        if(py<=0){
+
+            py=0;
+
+            vy=
+                Math.abs(vy);
+        }
+
+
+        if(py>=maxY){
+
+            py=maxY;
+
+            vy=
+                -Math.abs(vy);
+        }
+
+
+        alien.style.left =
+            px+"px";
+
+        alien.style.top =
+            py+"px";
+
+
+        let tilt =
+            vx/20;
+
+        if(tilt>12){
+            tilt=12;
+        }
+
+        if(tilt<-12){
+            tilt=-12;
+        }
+
+        alien.style.transform =
+            "rotate("
+            +
+            tilt
+            +
+            "deg)";
+
+
+        moveFrame =
+            requestAnimationFrame(
+                move
+            );
+    }
+
+
+    moveFrame =
+        requestAnimationFrame(
+            move
+        );
+}
+
+
+/* ==========================================
+   SPAWN ENEMY
+========================================== */
+
+function spawnEnemy(){
+
+    if(!playing){
+        return;
+    }
+
+
+    clearEnemy();
+
+    calculateLevel();
+
+
+    const data =
+        chooseEnemy();
+
+
+    const alien =
+        document.createElement(
+            "button"
+        );
+
+    alien.type =
+        "button";
+
+    alien.className =
+        "alien "
+        +
+        data.type;
+
+
+    const image =
+        document.createElement(
+            "img"
+        );
+
+    image.src =
+        data.image;
+
+    image.alt =
+        "BumpBoy alien";
+
+
+    alien.appendChild(
+        image
+    );
+
+    arena.appendChild(
+        alien
+    );
+
+
+    let w =
+        92;
+
+    let h =
+        92;
+
+
+    if(data.type==="fast"){
+
+        w=120;
+        h=86;
+    }
+
+
+    if(data.type==="heavy"){
+
+        w=112;
+        h=96;
+    }
+
+
+    if(data.type==="boss"){
+
+        w=220;
+        h=180;
+    }
+
+
+    const maxX =
+        Math.max(
+            0,
+            arena.clientWidth-w
+        );
+
+    const maxY =
+        Math.max(
+            0,
+            arena.clientHeight-h
+        );
+
+
+    const x =
+        Math.random()
+        *
+        maxX;
+
+    const y =
+        Math.random()
+        *
+        maxY;
+
+
+    alien.style.left =
+        x+"px";
+
+    alien.style.top =
+        y+"px";
+
+
+    enemy =
+        alien;
+
+
+    if(data.type==="boss"){
+
+        bossMaxHealth =
+            8;
+
+        bossHealth =
+            bossMaxHealth;
+
+        bossHealthWrap.style.display =
+            "block";
+
+        bossHealthFill.style.width =
+            "100%";
+
+    }else{
+
+        bossHealthWrap.style.display =
+            "none";
+    }
+
+
+    startMovement(
+        alien,
+        data,
+        x,
+        y,
+        w,
+        h
+    );
+
+
+    /* ======================================
+       HIT ENEMY
+    ====================================== */
+
+    alien.addEventListener(
+        "click",
+        function(e){
+
+            e.stopPropagation();
+
+
+            if(!playing){
+                return;
+            }
+
+
+            const ar =
+                alien.getBoundingClientRect();
+
+            const gr =
+                game.getBoundingClientRect();
+
+
+            const cx =
+                ar.left
+                -
+                gr.left
+                +
+                ar.width/2;
+
+            const cy =
+                ar.top
+                -
+                gr.top
+                +
+                ar.height/2;
+
+
+            createLaser(
+                cx,
+                cy
+            );
+
+
+            tone(
+                750,
+                70,
+                .025
+            );
+
+
+            /* BOSS HIT */
+
+            if(
+                data.type==="boss"
+            ){
+
+                bossHealth--;
+
+
+                bossHealthFill.style.width =
+                    Math.max(
+                        0,
+                        bossHealth
+                        /
+                        bossMaxHealth
+                        *
+                        100
+                    )
+                    +
+                    "%";
+
+
+                flash.style.opacity =
+                    ".13";
+
+
+                setTimeout(
+                    function(){
+
+                        flash.style.opacity =
+                            "0";
+
+                    },
+                    55
+                );
+
+
+                if(bossHealth>0){
+
+                    explosion(
+                        cx,
+                        cy
+                    );
+
+                    return;
+                }
+            }
+
+
+            /* DESTROYED */
+
+            score +=
+                data.points;
+
+
+            updateHUD();
+
+
+            explosion(
+                cx,
+                cy
+            );
+
+
+            showPoints(
+                cx,
+                cy,
+                data.points
+            );
+
+
+            tone(
+                180,
+                100,
+                .04
+            );
+
+
+            calculateLevel();
+
+
+            if(
+                data.type==="boss"
+            ){
+
+                bossHealthWrap.style.display =
+                    "none";
+
+                setTimeout(
+                    winGame,
+                    450
+                );
+
+                return;
+            }
+
+
+            setTimeout(
+                spawnEnemy,
+                250
+            );
+        }
+    );
+
+
+    /* ======================================
+       ENEMY ESCAPES
+    ====================================== */
+
+    enemyTimer =
+        setTimeout(
+            function(){
+
+                if(
+                    !playing
+                    ||
+                    enemy!==alien
+                ){
+                    return;
+                }
+
+
+                lives--;
+
+
+                updateHUD();
+
+
+                tone(
+                    90,
+                    180,
+                    .04
+                );
+
+
+                if(lives<=0){
+
+                    endGame();
+
+                }else{
+
+                    spawnEnemy();
+                }
+
+            },
+            data.life
+        );
+}
+
+
+/* ==========================================
+   MISSED SHOT
+========================================== */
+
+arena.addEventListener(
+    "click",
+    function(e){
+
+        if(!playing){
+            return;
+        }
+
+
+        const gr =
+            game.getBoundingClientRect();
+
+
+        createLaser(
+            e.clientX-gr.left,
+            e.clientY-gr.top
+        );
+
+
+        lives--;
+
+
+        updateHUD();
+
+
+        tone(
+            100,
+            120,
+            .03
+        );
+
+
+        if(lives<=0){
+
+            endGame();
+        }
+    }
+);
+
+
+/* ==========================================
+   START GAME
+========================================== */
+
 function startGame(){
 
-score=0;
-lives=3;
-timeLeft=60;
-level=1;
-bossHealth=0;
-playing=true;
+    score =
+        0;
 
-overlay.style.display="none";
-bossHealthWrap.style.display="none";
+    lives =
+        3;
 
-updateHUD();
-announce("LEVEL 1");
-spawnEnemy();
+    timeLeft =
+        60;
 
-if(gameClock)clearInterval(gameClock);
+    level =
+        1;
 
-gameClock=setInterval(function(){
+    bossHealth =
+        0;
 
-if(!playing)return;
+    playing =
+        true;
 
-timeLeft--;
-updateHUD();
 
-if(timeLeft<=0)endGame();
+    overlay.style.display =
+        "none";
 
-},1000);
+    bossHealthWrap.style.display =
+        "none";
+
+
+    updateHUD();
+
+
+    announce(
+        "LEVEL 1"
+    );
+
+
+    spawnEnemy();
+
+
+    if(gameClock){
+
+        clearInterval(
+            gameClock
+        );
+    }
+
+
+    gameClock =
+        setInterval(
+            function(){
+
+                if(!playing){
+                    return;
+                }
+
+
+                timeLeft--;
+
+
+                updateHUD();
+
+
+                if(timeLeft<=0){
+
+                    endGame();
+                }
+
+            },
+            1000
+        );
 }
 
-/* GAME OVER */
+
+/* ==========================================
+   GAME OVER
+========================================== */
+
 function endGame(){
 
-if(!playing)return;
+    if(!playing){
+        return;
+    }
 
-playing=false;
-clearEnemy();
 
-bossHealthWrap.style.display="none";
+    playing =
+        false;
 
-if(gameClock){
-clearInterval(gameClock);
-gameClock=null;
+
+    clearEnemy();
+
+
+    bossHealthWrap.style.display =
+        "none";
+
+
+    if(gameClock){
+
+        clearInterval(
+            gameClock
+        );
+
+        gameClock =
+            null;
+    }
+
+
+    overlay.style.display =
+        "flex";
+
+
+    overlay.innerHTML =
+
+        '<div class="panel">'
+
+        +
+
+        '<h1>GAME OVER</h1>'
+
+        +
+
+        '<h2>FINAL SCORE: '
+        +
+        score
+        +
+        '</h2>'
+
+        +
+
+        '<p>You reached Level '
+        +
+        level
+        +
+        '.</p>'
+
+        +
+
+        '<button class="actionButton" id="playAgain" type="button">PLAY AGAIN</button>'
+
+        +
+
+        '</div>';
+
+
+    document
+        .getElementById(
+            "playAgain"
+        )
+        .addEventListener(
+            "click",
+            startGame
+        );
 }
 
-overlay.style.display="flex";
 
-overlay.innerHTML=
-'<div class="panel">'+
-'<h1>GAME OVER</h1>'+
-'<h2>FINAL SCORE: '+score+'</h2>'+
-'<p>You reached Level '+level+'.</p>'+
-'<button class="actionButton" id="playAgain">PLAY AGAIN</button>'+
-'</div>';
+/* ==========================================
+   WIN
+========================================== */
 
-document.getElementById("playAgain").addEventListener("click",startGame);
-}
-
-/* WIN */
 function winGame(){
 
-if(!playing)return;
+    if(!playing){
+        return;
+    }
 
-playing=false;
-clearEnemy();
 
-if(gameClock){
-clearInterval(gameClock);
-gameClock=null;
+    playing =
+        false;
+
+
+    clearEnemy();
+
+
+    if(gameClock){
+
+        clearInterval(
+            gameClock
+        );
+
+        gameClock =
+            null;
+    }
+
+
+    overlay.style.display =
+        "flex";
+
+
+    overlay.innerHTML =
+
+        '<div class="panel">'
+
+        +
+
+        '<h1>🏆 YOU WIN!</h1>'
+
+        +
+
+        '<h2>ALIEN INVASION DEFEATED</h2>'
+
+        +
+
+        '<p>Final Score: <strong>'
+        +
+        score
+        +
+        '</strong></p>'
+
+        +
+
+        '<p>The BumpBoy universe is safe!</p>'
+
+        +
+
+        '<button class="actionButton" id="playAgain" type="button">PLAY AGAIN</button>'
+
+        +
+
+        '</div>';
+
+
+    document
+        .getElementById(
+            "playAgain"
+        )
+        .addEventListener(
+            "click",
+            startGame
+        );
 }
 
-overlay.style.display="flex";
 
-overlay.innerHTML=
-'<div class="panel">'+
-'<h1>🏆 YOU WIN!</h1>'+
-'<h2>ALIEN INVASION DEFEATED</h2>'+
-'<p>Final Score: <strong>'+score+'</strong></p>'+
-'<p>BumpBoy is safe! 👶🏽🚀</p>'+
-'<button class="actionButton" id="playAgain">PLAY AGAIN</button>'+
-'</div>';
+/* ==========================================
+   START BUTTON
+========================================== */
 
-document.getElementById("playAgain").addEventListener("click",startGame);
-}
+document
+    .getElementById(
+        "startButton"
+    )
+    .addEventListener(
+        "click",
+        startGame
+    );
 
-document.getElementById("startButton").addEventListener("click",startGame);
 
 updateHUD();
 
 })();
 </script>
+
 </body>
 </html>
