@@ -2,14 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>BumpBoy Alien Shooter V3</title>
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,user-scalable=no">
+
+<title>BumpBoy Alien Shooter V3.1</title>
 
 <style>
+
 *{
     box-sizing:border-box;
-    -webkit-user-select:none;
     user-select:none;
+    -webkit-user-select:none;
 }
 
 html,body{
@@ -22,22 +25,46 @@ html,body{
     font-family:Arial,Helvetica,sans-serif;
 }
 
-button{font-family:inherit}
+button{
+    font-family:inherit;
+}
+
+/* =========================================================
+   MAIN GAME
+========================================================= */
 
 #game{
     position:relative;
     width:100vw;
     height:100vh;
-    min-height:420px;
     overflow:hidden;
     cursor:crosshair;
 
     background:
-        radial-gradient(circle at 20% 25%,rgba(111,49,146,.40),transparent 28%),
-        radial-gradient(circle at 80% 35%,rgba(27,77,154,.40),transparent 30%),
-        radial-gradient(circle at 50% 85%,rgba(143,33,109,.22),transparent 30%),
-        linear-gradient(#060817,#11071d);
+        radial-gradient(
+            circle at 20% 25%,
+            rgba(111,49,146,.40),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 80% 35%,
+            rgba(27,77,154,.40),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 50% 85%,
+            rgba(143,33,109,.22),
+            transparent 30%
+        ),
+        linear-gradient(
+            #060817,
+            #11071d
+        );
 }
+
+/* =========================================================
+   STARS
+========================================================= */
 
 .star{
     position:absolute;
@@ -46,29 +73,39 @@ button{font-family:inherit}
     pointer-events:none;
 }
 
-/* ================= HUD ================= */
+/* =========================================================
+   TOP HUD
+========================================================= */
 
 #topHUD{
     position:absolute;
-    z-index:50;
+    z-index:100;
+
     top:0;
     left:0;
+
     width:100%;
 
     display:flex;
     justify-content:space-between;
     align-items:center;
-    gap:8px;
 
-    padding:12px 16px;
+    gap:10px;
 
+    padding:15px 20px;
+
+    font-size:clamp(17px,2.4vw,26px);
     font-weight:900;
-    font-size:clamp(12px,2vw,18px);
 
-    text-shadow:0 2px 5px #000;
+    text-shadow:
+        0 2px 5px black;
 
     background:
-        linear-gradient(to bottom,rgba(0,0,0,.72),transparent);
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.80),
+            transparent
+        );
 }
 
 .hudBlock{
@@ -76,53 +113,65 @@ button{font-family:inherit}
 }
 
 #soundButton{
-    border:1px solid rgba(255,255,255,.4);
-    border-radius:8px;
-    padding:6px 10px;
+    border:1px solid rgba(255,255,255,.45);
+    border-radius:10px;
 
-    background:rgba(0,0,0,.35);
+    padding:8px 13px;
+
+    background:rgba(0,0,0,.45);
     color:white;
+
+    font-size:18px;
 
     cursor:pointer;
 }
 
-/* ================= TITLE ================= */
+/* =========================================================
+   GAME TITLE
+========================================================= */
 
 #gameTitle{
     position:absolute;
-    z-index:20;
+    z-index:30;
 
-    top:48px;
+    top:62px;
     left:0;
 
     width:100%;
 
     text-align:center;
 
-    font-size:clamp(22px,4vw,44px);
+    font-size:clamp(30px,5vw,58px);
     font-weight:900;
+
     letter-spacing:3px;
 
     text-shadow:
         0 0 8px #62caff,
         0 0 20px rgba(225,66,255,.55),
-        0 3px 5px #000;
+        0 3px 5px black;
 
     pointer-events:none;
 }
 
-/* ================= ARENA ================= */
+/* =========================================================
+   ARENA
+========================================================= */
 
 #arena{
     position:absolute;
-    top:95px;
+
+    top:125px;
     left:0;
     right:0;
-    bottom:105px;
+    bottom:130px;
+
     overflow:hidden;
 }
 
-/* ================= CUSTOM ENEMIES ================= */
+/* =========================================================
+   ALIENS
+========================================================= */
 
 .alien{
     position:absolute;
@@ -152,76 +201,107 @@ button{font-family:inherit}
     pointer-events:none;
 
     filter:
-        drop-shadow(0 0 10px rgba(109,255,181,.75));
+        drop-shadow(
+            0 0 12px
+            rgba(109,255,181,.80)
+        );
 }
+
+/* GREEN ALIEN */
 
 .alien.normal{
-    width:92px;
-    height:92px;
+    width:clamp(110px,13vw,160px);
+    height:clamp(110px,13vw,160px);
 }
 
+/* UFO */
+
 .alien.fast{
-    width:120px;
-    height:86px;
+    width:clamp(140px,16vw,195px);
+    height:clamp(100px,12vw,140px);
 }
 
 .alien.fast img{
     filter:
-        drop-shadow(0 0 13px rgba(78,205,255,.9))
-        drop-shadow(0 0 7px rgba(255,60,221,.7));
+        drop-shadow(
+            0 0 14px
+            rgba(78,205,255,.90)
+        )
+        drop-shadow(
+            0 0 8px
+            rgba(255,60,221,.75)
+        );
 }
 
+/* HEAVY ALIEN */
+
 .alien.heavy{
-    width:112px;
-    height:96px;
+    width:clamp(130px,15vw,180px);
+    height:clamp(110px,13vw,155px);
 }
 
 .alien.heavy img{
     filter:
-        drop-shadow(0 0 14px rgba(255,58,113,.85));
+        drop-shadow(
+            0 0 15px
+            rgba(255,58,113,.90)
+        );
 }
 
+/* BOSS */
+
 .alien.boss{
-    width:220px;
-    height:180px;
+    width:clamp(250px,28vw,350px);
+    height:clamp(205px,23vw,285px);
 }
 
 .alien.boss img{
     filter:
-        drop-shadow(0 0 20px rgba(173,68,255,.95))
-        drop-shadow(0 0 12px rgba(255,115,30,.75));
+        drop-shadow(
+            0 0 22px
+            rgba(173,68,255,.95)
+        )
+        drop-shadow(
+            0 0 14px
+            rgba(255,115,30,.80)
+        );
 }
 
-/* ================= BOSS HEALTH ================= */
+/* =========================================================
+   BOSS HEALTH
+========================================================= */
 
 #bossHealthWrap{
     position:absolute;
-    z-index:45;
 
-    top:92px;
+    z-index:80;
+
+    top:110px;
     left:50%;
 
     transform:translateX(-50%);
 
-    width:min(430px,70%);
+    width:min(520px,70%);
 
     display:none;
 
     text-align:center;
+
     font-weight:900;
-    font-size:12px;
+    font-size:16px;
 }
 
 #bossHealthBar{
-    height:13px;
-    margin-top:5px;
+    height:17px;
 
-    border:1px solid white;
-    border-radius:10px;
+    margin-top:6px;
+
+    border:2px solid white;
+    border-radius:12px;
 
     overflow:hidden;
 
-    background:rgba(0,0,0,.6);
+    background:rgba(0,0,0,.70);
 }
 
 #bossHealthFill{
@@ -229,27 +309,39 @@ button{font-family:inherit}
     height:100%;
 
     background:
-        linear-gradient(90deg,#ff315c,#ff8b36,#ffe259);
+        linear-gradient(
+            90deg,
+            #ff315c,
+            #ff8b36,
+            #ffe259
+        );
 }
 
-/* ================= BB SHIP ================= */
+/* =========================================================
+   SHIP
+========================================================= */
 
 #ship{
     position:absolute;
 
-    z-index:32;
+    z-index:40;
 
-    bottom:4px;
+    bottom:5px;
     left:50%;
 
-    width:125px;
-    height:105px;
+    width:clamp(150px,17vw,215px);
+    height:clamp(125px,14vw,175px);
 
     transform:translateX(-50%);
 
     pointer-events:none;
 
-    animation:hoverShip 1.5s ease-in-out infinite alternate;
+    animation:
+        hoverShip
+        1.5s
+        ease-in-out
+        infinite
+        alternate;
 }
 
 #ship img{
@@ -259,56 +351,82 @@ button{font-family:inherit}
     object-fit:contain;
 
     filter:
-        drop-shadow(0 0 12px rgba(50,205,255,.85))
-        drop-shadow(0 0 10px rgba(255,40,220,.45));
+        drop-shadow(
+            0 0 14px
+            rgba(50,205,255,.90)
+        )
+        drop-shadow(
+            0 0 11px
+            rgba(255,40,220,.50)
+        );
 }
 
 @keyframes hoverShip{
+
     from{
-        transform:translateX(-50%) translateY(1px);
+        transform:
+            translateX(-50%)
+            translateY(1px);
     }
 
     to{
-        transform:translateX(-50%) translateY(-6px);
+        transform:
+            translateX(-50%)
+            translateY(-7px);
     }
 }
 
-/* ================= LASER ================= */
+/* =========================================================
+   LASER
+========================================================= */
 
 .laser{
     position:absolute;
 
-    z-index:28;
+    z-index:50;
 
-    width:5px;
+    width:6px;
 
-    border-radius:5px;
+    border-radius:6px;
 
     pointer-events:none;
 
     background:white;
 
     box-shadow:
-        0 0 5px white,
-        0 0 11px #54d8ff,
-        0 0 20px #d543ff;
+        0 0 6px white,
+        0 0 13px #54d8ff,
+        0 0 22px #d543ff;
 
-    transform-origin:bottom center;
+    transform-origin:
+        bottom center;
 
-    animation:laserFade .2s linear forwards;
+    animation:
+        laserFade
+        .20s
+        linear
+        forwards;
 }
 
 @keyframes laserFade{
-    from{opacity:1}
-    to{opacity:0}
+
+    from{
+        opacity:1;
+    }
+
+    to{
+        opacity:0;
+    }
 }
 
-/* ================= EXPLOSION ================= */
+/* =========================================================
+   EXPLOSION
+========================================================= */
 
 .explosionCore{
     position:absolute;
 
-    z-index:42;
+    z-index:70;
 
     width:18px;
     height:18px;
@@ -317,7 +435,8 @@ button{font-family:inherit}
 
     pointer-events:none;
 
-    transform:translate(-50%,-50%);
+    transform:
+        translate(-50%,-50%);
 
     background:#fff7a8;
 
@@ -327,10 +446,15 @@ button{font-family:inherit}
         0 0 35px #ff7a00,
         0 0 55px #ff2b00;
 
-    animation:coreBlast .55s ease-out forwards;
+    animation:
+        coreBlast
+        .55s
+        ease-out
+        forwards;
 }
 
 @keyframes coreBlast{
+
     0%{
         width:10px;
         height:10px;
@@ -352,8 +476,8 @@ button{font-family:inherit}
     }
 
     100%{
-        width:130px;
-        height:130px;
+        width:135px;
+        height:135px;
         opacity:0;
         background:#651100;
     }
@@ -362,24 +486,35 @@ button{font-family:inherit}
 .shockwave{
     position:absolute;
 
-    z-index:41;
+    z-index:69;
 
     width:15px;
     height:15px;
 
-    border:4px solid rgba(255,215,80,.95);
+    border:
+        4px solid
+        rgba(255,215,80,.95);
+
     border-radius:50%;
 
     pointer-events:none;
 
-    transform:translate(-50%,-50%);
+    transform:
+        translate(-50%,-50%);
 
-    box-shadow:0 0 15px #ff7a00;
+    box-shadow:
+        0 0 15px
+        #ff7a00;
 
-    animation:shock .6s ease-out forwards;
+    animation:
+        shock
+        .6s
+        ease-out
+        forwards;
 }
 
 @keyframes shock{
+
     from{
         width:15px;
         height:15px;
@@ -387,8 +522,8 @@ button{font-family:inherit}
     }
 
     to{
-        width:155px;
-        height:155px;
+        width:160px;
+        height:160px;
         opacity:0;
         border-width:1px;
     }
@@ -397,7 +532,7 @@ button{font-family:inherit}
 .spark{
     position:absolute;
 
-    z-index:43;
+    z-index:71;
 
     width:7px;
     height:7px;
@@ -408,14 +543,22 @@ button{font-family:inherit}
 
     background:#ffe86b;
 
-    box-shadow:0 0 8px #ff7a00;
+    box-shadow:
+        0 0 8px
+        #ff7a00;
 
-    transform:translate(-50%,-50%);
+    transform:
+        translate(-50%,-50%);
 
-    animation:sparkFly .55s ease-out forwards;
+    animation:
+        sparkFly
+        .55s
+        ease-out
+        forwards;
 }
 
 @keyframes sparkFly{
+
     from{
         transform:
             translate(-50%,-50%)
@@ -428,7 +571,10 @@ button{font-family:inherit}
     to{
         transform:
             translate(-50%,-50%)
-            translate(var(--dx),var(--dy))
+            translate(
+                var(--dx),
+                var(--dy)
+            )
             scale(.15);
 
         opacity:0;
@@ -438,7 +584,7 @@ button{font-family:inherit}
 .smoke{
     position:absolute;
 
-    z-index:40;
+    z-index:68;
 
     width:25px;
     height:25px;
@@ -447,16 +593,23 @@ button{font-family:inherit}
 
     pointer-events:none;
 
-    transform:translate(-50%,-50%);
+    transform:
+        translate(-50%,-50%);
 
-    background:rgba(130,130,145,.55);
+    background:
+        rgba(130,130,145,.55);
 
     filter:blur(5px);
 
-    animation:smokeOut .9s ease-out forwards;
+    animation:
+        smokeOut
+        .9s
+        ease-out
+        forwards;
 }
 
 @keyframes smokeOut{
+
     from{
         width:25px;
         height:25px;
@@ -480,59 +633,77 @@ button{font-family:inherit}
     }
 }
 
-/* ================= POINTS ================= */
+/* =========================================================
+   POINTS
+========================================================= */
 
 .points{
     position:absolute;
 
-    z-index:50;
+    z-index:90;
 
-    font-size:22px;
+    font-size:28px;
     font-weight:900;
 
     pointer-events:none;
 
-    transform:translate(-50%,-50%);
+    transform:
+        translate(-50%,-50%);
 
     text-shadow:
         0 2px 4px black,
         0 0 8px #ffdd58;
 
-    animation:pointsFloat .8s ease-out forwards;
+    animation:
+        pointsFloat
+        .8s
+        ease-out
+        forwards;
 }
 
 @keyframes pointsFloat{
+
     from{
         opacity:1;
-        transform:translate(-50%,-50%);
+
+        transform:
+            translate(-50%,-50%);
     }
 
     to{
         opacity:0;
-        transform:translate(-50%,-140%);
+
+        transform:
+            translate(-50%,-140%);
     }
 }
 
-/* ================= LEVEL MESSAGE ================= */
+/* =========================================================
+   LEVEL MESSAGE
+========================================================= */
 
 #levelMessage{
     position:absolute;
 
-    z-index:60;
+    z-index:95;
 
     top:50%;
     left:50%;
 
-    transform:translate(-50%,-50%);
+    transform:
+        translate(-50%,-50%);
 
     text-align:center;
 
-    font-size:clamp(30px,7vw,72px);
+    font-size:
+        clamp(34px,7vw,78px);
+
     font-weight:900;
 
     text-shadow:
         0 4px 10px black,
-        0 0 15px rgba(255,255,255,.7);
+        0 0 15px
+        rgba(255,255,255,.7);
 
     pointer-events:none;
 
@@ -542,7 +713,7 @@ button{font-family:inherit}
 #flash{
     position:absolute;
 
-    z-index:55;
+    z-index:85;
 
     inset:0;
 
@@ -553,12 +724,14 @@ button{font-family:inherit}
     pointer-events:none;
 }
 
-/* ================= START / GAME OVER ================= */
+/* =========================================================
+   START / GAME OVER PANEL
+========================================================= */
 
 #overlay{
     position:absolute;
 
-    z-index:100;
+    z-index:200;
 
     inset:0;
 
@@ -568,18 +741,27 @@ button{font-family:inherit}
 
     padding:20px;
 
-    background:rgba(2,4,14,.92);
+    background:
+        rgba(2,4,14,.92);
 
     text-align:center;
 }
 
 .panel{
-    width:min(540px,92%);
+    width:min(760px,90%);
 
-    padding:26px;
+    max-height:90vh;
 
-    border:1px solid rgba(255,255,255,.25);
-    border-radius:20px;
+    overflow:auto;
+
+    padding:
+        clamp(28px,4vw,48px);
+
+    border:
+        1px solid
+        rgba(255,255,255,.25);
+
+    border-radius:24px;
 
     background:
         linear-gradient(
@@ -589,109 +771,145 @@ button{font-family:inherit}
         );
 
     box-shadow:
-        0 0 35px rgba(83,128,255,.2),
-        0 0 55px rgba(211,60,255,.12);
+        0 0 40px
+        rgba(83,128,255,.25),
+        0 0 60px
+        rgba(211,60,255,.15);
 }
 
 .panel h1{
     margin:0;
 
-    font-size:clamp(30px,6vw,56px);
+    font-size:
+        clamp(42px,7vw,76px);
 
     text-shadow:
         0 0 10px #54d8ff,
-        0 0 15px #d543ff;
+        0 0 16px #d543ff;
 }
 
 .panel h2{
-    margin:8px 0 14px;
+    margin:
+        10px 0 18px;
 
-    letter-spacing:2px;
+    letter-spacing:3px;
+
+    font-size:
+        clamp(24px,3vw,36px);
 }
 
 .panel p{
     color:#dce1f2;
 
     line-height:1.5;
+
+    font-size:
+        clamp(17px,2vw,23px);
 }
 
 .instructions{
-    margin:18px 0;
+    margin:
+        18px 0;
 
-    padding:12px;
+    padding:
+        14px;
 
-    border-radius:12px;
+    border-radius:
+        14px;
 
-    background:rgba(255,255,255,.06);
+    background:
+        rgba(255,255,255,.06);
 
-    font-size:14px;
-    line-height:1.6;
+    font-size:
+        clamp(17px,1.8vw,22px);
+
+    line-height:1.65;
 }
 
 .actionButton{
-    min-width:170px;
+    min-width:230px;
 
-    margin-top:8px;
+    margin-top:12px;
 
     border:0;
-    border-radius:12px;
+    border-radius:14px;
 
-    padding:14px 24px;
+    padding:
+        18px 32px;
 
     background:white;
     color:#10131f;
 
-    font-size:17px;
+    font-size:21px;
     font-weight:900;
 
     cursor:pointer;
 }
 
 .actionButton:hover{
-    transform:scale(1.04);
+    transform:
+        scale(1.04);
 }
 
-@media(max-width:520px){
+/* =========================================================
+   SHORT HUD SCREENS
+========================================================= */
+
+@media(max-height:650px){
 
     #topHUD{
-        padding:8px;
-        font-size:11px;
+        padding:9px 14px;
+
+        font-size:
+            clamp(14px,2.2vw,20px);
     }
 
     #gameTitle{
-        top:40px;
+        top:45px;
+
+        font-size:
+            clamp(26px,4.5vw,48px);
     }
 
     #arena{
-        top:82px;
-        bottom:90px;
+        top:100px;
+        bottom:105px;
     }
 
-    .alien.normal{
-        width:75px;
-        height:75px;
+    .panel{
+        width:min(720px,92%);
+
+        padding:22px 30px;
     }
 
-    .alien.fast{
-        width:100px;
-        height:72px;
+    .panel h1{
+        font-size:
+            clamp(36px,6vw,60px);
     }
 
-    .alien.heavy{
-        width:92px;
-        height:80px;
+    .panel h2{
+        margin:5px 0 9px;
     }
 
-    .alien.boss{
-        width:175px;
-        height:145px;
+    .panel p{
+        margin:8px 0;
     }
 
-    #ship{
-        width:105px;
-        height:90px;
+    .instructions{
+        margin:10px 0;
+
+        padding:9px 12px;
+
+        line-height:1.45;
+    }
+
+    .actionButton{
+        margin-top:5px;
+
+        padding:13px 28px;
     }
 }
+
 </style>
 </head>
 
@@ -702,22 +920,30 @@ button{font-family:inherit}
     <div id="topHUD">
 
         <div class="hudBlock">
-            SCORE <span id="score">0</span>
+            SCORE
+            <span id="score">0</span>
         </div>
 
         <div class="hudBlock">
-            LEVEL <span id="level">1</span>
+            LEVEL
+            <span id="level">1</span>
         </div>
 
         <div class="hudBlock">
-            TIME <span id="time">60</span>
+            TIME
+            <span id="time">60</span>
         </div>
 
         <div class="hudBlock">
-            LIVES <span id="lives">❤️❤️❤️</span>
+            LIVES
+            <span id="lives">
+                ❤️❤️❤️
+            </span>
         </div>
 
-        <button id="soundButton" type="button">
+        <button
+            id="soundButton"
+            type="button">
             🔊
         </button>
 
@@ -734,7 +960,8 @@ button{font-family:inherit}
         👑 BOSS HEALTH
 
         <div id="bossHealthBar">
-            <div id="bossHealthFill"></div>
+            <div id="bossHealthFill">
+            </div>
         </div>
 
     </div>
@@ -744,22 +971,32 @@ button{font-family:inherit}
 
 
     <div id="ship">
-        <img src="ship.png" alt="BumpBoy Star Cruiser">
+
+        <img
+            src="ship.png"
+            alt="BumpBoy Star Cruiser">
+
     </div>
 
 
-    <div id="levelMessage"></div>
+    <div id="levelMessage">
+    </div>
 
-    <div id="flash"></div>
+    <div id="flash">
+    </div>
 
 
     <div id="overlay">
 
         <div class="panel">
 
-            <h1>BUMPBOY</h1>
+            <h1>
+                BUMPBOY
+            </h1>
 
-            <h2>ALIEN SHOOTER</h2>
+            <h2>
+                ALIEN SHOOTER
+            </h2>
 
             <p>
                 The invasion has begun.
@@ -769,22 +1006,30 @@ button{font-family:inherit}
             <div class="instructions">
 
                 💚 LEVEL 1 ALIEN — 10 POINTS
+
                 <br>
 
                 🛸 LEVEL 2 UFO — 20 POINTS
+
                 <br>
 
                 🔥 LEVEL 3 HEAVY — 30 POINTS
+
                 <br><br>
 
                 ❤️ You have 3 lives.
+
                 <br>
 
                 Missing a shot costs a life.
+
                 <br><br>
 
                 Reach Level 4 and defeat the
-                <strong>ALIEN BOSS!</strong>
+
+                <strong>
+                    ALIEN BOSS!
+                </strong>
 
             </div>
 
@@ -805,7 +1050,12 @@ button{font-family:inherit}
 
 
 <script>
+
 (function(){
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
 
 const game =
     document.getElementById("game");
@@ -838,32 +1088,48 @@ const soundButton =
     document.getElementById("soundButton");
 
 const bossHealthWrap =
-    document.getElementById("bossHealthWrap");
+    document.getElementById(
+        "bossHealthWrap"
+    );
 
 const bossHealthFill =
-    document.getElementById("bossHealthFill");
+    document.getElementById(
+        "bossHealthFill"
+    );
 
+
+/* =========================================================
+   GAME VARIABLES
+========================================================= */
 
 let score = 0;
+
 let lives = 3;
+
 let timeLeft = 60;
+
 let level = 1;
 
 let playing = false;
+
 let muted = false;
 
 let enemy = null;
+
 let enemyTimer = null;
+
 let gameClock = null;
+
 let moveFrame = null;
 
 let bossHealth = 0;
+
 let bossMaxHealth = 0;
 
 
-/* ==========================================
+/* =========================================================
    STARS
-========================================== */
+========================================================= */
 
 for(let i=0;i<100;i++){
 
@@ -898,9 +1164,9 @@ for(let i=0;i<100;i++){
 }
 
 
-/* ==========================================
+/* =========================================================
    HUD
-========================================== */
+========================================================= */
 
 function updateHUD(){
 
@@ -924,9 +1190,9 @@ function updateHUD(){
 }
 
 
-/* ==========================================
+/* =========================================================
    SOUND
-========================================== */
+========================================================= */
 
 function tone(
     frequency,
@@ -975,6 +1241,7 @@ function tone(
             function(){
 
                 osc.stop();
+
                 ctx.close();
 
             },
@@ -1013,9 +1280,9 @@ soundButton.addEventListener(
 );
 
 
-/* ==========================================
-   ANNOUNCEMENTS
-========================================== */
+/* =========================================================
+   ANNOUNCEMENT
+========================================================= */
 
 function announce(text){
 
@@ -1037,9 +1304,9 @@ function announce(text){
 }
 
 
-/* ==========================================
+/* =========================================================
    LASER
-========================================== */
+========================================================= */
 
 function createLaser(
     targetX,
@@ -1124,9 +1391,9 @@ function createLaser(
 }
 
 
-/* ==========================================
+/* =========================================================
    EXPLOSION
-========================================== */
+========================================================= */
 
 function explosion(x,y){
 
@@ -1254,23 +1521,27 @@ function explosion(x,y){
 
     setTimeout(
         function(){
+
             core.remove();
+
         },
         650
     );
 
     setTimeout(
         function(){
+
             wave.remove();
+
         },
         650
     );
 }
 
 
-/* ==========================================
+/* =========================================================
    POINT POPUP
-========================================== */
+========================================================= */
 
 function showPoints(
     x,
@@ -1310,9 +1581,9 @@ function showPoints(
 }
 
 
-/* ==========================================
-   CLEAR CURRENT ENEMY
-========================================== */
+/* =========================================================
+   CLEAR ENEMY
+========================================================= */
 
 function clearEnemy(){
 
@@ -1346,9 +1617,9 @@ function clearEnemy(){
 }
 
 
-/* ==========================================
-   LEVELS
-========================================== */
+/* =========================================================
+   LEVEL SYSTEM
+========================================================= */
 
 function calculateLevel(){
 
@@ -1399,9 +1670,9 @@ function calculateLevel(){
 }
 
 
-/* ==========================================
+/* =========================================================
    ENEMY TYPES
-========================================== */
+========================================================= */
 
 function chooseEnemy(){
 
@@ -1412,10 +1683,15 @@ function chooseEnemy(){
     if(level===1){
 
         return{
+
             image:"alien1.png",
+
             type:"normal",
+
             points:10,
+
             speed:65,
+
             life:4200
         };
     }
@@ -1426,20 +1702,30 @@ function chooseEnemy(){
         if(r<.65){
 
             return{
+
                 image:"alien1.png",
+
                 type:"normal",
+
                 points:10,
+
                 speed:78,
+
                 life:3800
             };
 
         }else{
 
             return{
+
                 image:"alien2.png",
+
                 type:"fast",
+
                 points:20,
+
                 speed:135,
+
                 life:3000
             };
         }
@@ -1451,30 +1737,45 @@ function chooseEnemy(){
         if(r<.4){
 
             return{
+
                 image:"alien1.png",
+
                 type:"normal",
+
                 points:10,
+
                 speed:92,
+
                 life:3300
             };
 
         }else if(r<.75){
 
             return{
+
                 image:"alien2.png",
+
                 type:"fast",
+
                 points:20,
+
                 speed:155,
+
                 life:2600
             };
 
         }else{
 
             return{
+
                 image:"alien3.png",
+
                 type:"heavy",
+
                 points:30,
+
                 speed:58,
+
                 life:4200
             };
         }
@@ -1482,26 +1783,29 @@ function chooseEnemy(){
 
 
     return{
+
         image:"boss.png",
+
         type:"boss",
+
         points:250,
+
         speed:72,
+
         life:15000
     };
 }
 
 
-/* ==========================================
-   MOVEMENT
-========================================== */
+/* =========================================================
+   ENEMY MOVEMENT
+========================================================= */
 
 function startMovement(
     alien,
     data,
     x,
-    y,
-    w,
-    h
+    y
 ){
 
     let px =
@@ -1620,6 +1924,13 @@ function startMovement(
         }
 
 
+        const w =
+            alien.offsetWidth;
+
+        const h =
+            alien.offsetHeight;
+
+
         const maxX =
             Math.max(
                 0,
@@ -1637,7 +1948,7 @@ function startMovement(
 
             px=0;
 
-            vx=
+            vx =
                 Math.abs(vx);
         }
 
@@ -1646,7 +1957,7 @@ function startMovement(
 
             px=maxX;
 
-            vx=
+            vx =
                 -Math.abs(vx);
         }
 
@@ -1655,7 +1966,7 @@ function startMovement(
 
             py=0;
 
-            vy=
+            vy =
                 Math.abs(vy);
         }
 
@@ -1664,7 +1975,7 @@ function startMovement(
 
             py=maxY;
 
-            vy=
+            vy =
                 -Math.abs(vy);
         }
 
@@ -1680,12 +1991,15 @@ function startMovement(
             vx/20;
 
         if(tilt>12){
+
             tilt=12;
         }
 
         if(tilt<-12){
+
             tilt=-12;
         }
+
 
         alien.style.transform =
             "rotate("
@@ -1709,13 +2023,14 @@ function startMovement(
 }
 
 
-/* ==========================================
+/* =========================================================
    SPAWN ENEMY
-========================================== */
+========================================================= */
 
 function spawnEnemy(){
 
     if(!playing){
+
         return;
     }
 
@@ -1752,7 +2067,7 @@ function spawnEnemy(){
         data.image;
 
     image.alt =
-        "BumpBoy alien";
+        "BumpBoy Alien";
 
 
     alien.appendChild(
@@ -1764,32 +2079,11 @@ function spawnEnemy(){
     );
 
 
-    let w =
-        92;
+    const w =
+        alien.offsetWidth;
 
-    let h =
-        92;
-
-
-    if(data.type==="fast"){
-
-        w=120;
-        h=86;
-    }
-
-
-    if(data.type==="heavy"){
-
-        w=112;
-        h=96;
-    }
-
-
-    if(data.type==="boss"){
-
-        w=220;
-        h=180;
-    }
+    const h =
+        alien.offsetHeight;
 
 
     const maxX =
@@ -1852,15 +2146,13 @@ function spawnEnemy(){
         alien,
         data,
         x,
-        y,
-        w,
-        h
+        y
     );
 
 
-    /* ======================================
-       HIT ENEMY
-    ====================================== */
+    /* =====================================================
+       HIT ALIEN
+    ===================================================== */
 
     alien.addEventListener(
         "click",
@@ -1870,6 +2162,7 @@ function spawnEnemy(){
 
 
             if(!playing){
+
                 return;
             }
 
@@ -2014,9 +2307,9 @@ function spawnEnemy(){
     );
 
 
-    /* ======================================
+    /* =====================================================
        ENEMY ESCAPES
-    ====================================== */
+    ===================================================== */
 
     enemyTimer =
         setTimeout(
@@ -2027,6 +2320,7 @@ function spawnEnemy(){
                     ||
                     enemy!==alien
                 ){
+
                     return;
                 }
 
@@ -2059,15 +2353,16 @@ function spawnEnemy(){
 }
 
 
-/* ==========================================
+/* =========================================================
    MISSED SHOT
-========================================== */
+========================================================= */
 
 arena.addEventListener(
     "click",
     function(e){
 
         if(!playing){
+
             return;
         }
 
@@ -2103,9 +2398,9 @@ arena.addEventListener(
 );
 
 
-/* ==========================================
+/* =========================================================
    START GAME
-========================================== */
+========================================================= */
 
 function startGame(){
 
@@ -2159,6 +2454,7 @@ function startGame(){
             function(){
 
                 if(!playing){
+
                     return;
                 }
 
@@ -2180,13 +2476,14 @@ function startGame(){
 }
 
 
-/* ==========================================
+/* =========================================================
    GAME OVER
-========================================== */
+========================================================= */
 
 function endGame(){
 
     if(!playing){
+
         return;
     }
 
@@ -2261,13 +2558,14 @@ function endGame(){
 }
 
 
-/* ==========================================
-   WIN
-========================================== */
+/* =========================================================
+   WIN GAME
+========================================================= */
 
 function winGame(){
 
     if(!playing){
+
         return;
     }
 
@@ -2277,6 +2575,10 @@ function winGame(){
 
 
     clearEnemy();
+
+
+    bossHealthWrap.style.display =
+        "none";
 
 
     if(gameClock){
@@ -2338,9 +2640,9 @@ function winGame(){
 }
 
 
-/* ==========================================
+/* =========================================================
    START BUTTON
-========================================== */
+========================================================= */
 
 document
     .getElementById(
@@ -2355,6 +2657,7 @@ document
 updateHUD();
 
 })();
+
 </script>
 
 </body>
