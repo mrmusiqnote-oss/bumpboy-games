@@ -1,0 +1,3894 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,user-scalable=no">
+
+<title>
+    BumpBoy Alien Shooter V4
+</title>
+
+<style>
+
+/* =========================================================
+   BUMPBOY ALIEN SHOOTER V4
+   STAGE 1
+========================================================= */
+
+*{
+    box-sizing:border-box;
+    user-select:none;
+    -webkit-user-select:none;
+}
+
+html,
+body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+
+    background:#050714;
+    color:white;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+}
+
+button{
+    font-family:inherit;
+}
+
+/* =========================================================
+   MAIN GAME
+========================================================= */
+
+#game{
+    position:relative;
+
+    width:100vw;
+    height:100vh;
+
+    overflow:hidden;
+
+    background:
+        radial-gradient(
+            circle at 20% 25%,
+            rgba(111,49,146,.40),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 80% 35%,
+            rgba(27,77,154,.40),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 50% 85%,
+            rgba(143,33,109,.22),
+            transparent 30%
+        ),
+
+        linear-gradient(
+            #060817,
+            #11071d
+        );
+}
+
+/* =========================================================
+   STARS
+========================================================= */
+
+.star{
+    position:absolute;
+
+    border-radius:50%;
+
+    background:white;
+
+    pointer-events:none;
+}
+
+/* =========================================================
+   TOP HUD
+========================================================= */
+
+#topHUD{
+    position:absolute;
+
+    z-index:200;
+
+    top:0;
+    left:0;
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:
+        space-between;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:
+        12px 16px;
+
+    font-size:
+        clamp(
+            14px,
+            2vw,
+            23px
+        );
+
+    font-weight:900;
+
+    text-shadow:
+        0 2px 5px black;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.88),
+            rgba(0,0,0,.20),
+            transparent
+        );
+}
+
+.hudBlock{
+    white-space:nowrap;
+}
+
+#soundButton{
+    min-height:40px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.45);
+
+    border-radius:10px;
+
+    padding:
+        6px 10px;
+
+    background:
+        rgba(0,0,0,.55);
+
+    color:white;
+
+    font-size:
+        clamp(
+            12px,
+            1.6vw,
+            17px
+        );
+
+    font-weight:900;
+
+    cursor:pointer;
+}
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+#gameTitle{
+    position:absolute;
+
+    z-index:30;
+
+    top:57px;
+    left:0;
+
+    width:100%;
+
+    text-align:center;
+
+    font-size:
+        clamp(
+            23px,
+            4vw,
+            45px
+        );
+
+    font-weight:900;
+
+    letter-spacing:2px;
+
+    text-shadow:
+        0 0 8px #62caff,
+        0 0 20px rgba(225,66,255,.55),
+        0 3px 5px black;
+
+    pointer-events:none;
+}
+
+/* =========================================================
+   EXIT GAME
+========================================================= */
+
+#exitGameButton{
+    position:absolute;
+
+    z-index:220;
+
+    top:68px;
+    right:14px;
+
+    min-height:40px;
+
+    padding:
+        7px 12px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.55);
+
+    border-radius:10px;
+
+    background:
+        rgba(0,0,0,.76);
+
+    color:white;
+
+    font-size:
+        clamp(
+            11px,
+            1.5vw,
+            16px
+        );
+
+    font-weight:900;
+
+    cursor:pointer;
+}
+
+/* =========================================================
+   GAME ARENA
+========================================================= */
+
+#arena{
+    position:absolute;
+
+    top:110px;
+    left:0;
+    right:0;
+    bottom:120px;
+
+    overflow:hidden;
+}
+
+/* =========================================================
+   ENEMY FORMATION
+========================================================= */
+
+#enemyLayer{
+    position:absolute;
+
+    inset:0;
+
+    pointer-events:none;
+}
+
+.enemy{
+    position:absolute;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    pointer-events:none;
+
+    will-change:
+        left,
+        top,
+        transform;
+}
+
+.enemy img{
+    display:block;
+
+    width:100%;
+    height:100%;
+
+    object-fit:contain;
+
+    pointer-events:none;
+}
+
+/* GREEN ALIEN */
+
+.enemy.normal{
+    width:
+        clamp(
+            55px,
+            7vw,
+            92px
+        );
+
+    height:
+        clamp(
+            55px,
+            7vw,
+            92px
+        );
+}
+
+.enemy.normal img{
+    filter:
+        drop-shadow(
+            0 0 8px
+            rgba(109,255,181,.80)
+        );
+}
+
+/* FAST UFO */
+
+.enemy.fast{
+    width:
+        clamp(
+            75px,
+            9vw,
+            115px
+        );
+
+    height:
+        clamp(
+            52px,
+            6.5vw,
+            82px
+        );
+}
+
+.enemy.fast img{
+    filter:
+        drop-shadow(
+            0 0 10px
+            rgba(78,205,255,.90)
+        )
+
+        drop-shadow(
+            0 0 6px
+            rgba(255,60,221,.75)
+        );
+}
+
+/* HEAVY ALIEN */
+
+.enemy.heavy{
+    width:
+        clamp(
+            68px,
+            8vw,
+            105px
+        );
+
+    height:
+        clamp(
+            62px,
+            7.5vw,
+            98px
+        );
+}
+
+.enemy.heavy img{
+    filter:
+        drop-shadow(
+            0 0 11px
+            rgba(255,58,113,.90)
+        );
+}
+
+/* =========================================================
+   PLAYER SHIP
+========================================================= */
+
+#ship{
+    position:absolute;
+
+    z-index:80;
+
+    left:50%;
+    bottom:6px;
+
+    width:
+        clamp(
+            95px,
+            12vw,
+            150px
+        );
+
+    height:
+        clamp(
+            75px,
+            9vw,
+            115px
+        );
+
+    transform:
+        translateX(-50%);
+
+    pointer-events:none;
+
+    will-change:left;
+}
+
+#ship img{
+    width:100%;
+    height:100%;
+
+    object-fit:contain;
+
+    filter:
+        drop-shadow(
+            0 0 12px
+            rgba(50,205,255,.90)
+        )
+
+        drop-shadow(
+            0 0 8px
+            rgba(255,40,220,.50)
+        );
+}
+
+/* =========================================================
+   PLAYER LASERS
+========================================================= */
+
+.playerLaser{
+    position:absolute;
+
+    z-index:70;
+
+    width:6px;
+    height:28px;
+
+    border-radius:6px;
+
+    background:white;
+
+    box-shadow:
+        0 0 6px white,
+        0 0 12px #54d8ff,
+        0 0 20px #d543ff;
+
+    pointer-events:none;
+}
+
+/* =========================================================
+   ENEMY LASERS
+========================================================= */
+
+.enemyLaser{
+    position:absolute;
+
+    z-index:65;
+
+    width:7px;
+    height:24px;
+
+    border-radius:6px;
+
+    background:#ff5a75;
+
+    box-shadow:
+        0 0 6px #ff5a75,
+        0 0 15px #ff273f;
+
+    pointer-events:none;
+}
+
+/* =========================================================
+   EXPLOSION
+========================================================= */
+
+.explosion{
+    position:absolute;
+
+    z-index:100;
+
+    width:18px;
+    height:18px;
+
+    border-radius:50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    pointer-events:none;
+
+    background:#fff6a0;
+
+    box-shadow:
+        0 0 8px white,
+        0 0 18px #ffd84a,
+        0 0 35px #ff7a00,
+        0 0 55px #ff2b00;
+
+    animation:
+        explode
+        .45s
+        ease-out
+        forwards;
+}
+
+@keyframes explode{
+
+    0%{
+        width:15px;
+        height:15px;
+        opacity:1;
+    }
+
+    55%{
+        width:75px;
+        height:75px;
+        opacity:1;
+    }
+
+    100%{
+        width:110px;
+        height:110px;
+        opacity:0;
+    }
+}
+
+/* =========================================================
+   LEVEL MESSAGE
+========================================================= */
+
+#levelMessage{
+    position:absolute;
+
+    z-index:180;
+
+    top:48%;
+    left:50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    width:90%;
+
+    text-align:center;
+
+    font-size:
+        clamp(
+            34px,
+            7vw,
+            75px
+        );
+
+    font-weight:900;
+
+    text-shadow:
+        0 4px 10px black,
+        0 0 18px
+        rgba(255,255,255,.75);
+
+    pointer-events:none;
+
+    opacity:0;
+}
+
+/* =========================================================
+   BOTTOM CONTROLS
+========================================================= */
+
+#controls{
+    position:absolute;
+
+    z-index:210;
+
+    left:0;
+    bottom:0;
+
+    width:100%;
+
+    height:110px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:
+        clamp(
+            12px,
+            4vw,
+            40px
+        );
+
+    padding:
+        10px 15px;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(0,0,0,.92),
+            rgba(0,0,0,.55),
+            transparent
+        );
+}
+
+.controlButton{
+    min-width:
+        clamp(
+            80px,
+            15vw,
+            150px
+        );
+
+    min-height:62px;
+
+    border:
+        2px solid
+        rgba(255,255,255,.50);
+
+    border-radius:15px;
+
+    background:
+        rgba(17,23,48,.90);
+
+    color:white;
+
+    font-size:
+        clamp(
+            18px,
+            3vw,
+            29px
+        );
+
+    font-weight:900;
+
+    cursor:pointer;
+
+    touch-action:none;
+
+    box-shadow:
+        inset 0 0 12px
+        rgba(255,255,255,.05);
+}
+
+.controlButton:active{
+    transform:
+        scale(.96);
+}
+
+#fireButton{
+    background:
+        linear-gradient(
+            135deg,
+            #8b275d,
+            #702ea8
+        );
+
+    min-width:
+        clamp(
+            105px,
+            19vw,
+            190px
+        );
+}
+
+/* =========================================================
+   START / GAME OVER OVERLAY
+========================================================= */
+
+#overlay{
+    position:absolute;
+
+    z-index:300;
+
+    inset:0;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    background:
+        rgba(2,4,14,.94);
+
+    text-align:center;
+}
+
+.panel{
+    width:
+        min(
+            700px,
+            92%
+        );
+
+    padding:
+        clamp(
+            25px,
+            4vw,
+            45px
+        );
+
+    border:
+        2px solid
+        rgba(255,255,255,.28);
+
+    border-radius:24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(30,17,55,.98),
+            rgba(8,15,38,.98)
+        );
+}
+
+.panel h1{
+    margin:
+        0 0 10px;
+
+    font-size:
+        clamp(
+            35px,
+            6vw,
+            70px
+        );
+
+    letter-spacing:3px;
+
+    text-shadow:
+        0 0 10px #55cfff,
+        0 0 22px #d747ff;
+}
+
+.panel h2{
+    margin:
+        8px 0 18px;
+
+    font-size:
+        clamp(
+            22px,
+            3.5vw,
+            36px
+        );
+}
+
+.panel p{
+    margin:
+        10px auto;
+
+    max-width:580px;
+
+    line-height:1.45;
+
+    font-size:
+        clamp(
+            15px,
+            2vw,
+            20px
+        );
+
+    color:#e7e7ff;
+}
+
+.mainButton{
+    margin-top:22px;
+
+    min-width:190px;
+    min-height:58px;
+
+    padding:
+        13px 28px;
+
+    border:0;
+
+    border-radius:15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #48caff,
+            #b24cff,
+            #ff4cbd
+        );
+
+    color:white;
+
+    font-size:
+        clamp(
+            19px,
+            2.5vw,
+            27px
+        );
+
+    font-weight:900;
+
+    cursor:pointer;
+}
+
+/* =========================================================
+   SMALLER MOAP WINDOWS
+========================================================= */
+
+@media(max-width:650px){
+
+    #topHUD{
+        padding:
+            8px 7px;
+
+        font-size:13px;
+    }
+
+    #gameTitle{
+        top:50px;
+
+        font-size:24px;
+    }
+
+    #exitGameButton{
+        top:78px;
+        right:7px;
+
+        min-height:34px;
+
+        padding:
+            5px 8px;
+
+        font-size:11px;
+    }
+
+    #arena{
+        top:100px;
+        bottom:100px;
+    }
+
+    #controls{
+        height:95px;
+
+        gap:8px;
+
+        padding:
+            8px;
+    }
+
+    .controlButton{
+        min-width:75px;
+        min-height:54px;
+
+        font-size:17px;
+    }
+
+    #fireButton{
+        min-width:105px;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="game">
+
+    <!-- =====================================================
+         TOP INFORMATION
+    ====================================================== -->
+
+    <div id="topHUD">
+
+        <div class="hudBlock">
+            SCORE:
+            <span id="score">0</span>
+        </div>
+
+        <div class="hudBlock">
+            LEVEL:
+            <span id="level">1</span>
+        </div>
+
+        <div class="hudBlock">
+            LIVES:
+            <span id="lives">❤️❤️❤️</span>
+        </div>
+
+        <div class="hudBlock">
+            WAVE:
+            <span id="wave">1</span>
+        </div>
+
+        <button
+            id="soundButton"
+            type="button">
+            🔊 SOUND
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         TITLE
+    ====================================================== -->
+
+    <div id="gameTitle">
+        BUMPBOY ALIEN INVASION
+    </div>
+
+
+    <!-- =====================================================
+         EXIT
+    ====================================================== -->
+
+    <button
+        id="exitGameButton"
+        type="button">
+        EXIT GAME
+    </button>
+
+
+    <!-- =====================================================
+         PLAY AREA
+    ====================================================== -->
+
+    <div id="arena">
+
+        <div id="enemyLayer">
+        </div>
+
+        <div id="ship">
+
+            <img
+                id="shipImage"
+                src="ship.png"
+                alt="BB Star Cruiser">
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         LEVEL MESSAGE
+    ====================================================== -->
+
+    <div id="levelMessage">
+    </div>
+
+
+    <!-- =====================================================
+         PLAYER CONTROLS
+    ====================================================== -->
+
+    <div id="controls">
+
+        <button
+            id="leftButton"
+            class="controlButton"
+            type="button">
+            ◀ LEFT
+        </button>
+
+        <button
+            id="fireButton"
+            class="controlButton"
+            type="button">
+            🔥 FIRE
+        </button>
+
+        <button
+            id="rightButton"
+            class="controlButton"
+            type="button">
+            RIGHT ▶
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         OPENING SCREEN
+    ====================================================== -->
+
+    <div id="overlay">
+
+        <div class="panel">
+
+            <h1>
+                BUMPBOY
+            </h1>
+
+            <h2>
+                👽 ALIEN INVASION 👽
+            </h2>
+
+            <p>
+                The invasion has begun.
+            </p>
+
+            <p>
+                Pilot the BB Star Cruiser,
+                destroy the alien formations,
+                and survive each wave.
+            </p>
+
+            <p>
+                Move with LEFT and RIGHT.
+                Line up your shot and FIRE!
+            </p>
+
+            <button
+                id="startButton"
+                class="mainButton"
+                type="button">
+                START MISSION
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const game =
+    document.getElementById(
+        "game"
+    );
+
+const arena =
+    document.getElementById(
+        "arena"
+    );
+
+const enemyLayer =
+    document.getElementById(
+        "enemyLayer"
+    );
+
+const ship =
+    document.getElementById(
+        "ship"
+    );
+
+const shipImage =
+    document.getElementById(
+        "shipImage"
+    );
+
+const scoreText =
+    document.getElementById(
+        "score"
+    );
+
+const levelText =
+    document.getElementById(
+        "level"
+    );
+
+const livesText =
+    document.getElementById(
+        "lives"
+    );
+
+const waveText =
+    document.getElementById(
+        "wave"
+    );
+
+const soundButton =
+    document.getElementById(
+        "soundButton"
+    );
+
+const exitGameButton =
+    document.getElementById(
+        "exitGameButton"
+    );
+
+const leftButton =
+    document.getElementById(
+        "leftButton"
+    );
+
+const fireButton =
+    document.getElementById(
+        "fireButton"
+    );
+
+const rightButton =
+    document.getElementById(
+        "rightButton"
+    );
+
+const overlay =
+    document.getElementById(
+        "overlay"
+    );
+
+const startButton =
+    document.getElementById(
+        "startButton"
+    );
+
+const levelMessage =
+    document.getElementById(
+        "levelMessage"
+    );
+
+
+/* =========================================================
+   IMAGE FILES
+========================================================= */
+
+const IMAGE_NORMAL =
+    "alien1.png";
+
+const IMAGE_FAST =
+    "alien2.png";
+
+const IMAGE_HEAVY =
+    "alien3.png";
+
+const IMAGE_SHIP =
+    "ship.png";
+
+
+/* =========================================================
+   GAME STATE
+========================================================= */
+
+let playing = false;
+
+let score = 0;
+
+let lives = 3;
+
+let level = 1;
+
+let wave = 1;
+
+let enemies = [];
+
+let playerLasers = [];
+
+let enemyLasers = [];
+
+let shipX = 0;
+
+let moveLeft = false;
+
+let moveRight = false;
+
+let lastFrame = 0;
+
+let animationFrame = null;
+
+let lastPlayerShot = 0;
+
+let lastEnemyShot = 0;
+
+let formationDirection = 1;
+
+let formationSpeed = 28;
+
+let soundOn = true;
+
+let audioContext = null;
+
+
+/* =========================================================
+   GAME SETTINGS
+========================================================= */
+
+const SHIP_SPEED =
+    330;
+
+const PLAYER_LASER_SPEED =
+    620;
+
+const PLAYER_FIRE_DELAY =
+    330;
+
+const ENEMY_LASER_SPEED =
+    260;
+
+
+/* =========================================================
+   CREATE STAR FIELD
+========================================================= */
+
+function createStars(){
+
+    const total =
+        80;
+
+    for(
+        let i = 0;
+        i < total;
+        i++
+    ){
+
+        const star =
+            document.createElement(
+                "div"
+            );
+
+        star.className =
+            "star";
+
+        const size =
+            1
+            +
+            Math.random()
+            *
+            2.2;
+
+        star.style.width =
+            size + "px";
+
+        star.style.height =
+            size + "px";
+
+        star.style.left =
+            Math.random()
+            *
+            100
+            +
+            "%";
+
+        star.style.top =
+            Math.random()
+            *
+            100
+            +
+            "%";
+
+        star.style.opacity =
+            .20
+            +
+            Math.random()
+            *
+            .70;
+
+        game.appendChild(
+            star
+        );
+    }
+}
+
+createStars();/* =========================================================
+   AUDIO
+========================================================= */
+
+function getAudio(){
+
+    if(!audioContext){
+
+        audioContext =
+            new (
+                window.AudioContext
+                ||
+                window.webkitAudioContext
+            )();
+    }
+
+    if(
+        audioContext.state
+        ===
+        "suspended"
+    ){
+        audioContext.resume();
+    }
+
+    return audioContext;
+}
+
+
+function tone(
+    frequency,
+    duration,
+    type,
+    volume
+){
+
+    if(!soundOn){
+        return;
+    }
+
+    try{
+
+        const ctx =
+            getAudio();
+
+        const osc =
+            ctx.createOscillator();
+
+        const gain =
+            ctx.createGain();
+
+        osc.type =
+            type || "sine";
+
+        osc.frequency.value =
+            frequency;
+
+        gain.gain.value =
+            volume || .04;
+
+        osc.connect(
+            gain
+        );
+
+        gain.connect(
+            ctx.destination
+        );
+
+        const now =
+            ctx.currentTime;
+
+        gain.gain.setValueAtTime(
+            gain.gain.value,
+            now
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            .0001,
+            now + duration
+        );
+
+        osc.start(
+            now
+        );
+
+        osc.stop(
+            now + duration
+        );
+    }
+    catch(error){
+    }
+}
+
+
+function playerShotSound(){
+
+    tone(
+        720,
+        .07,
+        "square",
+        .035
+    );
+}
+
+
+function enemyShotSound(){
+
+    tone(
+        230,
+        .10,
+        "sawtooth",
+        .025
+    );
+}
+
+
+function explosionSound(){
+
+    tone(
+        110,
+        .14,
+        "sawtooth",
+        .055
+    );
+}
+
+
+function shipHitSound(){
+
+    tone(
+        150,
+        .20,
+        "sawtooth",
+        .07
+    );
+}
+
+
+function levelSound(){
+
+    tone(
+        440,
+        .10,
+        "sine",
+        .04
+    );
+
+    setTimeout(
+        function(){
+
+            tone(
+                660,
+                .10,
+                "sine",
+                .04
+            );
+
+        },
+        100
+    );
+
+    setTimeout(
+        function(){
+
+            tone(
+                880,
+                .16,
+                "sine",
+                .04
+            );
+
+        },
+        200
+    );
+}
+
+
+soundButton.addEventListener(
+    "click",
+    function(event){
+
+        event.stopPropagation();
+
+        soundOn =
+            !soundOn;
+
+        soundButton.textContent =
+            soundOn
+            ?
+            "🔊 SOUND"
+            :
+            "🔇 MUTED";
+
+        if(soundOn){
+
+            tone(
+                700,
+                .08,
+                "sine",
+                .04
+            );
+        }
+    }
+);
+
+
+/* =========================================================
+   HUD
+========================================================= */
+
+function updateHUD(){
+
+    scoreText.textContent =
+        score;
+
+    levelText.textContent =
+        level;
+
+    waveText.textContent =
+        wave;
+
+    let hearts = "";
+
+    for(
+        let i = 0;
+        i < lives;
+        i++
+    ){
+
+        hearts +=
+            "❤️";
+    }
+
+    if(
+        hearts === ""
+    ){
+
+        hearts =
+            "💀";
+    }
+
+    livesText.textContent =
+        hearts;
+}
+
+
+/* =========================================================
+   LEVEL MESSAGE
+========================================================= */
+
+function showLevelMessage(
+    message
+){
+
+    levelMessage.textContent =
+        message;
+
+    levelMessage.style.opacity =
+        "1";
+
+    levelMessage.animate(
+        [
+            {
+                opacity:0,
+                transform:
+                    "translate(-50%,-50%) scale(.65)"
+            },
+
+            {
+                opacity:1,
+                transform:
+                    "translate(-50%,-50%) scale(1.08)"
+            },
+
+            {
+                opacity:1,
+                transform:
+                    "translate(-50%,-50%) scale(1)"
+            },
+
+            {
+                opacity:0,
+                transform:
+                    "translate(-50%,-50%) scale(1.08)"
+            }
+        ],
+        {
+            duration:1200,
+            easing:"ease-out"
+        }
+    );
+
+    setTimeout(
+        function(){
+
+            levelMessage.style.opacity =
+                "0";
+
+        },
+        1200
+    );
+}
+
+
+/* =========================================================
+   SHIP POSITION
+========================================================= */
+
+function resetShip(){
+
+    const maxX =
+        Math.max(
+            0,
+            arena.clientWidth
+            -
+            ship.offsetWidth
+        );
+
+    shipX =
+        maxX / 2;
+
+    ship.style.left =
+        shipX + "px";
+
+    ship.style.transform =
+        "none";
+}
+
+
+/* =========================================================
+   ENEMY TYPE FOR EACH ROW
+========================================================= */
+
+function getEnemyType(
+    row
+){
+
+    /*
+       Early levels begin mostly with green aliens.
+
+       As the player progresses, UFOs and
+       heavy aliens begin appearing in formations.
+    */
+
+    if(
+        level >= 4
+        &&
+        row === 0
+    ){
+
+        return {
+            className:"heavy",
+            image:IMAGE_HEAVY,
+            points:30,
+            health:2
+        };
+    }
+
+    if(
+        level >= 2
+        &&
+        row <= 1
+    ){
+
+        return {
+            className:"fast",
+            image:IMAGE_FAST,
+            points:20,
+            health:1
+        };
+    }
+
+    return {
+        className:"normal",
+        image:IMAGE_NORMAL,
+        points:10,
+        health:1
+    };
+}
+
+
+/* =========================================================
+   CLEAR ENEMIES
+========================================================= */
+
+function clearEnemies(){
+
+    for(
+        const enemy
+        of enemies
+    ){
+
+        if(
+            enemy.element
+            &&
+            enemy.element.isConnected
+        ){
+
+            enemy.element.remove();
+        }
+    }
+
+    enemies = [];
+}
+
+
+/* =========================================================
+   CREATE ENEMY FORMATION
+========================================================= */
+
+function createFormation(){
+
+    clearEnemies();
+
+    /*
+       Formation grows as the game progresses.
+
+       Level 1:
+       2 rows x 5 aliens
+
+       Later levels:
+       3 rows x 6 aliens
+    */
+
+    let rows =
+        2;
+
+    let columns =
+        5;
+
+    if(
+        level >= 3
+    ){
+
+        rows = 3;
+    }
+
+    if(
+        level >= 5
+    ){
+
+        columns = 6;
+    }
+
+
+    /*
+       Calculate spacing from the actual
+       MOAP screen size so the formation
+       fits different HUD sizes.
+    */
+
+    const usableWidth =
+        arena.clientWidth
+        *
+        .78;
+
+    const startX =
+        arena.clientWidth
+        *
+        .11;
+
+    const columnSpacing =
+        usableWidth
+        /
+        columns;
+
+    const rowSpacing =
+        Math.max(
+            65,
+            Math.min(
+                90,
+                arena.clientHeight
+                *
+                .14
+            )
+        );
+
+
+    for(
+        let row = 0;
+        row < rows;
+        row++
+    ){
+
+        for(
+            let column = 0;
+            column < columns;
+            column++
+        ){
+
+            const settings =
+                getEnemyType(
+                    row
+                );
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+            element.className =
+                "enemy "
+                +
+                settings.className;
+
+
+            const image =
+                document.createElement(
+                    "img"
+                );
+
+            image.src =
+                settings.image;
+
+            image.alt =
+                settings.className
+                +
+                " alien";
+
+            image.draggable =
+                false;
+
+
+            element.appendChild(
+                image
+            );
+
+            enemyLayer.appendChild(
+                element
+            );
+
+
+            const enemyWidth =
+                element.offsetWidth;
+
+
+            const x =
+                startX
+                +
+                column
+                *
+                columnSpacing
+                +
+                (
+                    columnSpacing
+                    -
+                    enemyWidth
+                )
+                /
+                2;
+
+
+            const y =
+                25
+                +
+                row
+                *
+                rowSpacing;
+
+
+            element.style.left =
+                x + "px";
+
+            element.style.top =
+                y + "px";
+
+
+            enemies.push(
+                {
+                    element:
+                        element,
+
+                    x:
+                        x,
+
+                    y:
+                        y,
+
+                    health:
+                        settings.health,
+
+                    maxHealth:
+                        settings.health,
+
+                    points:
+                        settings.points,
+
+                    type:
+                        settings.className,
+
+                    alive:
+                        true
+                }
+            );
+        }
+    }
+
+
+    /*
+       Formation gets faster as levels rise.
+    */
+
+    formationSpeed =
+        25
+        +
+        (
+            level
+            *
+            7
+        );
+
+
+    formationDirection =
+        1;
+}
+
+
+/* =========================================================
+   FORMATION MOVEMENT
+========================================================= */
+
+function moveFormation(
+    delta
+){
+
+    if(
+        enemies.length === 0
+    ){
+        return;
+    }
+
+
+    const livingEnemies =
+        enemies.filter(
+            function(enemy){
+
+                return enemy.alive;
+            }
+        );
+
+
+    if(
+        livingEnemies.length === 0
+    ){
+        return;
+    }
+
+
+    let leftEdge =
+        Infinity;
+
+    let rightEdge =
+        -Infinity;
+
+
+    for(
+        const enemy
+        of livingEnemies
+    ){
+
+        leftEdge =
+            Math.min(
+                leftEdge,
+                enemy.x
+            );
+
+        rightEdge =
+            Math.max(
+                rightEdge,
+                enemy.x
+                +
+                enemy.element.offsetWidth
+            );
+    }
+
+
+    const movement =
+        formationDirection
+        *
+        formationSpeed
+        *
+        delta;
+
+
+    /*
+       When the formation reaches a side,
+       reverse direction and drop downward.
+    */
+
+    if(
+        rightEdge
+        +
+        movement
+        >=
+        arena.clientWidth
+        -
+        8
+    ){
+
+        formationDirection =
+            -1;
+
+        dropFormation();
+
+        return;
+    }
+
+
+    if(
+        leftEdge
+        +
+        movement
+        <=
+        8
+    ){
+
+        formationDirection =
+            1;
+
+        dropFormation();
+
+        return;
+    }
+
+
+    for(
+        const enemy
+        of livingEnemies
+    ){
+
+        enemy.x +=
+            movement;
+
+        enemy.element.style.left =
+            enemy.x + "px";
+    }
+}
+
+
+/* =========================================================
+   DROP FORMATION
+========================================================= */
+
+function dropFormation(){
+
+    const dropAmount =
+        18
+        +
+        Math.min(
+            level * 2,
+            14
+        );
+
+
+    for(
+        const enemy
+        of enemies
+    ){
+
+        if(!enemy.alive){
+            continue;
+        }
+
+
+        enemy.y +=
+            dropAmount;
+
+
+        enemy.element.style.top =
+            enemy.y + "px";
+
+
+        /*
+           If the invasion reaches the player's
+           ship area, the player loses the mission.
+        */
+
+        const enemyBottom =
+            enemy.y
+            +
+            enemy.element.offsetHeight;
+
+
+        const shipTop =
+            arena.clientHeight
+            -
+            ship.offsetHeight
+            -
+            12;
+
+
+        if(
+            enemyBottom
+            >=
+            shipTop
+        ){
+
+            invasionReachedShip();
+
+            return;
+        }
+    }
+}
+
+
+/* =========================================================
+   EXPLOSION
+========================================================= */
+
+function createExplosion(
+    x,
+    y
+){
+
+    const explosion =
+        document.createElement(
+            "div"
+        );
+
+    explosion.className =
+        "explosion";
+
+
+    explosion.style.left =
+        x + "px";
+
+    explosion.style.top =
+        y + "px";
+
+
+    arena.appendChild(
+        explosion
+    );
+
+
+    explosionSound();
+
+
+    setTimeout(
+        function(){
+
+            explosion.remove();
+
+        },
+        500
+    );
+}
+
+
+/* =========================================================
+   DESTROY ENEMY
+========================================================= */
+
+function destroyEnemy(
+    enemy
+){
+
+    if(
+        !enemy
+        ||
+        !enemy.alive
+    ){
+        return;
+    }
+
+
+    enemy.alive =
+        false;
+
+
+    const centerX =
+        enemy.x
+        +
+        enemy.element.offsetWidth
+        /
+        2;
+
+
+    const centerY =
+        enemy.y
+        +
+        enemy.element.offsetHeight
+        /
+        2;
+
+
+    createExplosion(
+        centerX,
+        centerY
+    );
+
+
+    score +=
+        enemy.points;
+
+
+    enemy.element.remove();
+
+
+    updateHUD();
+
+
+    /*
+       Check whether the entire invasion
+       wave has been destroyed.
+    */
+
+    const remaining =
+        enemies.some(
+            function(item){
+
+                return item.alive;
+            }
+        );
+
+
+    if(!remaining){
+
+        waveComplete();
+    }
+}
+
+
+/* =========================================================
+   INVASION REACHED SHIP
+========================================================= */
+
+function invasionReachedShip(){
+
+    if(!playing){
+        return;
+    }
+
+
+    lives = 0;
+
+    updateHUD();
+
+    shipHitSound();
+
+    gameOver(
+        "THE INVASION BROKE THROUGH!"
+    );
+}/* =========================================================
+   PLAYER MOVEMENT
+========================================================= */
+
+function moveShip(
+    delta
+){
+
+    if(!playing){
+        return;
+    }
+
+    let movement =
+        0;
+
+
+    if(moveLeft){
+
+        movement -=
+            SHIP_SPEED
+            *
+            delta;
+    }
+
+
+    if(moveRight){
+
+        movement +=
+            SHIP_SPEED
+            *
+            delta;
+    }
+
+
+    shipX +=
+        movement;
+
+
+    const maxX =
+        Math.max(
+            0,
+            arena.clientWidth
+            -
+            ship.offsetWidth
+        );
+
+
+    if(shipX < 0){
+
+        shipX = 0;
+    }
+
+
+    if(shipX > maxX){
+
+        shipX =
+            maxX;
+    }
+
+
+    ship.style.left =
+        shipX + "px";
+}
+
+
+/* =========================================================
+   LEFT / RIGHT BUTTON CONTROLS
+========================================================= */
+
+function startMoveLeft(
+    event
+){
+
+    event.preventDefault();
+
+    if(!playing){
+        return;
+    }
+
+    moveLeft = true;
+}
+
+
+function stopMoveLeft(
+    event
+){
+
+    if(event){
+
+        event.preventDefault();
+    }
+
+    moveLeft = false;
+}
+
+
+function startMoveRight(
+    event
+){
+
+    event.preventDefault();
+
+    if(!playing){
+        return;
+    }
+
+    moveRight = true;
+}
+
+
+function stopMoveRight(
+    event
+){
+
+    if(event){
+
+        event.preventDefault();
+    }
+
+    moveRight = false;
+}
+
+
+leftButton.addEventListener(
+    "pointerdown",
+    startMoveLeft
+);
+
+
+leftButton.addEventListener(
+    "pointerup",
+    stopMoveLeft
+);
+
+
+leftButton.addEventListener(
+    "pointercancel",
+    stopMoveLeft
+);
+
+
+leftButton.addEventListener(
+    "pointerleave",
+    stopMoveLeft
+);
+
+
+rightButton.addEventListener(
+    "pointerdown",
+    startMoveRight
+);
+
+
+rightButton.addEventListener(
+    "pointerup",
+    stopMoveRight
+);
+
+
+rightButton.addEventListener(
+    "pointercancel",
+    stopMoveRight
+);
+
+
+rightButton.addEventListener(
+    "pointerleave",
+    stopMoveRight
+);
+
+
+/* =========================================================
+   KEYBOARD CONTROLS
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(!playing){
+            return;
+        }
+
+
+        if(
+            event.code
+            ===
+            "ArrowLeft"
+            ||
+            event.code
+            ===
+            "KeyA"
+        ){
+
+            event.preventDefault();
+
+            moveLeft = true;
+        }
+
+
+        if(
+            event.code
+            ===
+            "ArrowRight"
+            ||
+            event.code
+            ===
+            "KeyD"
+        ){
+
+            event.preventDefault();
+
+            moveRight = true;
+        }
+
+
+        if(
+            event.code
+            ===
+            "Space"
+        ){
+
+            event.preventDefault();
+
+            firePlayerLaser();
+        }
+    }
+);
+
+
+document.addEventListener(
+    "keyup",
+    function(event){
+
+        if(
+            event.code
+            ===
+            "ArrowLeft"
+            ||
+            event.code
+            ===
+            "KeyA"
+        ){
+
+            moveLeft = false;
+        }
+
+
+        if(
+            event.code
+            ===
+            "ArrowRight"
+            ||
+            event.code
+            ===
+            "KeyD"
+        ){
+
+            moveRight = false;
+        }
+    }
+);
+
+
+/* =========================================================
+   FIRE BUTTON
+========================================================= */
+
+fireButton.addEventListener(
+    "pointerdown",
+    function(event){
+
+        event.preventDefault();
+
+        firePlayerLaser();
+    }
+);
+
+
+/* =========================================================
+   CREATE PLAYER LASER
+========================================================= */
+
+function firePlayerLaser(){
+
+    if(!playing){
+        return;
+    }
+
+
+    const now =
+        performance.now();
+
+
+    if(
+        now
+        -
+        lastPlayerShot
+        <
+        PLAYER_FIRE_DELAY
+    ){
+
+        return;
+    }
+
+
+    lastPlayerShot =
+        now;
+
+
+    const laser =
+        document.createElement(
+            "div"
+        );
+
+
+    laser.className =
+        "playerLaser";
+
+
+    const x =
+        shipX
+        +
+        ship.offsetWidth
+        /
+        2
+        -
+        3;
+
+
+    const y =
+        arena.clientHeight
+        -
+        ship.offsetHeight
+        -
+        5;
+
+
+    laser.style.left =
+        x + "px";
+
+
+    laser.style.top =
+        y + "px";
+
+
+    arena.appendChild(
+        laser
+    );
+
+
+    playerLasers.push(
+        {
+            element:
+                laser,
+
+            x:
+                x,
+
+            y:
+                y,
+
+            alive:
+                true
+        }
+    );
+
+
+    playerShotSound();
+}
+
+
+/* =========================================================
+   MOVE PLAYER LASERS
+========================================================= */
+
+function movePlayerLasers(
+    delta
+){
+
+    for(
+        const laser
+        of playerLasers
+    ){
+
+        if(!laser.alive){
+            continue;
+        }
+
+
+        laser.y -=
+            PLAYER_LASER_SPEED
+            *
+            delta;
+
+
+        laser.element.style.top =
+            laser.y + "px";
+
+
+        /*
+           Remove laser when it leaves
+           the top of the arena.
+        */
+
+        if(
+            laser.y
+            <
+            -40
+        ){
+
+            removePlayerLaser(
+                laser
+            );
+
+            continue;
+        }
+
+
+        checkPlayerLaserHit(
+            laser
+        );
+    }
+
+
+    playerLasers =
+        playerLasers.filter(
+            function(laser){
+
+                return laser.alive;
+            }
+        );
+}
+
+
+/* =========================================================
+   REMOVE PLAYER LASER
+========================================================= */
+
+function removePlayerLaser(
+    laser
+){
+
+    if(!laser){
+        return;
+    }
+
+
+    laser.alive =
+        false;
+
+
+    if(
+        laser.element
+        &&
+        laser.element.isConnected
+    ){
+
+        laser.element.remove();
+    }
+}
+
+
+/* =========================================================
+   RECTANGLE COLLISION
+========================================================= */
+
+function rectanglesOverlap(
+    ax,
+    ay,
+    aw,
+    ah,
+    bx,
+    by,
+    bw,
+    bh
+){
+
+    return (
+        ax
+        <
+        bx + bw
+
+        &&
+
+        ax + aw
+        >
+        bx
+
+        &&
+
+        ay
+        <
+        by + bh
+
+        &&
+
+        ay + ah
+        >
+        by
+    );
+}
+
+
+/* =========================================================
+   PLAYER LASER VS ALIEN
+========================================================= */
+
+function checkPlayerLaserHit(
+    laser
+){
+
+    if(!laser.alive){
+        return;
+    }
+
+
+    const laserWidth =
+        laser.element.offsetWidth;
+
+
+    const laserHeight =
+        laser.element.offsetHeight;
+
+
+    for(
+        const enemy
+        of enemies
+    ){
+
+        if(!enemy.alive){
+            continue;
+        }
+
+
+        const enemyWidth =
+            enemy.element.offsetWidth;
+
+
+        const enemyHeight =
+            enemy.element.offsetHeight;
+
+
+        if(
+            rectanglesOverlap(
+
+                laser.x,
+                laser.y,
+                laserWidth,
+                laserHeight,
+
+                enemy.x,
+                enemy.y,
+                enemyWidth,
+                enemyHeight
+            )
+        ){
+
+            removePlayerLaser(
+                laser
+            );
+
+
+            enemy.health--;
+
+
+            /*
+               Heavy aliens take more than
+               one shot to destroy.
+            */
+
+            if(
+                enemy.health
+                <=
+                0
+            ){
+
+                destroyEnemy(
+                    enemy
+                );
+            }
+            else{
+
+                enemy.element.animate(
+                    [
+                        {
+                            opacity:1,
+                            transform:
+                                "scale(1)"
+                        },
+
+                        {
+                            opacity:.35,
+                            transform:
+                                "scale(.88)"
+                        },
+
+                        {
+                            opacity:1,
+                            transform:
+                                "scale(1)"
+                        }
+                    ],
+                    {
+                        duration:180
+                    }
+                );
+
+
+                tone(
+                    250,
+                    .07,
+                    "square",
+                    .035
+                );
+            }
+
+
+            return;
+        }
+    }
+}
+
+
+/* =========================================================
+   CLEAR PLAYER LASERS
+========================================================= */
+
+function clearPlayerLasers(){
+
+    for(
+        const laser
+        of playerLasers
+    ){
+
+        if(
+            laser.element
+            &&
+            laser.element.isConnected
+        ){
+
+            laser.element.remove();
+        }
+    }
+
+
+    playerLasers = [];
+}
+
+
+/* =========================================================
+   ENEMY SHOOTING
+========================================================= */
+
+function enemyFire(
+    now
+){
+
+    if(
+        !playing
+        ||
+        enemies.length === 0
+    ){
+
+        return;
+    }
+
+
+    /*
+       Enemies fire more frequently
+       as the levels increase.
+    */
+
+    const delay =
+        Math.max(
+            550,
+            1900
+            -
+            level
+            *
+            180
+        );
+
+
+    if(
+        now
+        -
+        lastEnemyShot
+        <
+        delay
+    ){
+
+        return;
+    }
+
+
+    lastEnemyShot =
+        now;
+
+
+    const living =
+        enemies.filter(
+            function(enemy){
+
+                return enemy.alive;
+            }
+        );
+
+
+    if(
+        living.length === 0
+    ){
+
+        return;
+    }
+
+
+    /*
+       Choose one living alien
+       to fire at the player.
+    */
+
+    const shooter =
+        living[
+            Math.floor(
+                Math.random()
+                *
+                living.length
+            )
+        ];
+
+
+    const laser =
+        document.createElement(
+            "div"
+        );
+
+
+    laser.className =
+        "enemyLaser";
+
+
+    const x =
+        shooter.x
+        +
+        shooter.element.offsetWidth
+        /
+        2
+        -
+        3;
+
+
+    const y =
+        shooter.y
+        +
+        shooter.element.offsetHeight;
+
+
+    laser.style.left =
+        x + "px";
+
+
+    laser.style.top =
+        y + "px";
+
+
+    arena.appendChild(
+        laser
+    );
+
+
+    enemyLasers.push(
+        {
+            element:
+                laser,
+
+            x:
+                x,
+
+            y:
+                y,
+
+            alive:
+                true
+        }
+    );
+
+
+    enemyShotSound();
+}
+
+
+/* =========================================================
+   MOVE ENEMY LASERS
+========================================================= */
+
+function moveEnemyLasers(
+    delta
+){
+
+    for(
+        const laser
+        of enemyLasers
+    ){
+
+        if(!laser.alive){
+            continue;
+        }
+
+
+        laser.y +=
+            (
+                ENEMY_LASER_SPEED
+                +
+                level
+                *
+                18
+            )
+            *
+            delta;
+
+
+        laser.element.style.top =
+            laser.y + "px";
+
+
+        if(
+            laser.y
+            >
+            arena.clientHeight
+            +
+            30
+        ){
+
+            removeEnemyLaser(
+                laser
+            );
+
+            continue;
+        }
+
+
+        checkEnemyLaserHit(
+            laser
+        );
+    }
+
+
+    enemyLasers =
+        enemyLasers.filter(
+            function(laser){
+
+                return laser.alive;
+            }
+        );
+}
+
+
+/* =========================================================
+   REMOVE ENEMY LASER
+========================================================= */
+
+function removeEnemyLaser(
+    laser
+){
+
+    if(!laser){
+        return;
+    }
+
+
+    laser.alive =
+        false;
+
+
+    if(
+        laser.element
+        &&
+        laser.element.isConnected
+    ){
+
+        laser.element.remove();
+    }
+}
+
+
+/* =========================================================
+   ENEMY LASER VS PLAYER
+========================================================= */
+
+function checkEnemyLaserHit(
+    laser
+){
+
+    if(
+        !laser.alive
+        ||
+        !playing
+    ){
+
+        return;
+    }
+
+
+    const laserWidth =
+        laser.element.offsetWidth;
+
+
+    const laserHeight =
+        laser.element.offsetHeight;
+
+
+    const shipWidth =
+        ship.offsetWidth;
+
+
+    const shipHeight =
+        ship.offsetHeight;
+
+
+    const shipY =
+        arena.clientHeight
+        -
+        shipHeight
+        -
+        6;
+
+
+    if(
+        rectanglesOverlap(
+
+            laser.x,
+            laser.y,
+            laserWidth,
+            laserHeight,
+
+            shipX,
+            shipY,
+            shipWidth,
+            shipHeight
+        )
+    ){
+
+        removeEnemyLaser(
+            laser
+        );
+
+
+        playerHit();
+    }
+}
+
+
+/* =========================================================
+   PLAYER HIT
+========================================================= */
+
+function playerHit(){
+
+    if(!playing){
+        return;
+    }
+
+
+    lives--;
+
+
+    updateHUD();
+
+
+    shipHitSound();
+
+
+    ship.animate(
+        [
+            {
+                opacity:1
+            },
+
+            {
+                opacity:.15
+            },
+
+            {
+                opacity:1
+            },
+
+            {
+                opacity:.15
+            },
+
+            {
+                opacity:1
+            }
+        ],
+        {
+            duration:500
+        }
+    );
+
+
+    if(
+        lives <= 0
+    ){
+
+        gameOver(
+            "YOUR STAR CRUISER WAS DESTROYED!"
+        );
+    }
+}
+
+
+/* =========================================================
+   CLEAR ENEMY LASERS
+========================================================= */
+
+function clearEnemyLasers(){
+
+    for(
+        const laser
+        of enemyLasers
+    ){
+
+        if(
+            laser.element
+            &&
+            laser.element.isConnected
+        ){
+
+            laser.element.remove();
+        }
+    }
+
+
+    enemyLasers = [];
+}/* =========================================================
+   WAVE COMPLETE
+========================================================= */
+
+function waveComplete(){
+
+    if(!playing){
+        return;
+    }
+
+    /*
+       Temporarily pause the action while
+       preparing the next invasion wave.
+    */
+
+    clearPlayerLasers();
+    clearEnemyLasers();
+
+    wave++;
+
+    /*
+       Every 2 completed waves advances
+       the player one level.
+    */
+
+    if(
+        wave > 1
+        &&
+        (wave - 1) % 2 === 0
+    ){
+
+        level++;
+
+        /*
+           Stage 1 currently stops at Level 5.
+           Later we'll expand this to the
+           full 10-level game with bosses.
+        */
+
+        if(level > 5){
+
+            stageComplete();
+
+            return;
+        }
+
+
+        showLevelMessage(
+            "LEVEL "
+            +
+            level
+        );
+
+        levelSound();
+    }
+    else{
+
+        showLevelMessage(
+            "WAVE "
+            +
+            wave
+        );
+    }
+
+
+    updateHUD();
+
+
+    /*
+       Give the player a short break before
+       the next formation appears.
+    */
+
+    setTimeout(
+        function(){
+
+            if(!playing){
+                return;
+            }
+
+            createFormation();
+
+        },
+        1100
+    );
+}
+
+
+/* =========================================================
+   GAME LOOP
+========================================================= */
+
+function gameLoop(
+    timestamp
+){
+
+    if(!playing){
+        return;
+    }
+
+
+    if(!lastFrame){
+
+        lastFrame =
+            timestamp;
+    }
+
+
+    /*
+       Convert milliseconds into seconds
+       for smooth movement regardless of FPS.
+    */
+
+    let delta =
+        (
+            timestamp
+            -
+            lastFrame
+        )
+        /
+        1000;
+
+
+    /*
+       Prevent giant movement jumps if
+       Second Life temporarily pauses MOAP.
+    */
+
+    delta =
+        Math.min(
+            delta,
+            .05
+        );
+
+
+    lastFrame =
+        timestamp;
+
+
+    moveShip(
+        delta
+    );
+
+
+    moveFormation(
+        delta
+    );
+
+
+    movePlayerLasers(
+        delta
+    );
+
+
+    moveEnemyLasers(
+        delta
+    );
+
+
+    enemyFire(
+        timestamp
+    );
+
+
+    animationFrame =
+        requestAnimationFrame(
+            gameLoop
+        );
+}
+
+
+/* =========================================================
+   CLEAR ALL GAME OBJECTS
+========================================================= */
+
+function clearGameObjects(){
+
+    clearEnemies();
+
+    clearPlayerLasers();
+
+    clearEnemyLasers();
+}
+
+
+/* =========================================================
+   START GAME
+========================================================= */
+
+function startGame(){
+
+    /*
+       Clean up anything left from
+       a previous mission.
+    */
+
+    if(animationFrame){
+
+        cancelAnimationFrame(
+            animationFrame
+        );
+
+        animationFrame =
+            null;
+    }
+
+
+    clearGameObjects();
+
+
+    score = 0;
+
+    lives = 3;
+
+    level = 1;
+
+    wave = 1;
+
+
+    moveLeft = false;
+
+    moveRight = false;
+
+
+    lastFrame = 0;
+
+    lastPlayerShot = 0;
+
+    lastEnemyShot =
+        performance.now();
+
+
+    playing = true;
+
+
+    /*
+       Restore original ship for Stage 1.
+    */
+
+    shipImage.src =
+        IMAGE_SHIP;
+
+
+    overlay.style.display =
+        "none";
+
+
+    updateHUD();
+
+
+    resetShip();
+
+
+    createFormation();
+
+
+    showLevelMessage(
+        "LEVEL 1"
+    );
+
+
+    levelSound();
+
+
+    animationFrame =
+        requestAnimationFrame(
+            gameLoop
+        );
+}
+
+
+/* =========================================================
+   GAME OVER
+========================================================= */
+
+function gameOver(
+    reason
+){
+
+    if(!playing){
+        return;
+    }
+
+
+    playing = false;
+
+
+    moveLeft = false;
+
+    moveRight = false;
+
+
+    if(animationFrame){
+
+        cancelAnimationFrame(
+            animationFrame
+        );
+
+        animationFrame =
+            null;
+    }
+
+
+    clearGameObjects();
+
+
+    overlay.style.display =
+        "flex";
+
+
+    overlay.innerHTML =
+        `
+        <div class="panel">
+
+            <h1>
+                GAME OVER
+            </h1>
+
+            <h2>
+                ${reason}
+            </h2>
+
+            <p>
+                Final Score:
+                <strong>${score}</strong>
+            </p>
+
+            <p>
+                Level Reached:
+                <strong>${level}</strong>
+            </p>
+
+            <p>
+                Wave Reached:
+                <strong>${wave}</strong>
+            </p>
+
+            <button
+                id="restartButton"
+                class="mainButton"
+                type="button">
+                TRY AGAIN
+            </button>
+
+        </div>
+        `;
+
+
+    const restartButton =
+        document.getElementById(
+            "restartButton"
+        );
+
+
+    restartButton.addEventListener(
+        "click",
+        function(event){
+
+            event.stopPropagation();
+
+            startGame();
+        }
+    );
+}
+
+
+/* =========================================================
+   STAGE COMPLETE
+========================================================= */
+
+function stageComplete(){
+
+    if(!playing){
+        return;
+    }
+
+
+    playing = false;
+
+
+    moveLeft = false;
+
+    moveRight = false;
+
+
+    if(animationFrame){
+
+        cancelAnimationFrame(
+            animationFrame
+        );
+
+        animationFrame =
+            null;
+    }
+
+
+    clearGameObjects();
+
+
+    /*
+       Bonus for surviving the
+       first five levels.
+    */
+
+    score +=
+        500;
+
+
+    updateHUD();
+
+
+    levelSound();
+
+
+    setTimeout(
+        function(){
+
+            levelSound();
+
+        },
+        350
+    );
+
+
+    overlay.style.display =
+        "flex";
+
+
+    overlay.innerHTML =
+        `
+        <div class="panel">
+
+            <h1>
+                MISSION COMPLETE!
+            </h1>
+
+            <h2>
+                🚀 INVASION WAVE DEFEATED 🚀
+            </h2>
+
+            <p>
+                You completed the first
+                BumpBoy invasion sector.
+            </p>
+
+            <p>
+                Final Score:
+                <strong>${score}</strong>
+            </p>
+
+            <p>
+                The next sector will introduce
+                bosses, ship upgrades and
+                stronger alien forces.
+            </p>
+
+            <button
+                id="restartButton"
+                class="mainButton"
+                type="button">
+                PLAY AGAIN
+            </button>
+
+        </div>
+        `;
+
+
+    const restartButton =
+        document.getElementById(
+            "restartButton"
+        );
+
+
+    restartButton.addEventListener(
+        "click",
+        function(event){
+
+            event.stopPropagation();
+
+            startGame();
+        }
+    );
+}
+
+
+/* =========================================================
+   START BUTTON
+========================================================= */
+
+startButton.addEventListener(
+    "click",
+    function(event){
+
+        event.stopPropagation();
+
+        startGame();
+    }
+);
+
+
+/* =========================================================
+   WINDOW RESIZE
+========================================================= */
+
+window.addEventListener(
+    "resize",
+    function(){
+
+        /*
+           Keep the ship inside the arena if
+           the Second Life media surface changes size.
+        */
+
+        const maxX =
+            Math.max(
+                0,
+                arena.clientWidth
+                -
+                ship.offsetWidth
+            );
+
+
+        if(
+            shipX > maxX
+        ){
+
+            shipX =
+                maxX;
+        }
+
+
+        if(
+            shipX < 0
+        ){
+
+            shipX = 0;
+        }
+
+
+        ship.style.left =
+            shipX + "px";
+    }
+);/* =========================================================
+   EXIT GAME
+   SECOND LIFE WEB → HUD BRIDGE
+========================================================= */
+
+exitGameButton.addEventListener(
+    "click",
+    function(event){
+
+        event.preventDefault();
+        event.stopPropagation();
+
+
+        /*
+           Stop gameplay immediately.
+        */
+
+        playing = false;
+
+        moveLeft = false;
+        moveRight = false;
+
+
+        if(animationFrame){
+
+            cancelAnimationFrame(
+                animationFrame
+            );
+
+            animationFrame =
+                null;
+        }
+
+
+        clearGameObjects();
+
+
+        /*
+           IMPORTANT:
+           Our Second Life HUD controller watches
+           the current media URL for this token:
+
+           bumpboy_exit=1
+
+           When it sees it, the HUD hides itself.
+        */
+
+        window.location.href =
+            "https://mrmusiqnote-oss.github.io/bumpboy-games/?bumpboy_exit=1&t="
+            +
+            Date.now();
+    }
+);
+
+
+/* =========================================================
+   SAFETY - STOP MOVEMENT IF POINTER LEAVES WINDOW
+========================================================= */
+
+window.addEventListener(
+    "blur",
+    function(){
+
+        moveLeft = false;
+        moveRight = false;
+    }
+);
+
+
+/* =========================================================
+   PREVENT CONTEXT MENU ON GAME CONTROLS
+========================================================= */
+
+game.addEventListener(
+    "contextmenu",
+    function(event){
+
+        event.preventDefault();
+    }
+);
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+updateHUD();
+
+resetShip();
+
+
+/* =========================================================
+   BUMPBOY ALIEN SHOOTER V4
+   STAGE 1 COMPLETE
+========================================================= */
+
+</script>
+
+</body>
+
+</html>
