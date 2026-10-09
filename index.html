@@ -2,10 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport"
-      content="width=device-width,initial-scale=1,user-scalable=no">
 
-<title>BumpBoy Alien Shooter V3.1</title>
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,user-scalable=no"
+>
+
+<title>BumpBoy Alien Shooter V3.2</title>
 
 <style>
 
@@ -15,19 +18,26 @@
     -webkit-user-select:none;
 }
 
-html,body{
+html,
+body{
     margin:0;
     width:100%;
     height:100%;
     overflow:hidden;
+
     background:#050714;
     color:white;
-    font-family:Arial,Helvetica,sans-serif;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 }
 
 button{
     font-family:inherit;
 }
+
 
 /* =========================================================
    MAIN GAME
@@ -35,9 +45,18 @@ button{
 
 #game{
     position:relative;
+
     width:100vw;
     height:100vh;
+
     overflow:hidden;
+
+    /*
+       Crosshair is back.
+
+       The player can aim anywhere inside the arena
+       and fire toward the mouse position.
+    */
     cursor:crosshair;
 
     background:
@@ -46,21 +65,25 @@ button{
             rgba(111,49,146,.40),
             transparent 28%
         ),
+
         radial-gradient(
             circle at 80% 35%,
             rgba(27,77,154,.40),
             transparent 30%
         ),
+
         radial-gradient(
             circle at 50% 85%,
             rgba(143,33,109,.22),
             transparent 30%
         ),
+
         linear-gradient(
             #060817,
             #11071d
         );
 }
+
 
 /* =========================================================
    STARS
@@ -68,10 +91,14 @@ button{
 
 .star{
     position:absolute;
+
     border-radius:50%;
+
     background:white;
+
     pointer-events:none;
 }
+
 
 /* =========================================================
    TOP HUD
@@ -79,6 +106,7 @@ button{
 
 #topHUD{
     position:absolute;
+
     z-index:100;
 
     top:0;
@@ -87,6 +115,7 @@ button{
     width:100%;
 
     display:flex;
+
     justify-content:space-between;
     align-items:center;
 
@@ -94,7 +123,9 @@ button{
 
     padding:15px 20px;
 
-    font-size:clamp(17px,2.4vw,26px);
+    font-size:
+        clamp(17px,2.4vw,26px);
+
     font-weight:900;
 
     text-shadow:
@@ -113,12 +144,17 @@ button{
 }
 
 #soundButton{
-    border:1px solid rgba(255,255,255,.45);
+    border:
+        1px solid
+        rgba(255,255,255,.45);
+
     border-radius:10px;
 
     padding:8px 13px;
 
-    background:rgba(0,0,0,.45);
+    background:
+        rgba(0,0,0,.45);
+
     color:white;
 
     font-size:18px;
@@ -126,12 +162,14 @@ button{
     cursor:pointer;
 }
 
+
 /* =========================================================
    GAME TITLE
 ========================================================= */
 
 #gameTitle{
     position:absolute;
+
     z-index:30;
 
     top:62px;
@@ -141,7 +179,9 @@ button{
 
     text-align:center;
 
-    font-size:clamp(30px,5vw,58px);
+    font-size:
+        clamp(30px,5vw,58px);
+
     font-weight:900;
 
     letter-spacing:3px;
@@ -154,6 +194,7 @@ button{
     pointer-events:none;
 }
 
+
 /* =========================================================
    ARENA
 ========================================================= */
@@ -162,12 +203,104 @@ button{
     position:absolute;
 
     top:125px;
+
     left:0;
     right:0;
+
     bottom:130px;
 
     overflow:hidden;
+
+    cursor:crosshair;
+
+    /*
+       This allows us to handle the player's aim
+       ourselves without browser touch gestures
+       interfering with shooting.
+    */
+    touch-action:none;
 }
+
+
+/* =========================================================
+   AIM RETICLE
+========================================================= */
+
+#reticle{
+    position:absolute;
+
+    z-index:120;
+
+    width:42px;
+    height:42px;
+
+    border:
+        2px solid
+        rgba(255,255,255,.90);
+
+    border-radius:50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    pointer-events:none;
+
+    display:none;
+
+    box-shadow:
+        0 0 8px #58d9ff,
+        0 0 15px rgba(213,67,255,.75);
+}
+
+#reticle::before,
+#reticle::after{
+    content:"";
+
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    background:white;
+
+    box-shadow:
+        0 0 6px #58d9ff;
+}
+
+#reticle::before{
+    width:54px;
+    height:2px;
+}
+
+#reticle::after{
+    width:2px;
+    height:54px;
+}
+
+#reticleDot{
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    width:6px;
+    height:6px;
+
+    border-radius:50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    background:#ffffff;
+
+    box-shadow:
+        0 0 8px #ffffff,
+        0 0 14px #58d9ff;
+}
+
 
 /* =========================================================
    ALIENS
@@ -177,6 +310,7 @@ button{
     position:absolute;
 
     border:0;
+
     padding:0;
 
     background:transparent;
@@ -184,12 +318,16 @@ button{
     cursor:crosshair;
 
     display:flex;
+
     justify-content:center;
     align-items:center;
 
-    touch-action:manipulation;
+    touch-action:none;
 
-    will-change:left,top,transform;
+    will-change:
+        left,
+        top,
+        transform;
 }
 
 .alien img{
@@ -207,18 +345,30 @@ button{
         );
 }
 
-/* GREEN ALIEN */
+
+/* =========================================================
+   GREEN ALIEN
+========================================================= */
 
 .alien.normal{
-    width:clamp(110px,13vw,160px);
-    height:clamp(110px,13vw,160px);
+    width:
+        clamp(110px,13vw,160px);
+
+    height:
+        clamp(110px,13vw,160px);
 }
 
-/* UFO */
+
+/* =========================================================
+   FAST UFO
+========================================================= */
 
 .alien.fast{
-    width:clamp(140px,16vw,195px);
-    height:clamp(100px,12vw,140px);
+    width:
+        clamp(140px,16vw,195px);
+
+    height:
+        clamp(100px,12vw,140px);
 }
 
 .alien.fast img{
@@ -227,17 +377,24 @@ button{
             0 0 14px
             rgba(78,205,255,.90)
         )
+
         drop-shadow(
             0 0 8px
             rgba(255,60,221,.75)
         );
 }
 
-/* HEAVY ALIEN */
+
+/* =========================================================
+   HEAVY ALIEN
+========================================================= */
 
 .alien.heavy{
-    width:clamp(130px,15vw,180px);
-    height:clamp(110px,13vw,155px);
+    width:
+        clamp(130px,15vw,180px);
+
+    height:
+        clamp(110px,13vw,155px);
 }
 
 .alien.heavy img{
@@ -248,11 +405,17 @@ button{
         );
 }
 
-/* BOSS */
+
+/* =========================================================
+   BOSS
+========================================================= */
 
 .alien.boss{
-    width:clamp(250px,28vw,350px);
-    height:clamp(205px,23vw,285px);
+    width:
+        clamp(250px,28vw,350px);
+
+    height:
+        clamp(205px,23vw,285px);
 }
 
 .alien.boss img{
@@ -261,11 +424,13 @@ button{
             0 0 22px
             rgba(173,68,255,.95)
         )
+
         drop-shadow(
             0 0 14px
             rgba(255,115,30,.80)
         );
 }
+
 
 /* =========================================================
    BOSS HEALTH
@@ -277,17 +442,21 @@ button{
     z-index:80;
 
     top:110px;
+
     left:50%;
 
-    transform:translateX(-50%);
+    transform:
+        translateX(-50%);
 
-    width:min(520px,70%);
+    width:
+        min(520px,70%);
 
     display:none;
 
     text-align:center;
 
     font-weight:900;
+
     font-size:16px;
 }
 
@@ -296,12 +465,15 @@ button{
 
     margin-top:6px;
 
-    border:2px solid white;
+    border:
+        2px solid white;
+
     border-radius:12px;
 
     overflow:hidden;
 
-    background:rgba(0,0,0,.70);
+    background:
+        rgba(0,0,0,.70);
 }
 
 #bossHealthFill{
@@ -317,8 +489,9 @@ button{
         );
 }
 
+
 /* =========================================================
-   SHIP
+   PLAYER SHIP
 ========================================================= */
 
 #ship{
@@ -327,12 +500,17 @@ button{
     z-index:40;
 
     bottom:5px;
+
     left:50%;
 
-    width:clamp(150px,17vw,215px);
-    height:clamp(125px,14vw,175px);
+    width:
+        clamp(150px,17vw,215px);
 
-    transform:translateX(-50%);
+    height:
+        clamp(125px,14vw,175px);
+
+    transform:
+        translateX(-50%);
 
     pointer-events:none;
 
@@ -355,6 +533,7 @@ button{
             0 0 14px
             rgba(50,205,255,.90)
         )
+
         drop-shadow(
             0 0 11px
             rgba(255,40,220,.50)
@@ -375,6 +554,7 @@ button{
             translateY(-7px);
     }
 }
+
 
 /* =========================================================
    LASER
@@ -419,6 +599,60 @@ button{
     }
 }
 
+
+/* =========================================================
+   MUZZLE FLASH
+========================================================= */
+
+.muzzleFlash{
+    position:absolute;
+
+    z-index:55;
+
+    width:24px;
+    height:24px;
+
+    border-radius:50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    pointer-events:none;
+
+    background:white;
+
+    box-shadow:
+        0 0 8px white,
+        0 0 18px #54d8ff,
+        0 0 30px #d543ff;
+
+    animation:
+        muzzleFade
+        .16s
+        ease-out
+        forwards;
+}
+
+@keyframes muzzleFade{
+
+    from{
+        opacity:1;
+
+        transform:
+            translate(-50%,-50%)
+            scale(.6);
+    }
+
+    to{
+        opacity:0;
+
+        transform:
+            translate(-50%,-50%)
+            scale(2.2);
+    }
+}
+
+
 /* =========================================================
    EXPLOSION
 ========================================================= */
@@ -447,7 +681,8 @@ button{
         0 0 55px #ff2b00;
 
     animation:
-        coreBlast        .55s
+        coreBlast
+        .55s
         ease-out
         forwards;
 }
@@ -457,30 +692,38 @@ button{
     0%{
         width:10px;
         height:10px;
+
         opacity:1;
     }
 
     35%{
         width:75px;
         height:75px;
+
         opacity:1;
+
         background:#ffd84a;
     }
 
     70%{
         width:105px;
         height:105px;
+
         opacity:.8;
+
         background:#ff6a00;
     }
 
     100%{
         width:135px;
         height:135px;
+
         opacity:0;
+
         background:#651100;
     }
 }
+
 
 .shockwave{
     position:absolute;
@@ -517,16 +760,20 @@ button{
     from{
         width:15px;
         height:15px;
+
         opacity:1;
     }
 
     to{
         width:160px;
         height:160px;
+
         opacity:0;
+
         border-width:1px;
     }
 }
+
 
 .spark{
     position:absolute;
@@ -580,6 +827,7 @@ button{
     }
 }
 
+
 .smoke{
     position:absolute;
 
@@ -598,7 +846,8 @@ button{
     background:
         rgba(130,130,145,.55);
 
-    filter:blur(5px);
+    filter:
+        blur(5px);
 
     animation:
         smokeOut
@@ -632,6 +881,7 @@ button{
     }
 }
 
+
 /* =========================================================
    POINTS
 ========================================================= */
@@ -642,6 +892,7 @@ button{
     z-index:90;
 
     font-size:28px;
+
     font-weight:900;
 
     pointer-events:none;
@@ -677,6 +928,7 @@ button{
     }
 }
 
+
 /* =========================================================
    LEVEL MESSAGE
 ========================================================= */
@@ -709,6 +961,7 @@ button{
     opacity:0;
 }
 
+
 #flash{
     position:absolute;
 
@@ -723,6 +976,7 @@ button{
     pointer-events:none;
 }
 
+
 /* =========================================================
    START / GAME OVER PANEL
 ========================================================= */
@@ -735,6 +989,7 @@ button{
     inset:0;
 
     display:flex;
+
     align-items:center;
     justify-content:center;
 
@@ -746,8 +1001,10 @@ button{
     text-align:center;
 }
 
+
 .panel{
-    width:min(760px,90%);
+    width:
+        min(760px,90%);
 
     max-height:90vh;
 
@@ -772,9 +1029,12 @@ button{
     box-shadow:
         0 0 35px
         rgba(110,67,255,.40),
-        inset 0 0 25px
+
+        inset
+        0 0 25px
         rgba(255,255,255,.04);
 }
+
 
 .panel h1{
     margin:
@@ -790,6 +1050,7 @@ button{
         0 0 22px #d747ff;
 }
 
+
 .panel h2{
     margin:
         8px 0 18px;
@@ -797,6 +1058,7 @@ button{
     font-size:
         clamp(24px,4vw,40px);
 }
+
 
 .panel p{
     margin:
@@ -812,6 +1074,7 @@ button{
     color:#e7e7ff;
 }
 
+
 #startButton{
     margin-top:25px;
 
@@ -819,6 +1082,7 @@ button{
         16px 34px;
 
     border:0;
+
     border-radius:15px;
 
     background:
@@ -843,9 +1107,12 @@ button{
         rgba(115,94,255,.55);
 }
 
+
 #startButton:hover{
-    transform:scale(1.04);
+    transform:
+        scale(1.04);
 }
+
 
 /* =========================================================
    EXIT GAME BUTTON
@@ -857,6 +1124,7 @@ button{
     z-index:160;
 
     top:72px;
+
     right:18px;
 
     border:
@@ -865,7 +1133,8 @@ button{
 
     border-radius:10px;
 
-    padding:9px 14px;
+    padding:
+        9px 14px;
 
     background:
         rgba(0,0,0,.72);
@@ -884,10 +1153,12 @@ button{
         rgba(255,73,146,.35);
 }
 
+
 #exitGameButton:hover{
     background:
         rgba(130,25,72,.88);
 }
+
 
 /* =========================================================
    RESPONSIVE
@@ -919,30 +1190,54 @@ button{
 
     #exitGameButton{
         top:92px;
+
         right:9px;
 
-        padding:7px 10px;
+        padding:
+            7px 10px;
 
         font-size:12px;
     }
 
     #arena{
         top:110px;
+
         bottom:105px;
     }
 
     #ship{
         width:125px;
+
         height:105px;
+    }
+
+    #reticle{
+        width:34px;
+
+        height:34px;
+    }
+
+    #reticle::before{
+        width:44px;
+    }
+
+    #reticle::after{
+        height:44px;
     }
 }
 
 </style>
 </head>
 
+
 <body>
 
 <div id="game">
+
+
+    <!-- =====================================================
+         TOP HUD
+    ====================================================== -->
 
     <div id="topHUD">
 
@@ -968,21 +1263,38 @@ button{
 
         <button
             id="soundButton"
-            type="button">
+            type="button"
+        >
             🔊 SOUND
         </button>
 
     </div>
 
+
+    <!-- =====================================================
+         TITLE
+    ====================================================== -->
+
     <div id="gameTitle">
         BUMPBOY ALIEN SHOOTER
     </div>
 
+
+    <!-- =====================================================
+         EXIT
+    ====================================================== -->
+
     <button
         id="exitGameButton"
-        type="button">
+        type="button"
+    >
         EXIT GAME
     </button>
+
+
+    <!-- =====================================================
+         BOSS HEALTH
+    ====================================================== -->
 
     <div id="bossHealthWrap">
 
@@ -997,22 +1309,60 @@ button{
 
     </div>
 
+
+    <!-- =====================================================
+         GAME ARENA
+    ====================================================== -->
+
     <div id="arena">
     </div>
+
+
+    <!-- =====================================================
+         AIM RETICLE
+    ====================================================== -->
+
+    <div id="reticle">
+
+        <div id="reticleDot">
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PLAYER SHIP
+    ====================================================== -->
 
     <div id="ship">
 
         <img
             src="ship.png"
-            alt="BumpBoy ship">
+            alt="BumpBoy ship"
+        >
 
     </div>
+
+
+    <!-- =====================================================
+         LEVEL MESSAGE
+    ====================================================== -->
 
     <div id="levelMessage">
     </div>
 
+
+    <!-- =====================================================
+         FLASH
+    ====================================================== -->
+
     <div id="flash">
     </div>
+
+
+    <!-- =====================================================
+         START SCREEN
+    ====================================================== -->
 
     <div id="overlay">
 
@@ -1031,17 +1381,25 @@ button{
             </p>
 
             <p>
-                Tap or click the aliens to fire.
+                Move your mouse to aim and click to fire your
+                BB Star Cruiser.
+            </p>
+
+            <p>
+                Hit the aliens before they escape.
                 Missing a shot costs a life, so aim carefully.
             </p>
 
             <p>
-                Reach the boss and defeat it before time runs out!
+                The invasion becomes more dangerous as your
+                score increases. Reach the boss and destroy it
+                before time runs out!
             </p>
 
             <button
                 id="startButton"
-                type="button">
+                type="button"
+            >
                 START GAME
             </button>
 
@@ -1051,79 +1409,167 @@ button{
 
 </div>
 
+
 <script>
+
 
 /* =========================================================
    ELEMENTS
 ========================================================= */
 
 const game =
-    document.getElementById("game");
+    document.getElementById(
+        "game"
+    );
+
 
 const arena =
-    document.getElementById("arena");
+    document.getElementById(
+        "arena"
+    );
+
 
 const scoreText =
-    document.getElementById("score");
+    document.getElementById(
+        "score"
+    );
+
 
 const levelText =
-    document.getElementById("level");
+    document.getElementById(
+        "level"
+    );
+
 
 const livesText =
-    document.getElementById("lives");
+    document.getElementById(
+        "lives"
+    );
+
 
 const timeText =
-    document.getElementById("time");
+    document.getElementById(
+        "time"
+    );
+
 
 const soundButton =
-    document.getElementById("soundButton");
+    document.getElementById(
+        "soundButton"
+    );
+
 
 const overlay =
-    document.getElementById("overlay");
+    document.getElementById(
+        "overlay"
+    );
+
 
 const startButton =
-    document.getElementById("startButton");
+    document.getElementById(
+        "startButton"
+    );
+
 
 const exitGameButton =
-    document.getElementById("exitGameButton");
+    document.getElementById(
+        "exitGameButton"
+    );
+
 
 const levelMessage =
-    document.getElementById("levelMessage");
+    document.getElementById(
+        "levelMessage"
+    );
+
 
 const flash =
-    document.getElementById("flash");
+    document.getElementById(
+        "flash"
+    );
+
 
 const ship =
-    document.getElementById("ship");
+    document.getElementById(
+        "ship"
+    );
+
 
 const bossHealthWrap =
-    document.getElementById("bossHealthWrap");
+    document.getElementById(
+        "bossHealthWrap"
+    );
+
 
 const bossHealthFill =
-    document.getElementById("bossHealthFill");
+    document.getElementById(
+        "bossHealthFill"
+    );
+
+
+const reticle =
+    document.getElementById(
+        "reticle"
+    );
+
 
 /* =========================================================
    GAME VARIABLES
 ========================================================= */
 
 let score = 0;
+
 let lives = 3;
+
 let level = 1;
+
 let timeLeft = 60;
 
+
 let playing = false;
+
 let soundOn = true;
+
 
 let currentAlien = null;
 
+
 let enemyTimer = null;
+
 let gameClock = null;
 
+
 let bossHits = 0;
+
 let bossNeeded = 8;
+
 let bossTime = 0;
 
+
 let audioContext = null;
+
+
+/*
+   Current mouse / aim position.
+
+   These values are relative to the full game window,
+   not just the arena.
+*/
+
+let aimX = 0;
+
+let aimY = 0;
+
+let aimActive = false;
+
+
+/*
+   Prevents accidental double shots from the same
+   mouse/pointer action.
+*/
+
+let shotLocked = false;
+
 
 /* =========================================================
    IMAGE FILES
@@ -1132,14 +1578,18 @@ let audioContext = null;
 const IMAGE_NORMAL =
     "alien1.png";
 
+
 const IMAGE_FAST =
     "alien2.png";
+
 
 const IMAGE_HEAVY =
     "alien3.png";
 
+
 const IMAGE_BOSS =
     "boss.png";
+
 
 /* =========================================================
    STAR BACKGROUND
@@ -1149,6 +1599,7 @@ function createStars(){
 
     const totalStars = 85;
 
+
     for(
         let i = 0;
         i < totalStars;
@@ -1156,34 +1607,64 @@ function createStars(){
     ){
 
         const star =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         star.className =
             "star";
 
+
         const size =
-            Math.random() * 2.5 + 1;
+            Math.random()
+            *
+            2.5
+            +
+            1;
+
 
         star.style.width =
             size + "px";
 
+
         star.style.height =
             size + "px";
 
+
         star.style.left =
-            Math.random() * 100 + "%";
+            Math.random()
+            *
+            100
+            +
+            "%";
+
 
         star.style.top =
-            Math.random() * 100 + "%";
+            Math.random()
+            *
+            100
+            +
+            "%";
+
 
         star.style.opacity =
-            Math.random() * .75 + .2;
+            Math.random()
+            *
+            .75
+            +
+            .2;
 
-        game.appendChild(star);
+
+        game.appendChild(
+            star
+        );
     }
 }
 
+
 createStars();
+
 
 /* =========================================================
    AUDIO
@@ -1201,16 +1682,20 @@ function getAudio(){
             )();
     }
 
+
     if(
         audioContext.state
         ===
         "suspended"
     ){
+
         audioContext.resume();
     }
 
+
     return audioContext;
 }
+
 
 function tone(
     frequency,
@@ -1220,56 +1705,87 @@ function tone(
 ){
 
     if(!soundOn){
+
         return;
     }
+
 
     try{
 
         const ctx =
             getAudio();
 
+
         const osc =
             ctx.createOscillator();
+
 
         const gain =
             ctx.createGain();
 
+
         osc.type =
             type || "sine";
+
 
         osc.frequency.value =
             frequency;
 
+
         gain.gain.value =
             volume || .05;
 
-        osc.connect(gain);
+
+        osc.connect(
+            gain
+        );
+
+
         gain.connect(
             ctx.destination
         );
 
+
         const now =
             ctx.currentTime;
+
 
         gain.gain.setValueAtTime(
             gain.gain.value,
             now
         );
 
+
         gain.gain.exponentialRampToValueAtTime(
             .0001,
             now + duration
         );
 
-        osc.start(now);
+
+        osc.start(
+            now
+        );
+
+
         osc.stop(
             now + duration
         );
 
     }
     catch(error){
+
+        /*
+           Audio errors should never stop the game.
+        */
+
     }
-}/* =========================================================
+}
+
+
+/* =========================================================
+   END PART 1
+   DO NOT ADD </script>, </body>, OR </html> YET.
+========================================================= *//* =========================================================
    SOUND EFFECTS
 ========================================================= */
 
@@ -1301,6 +1817,7 @@ function laserSound(){
     );
 }
 
+
 function explosionSound(){
 
     if(!soundOn){
@@ -1328,6 +1845,7 @@ function explosionSound(){
         45
     );
 }
+
 
 function bossHitSound(){
 
@@ -1357,6 +1875,7 @@ function bossHitSound(){
     );
 }
 
+
 function loseLifeSound(){
 
     if(!soundOn){
@@ -1384,6 +1903,7 @@ function loseLifeSound(){
         90
     );
 }
+
 
 function levelSound(){
 
@@ -1427,6 +1947,7 @@ function levelSound(){
     );
 }
 
+
 function winSound(){
 
     if(!soundOn){
@@ -1460,6 +1981,11 @@ function winSound(){
     );
 }
 
+
+/* =========================================================
+   SOUND BUTTON
+========================================================= */
+
 soundButton.addEventListener(
     "click",
     function(e){
@@ -1488,6 +2014,7 @@ soundButton.addEventListener(
     }
 );
 
+
 /* =========================================================
    HUD
 ========================================================= */
@@ -1513,18 +2040,21 @@ function updateHUD(){
         i < lives;
         i++
     ){
+
         hearts += "❤️";
     }
 
     if(
         hearts === ""
     ){
+
         hearts = "💀";
     }
 
     livesText.textContent =
         hearts;
 }
+
 
 /* =========================================================
    LEVEL SYSTEM
@@ -1538,14 +2068,17 @@ function calculateLevel(){
 
         newLevel = 4;
     }
+
     else if(score >= 180){
 
         newLevel = 3;
     }
+
     else if(score >= 80){
 
         newLevel = 2;
     }
+
 
     if(
         newLevel !== level
@@ -1568,6 +2101,7 @@ function calculateLevel(){
     }
 }
 
+
 function showLevelMessage(text){
 
     levelMessage.textContent =
@@ -1586,22 +2120,26 @@ function showLevelMessage(text){
                 transform:
                     "translate(-50%,-50%) scale(.65)"
             },
+
             {
                 opacity:1,
                 transform:
                     "translate(-50%,-50%) scale(1.12)"
             },
+
             {
                 opacity:1,
                 transform:
                     "translate(-50%,-50%) scale(1)"
             },
+
             {
                 opacity:0,
                 transform:
                     "translate(-50%,-50%) scale(1.1)"
             }
         ],
+
         {
             duration:1300,
             easing:"ease-out"
@@ -1619,15 +2157,19 @@ function showLevelMessage(text){
     );
 }
 
+
 /* =========================================================
    ENEMY SETTINGS
 ========================================================= */
 
 function getEnemyType(){
 
+    /* LEVEL 1 */
+
     if(level === 1){
 
         return {
+
             type:"normal",
             image:IMAGE_NORMAL,
             points:10,
@@ -1636,6 +2178,9 @@ function getEnemyType(){
         };
     }
 
+
+    /* LEVEL 2 */
+
     if(level === 2){
 
         if(
@@ -1643,6 +2188,7 @@ function getEnemyType(){
         ){
 
             return {
+
                 type:"fast",
                 image:IMAGE_FAST,
                 points:20,
@@ -1652,6 +2198,7 @@ function getEnemyType(){
         }
 
         return {
+
             type:"normal",
             image:IMAGE_NORMAL,
             points:10,
@@ -1659,6 +2206,9 @@ function getEnemyType(){
             lifetime:3900
         };
     }
+
+
+    /* LEVEL 3 */
 
     if(level === 3){
 
@@ -1668,6 +2218,7 @@ function getEnemyType(){
         if(roll < .34){
 
             return {
+
                 type:"fast",
                 image:IMAGE_FAST,
                 points:20,
@@ -1679,6 +2230,7 @@ function getEnemyType(){
         if(roll < .68){
 
             return {
+
                 type:"heavy",
                 image:IMAGE_HEAVY,
                 points:30,
@@ -1688,6 +2240,7 @@ function getEnemyType(){
         }
 
         return {
+
             type:"normal",
             image:IMAGE_NORMAL,
             points:10,
@@ -1696,7 +2249,11 @@ function getEnemyType(){
         };
     }
 
+
+    /* LEVEL 4 — BOSS */
+
     return {
+
         type:"boss",
         image:IMAGE_BOSS,
         points:250,
@@ -1704,6 +2261,7 @@ function getEnemyType(){
         lifetime:15000
     };
 }
+
 
 /* =========================================================
    RANDOM POSITION
@@ -1735,6 +2293,7 @@ function randomPosition(
         );
 
     return {
+
         x:
             Math.random()
             *
@@ -1746,6 +2305,175 @@ function randomPosition(
             maxY
     };
 }
+
+
+/* =========================================================
+   AIM SYSTEM
+========================================================= */
+
+function updateAim(
+    clientX,
+    clientY
+){
+
+    const gameRect =
+        game.getBoundingClientRect();
+
+
+    aimX =
+        clientX
+        -
+        gameRect.left;
+
+
+    aimY =
+        clientY
+        -
+        gameRect.top;
+
+
+    aimX =
+        Math.max(
+            0,
+            Math.min(
+                gameRect.width,
+                aimX
+            )
+        );
+
+
+    aimY =
+        Math.max(
+            0,
+            Math.min(
+                gameRect.height,
+                aimY
+            )
+        );
+
+
+    reticle.style.left =
+        aimX + "px";
+
+
+    reticle.style.top =
+        aimY + "px";
+
+
+    if(playing){
+
+        reticle.style.display =
+            "block";
+    }
+
+
+    aimActive = true;
+}
+
+
+/* =========================================================
+   MOUSE AIM
+========================================================= */
+
+arena.addEventListener(
+    "pointermove",
+    function(event){
+
+        if(!playing){
+            return;
+        }
+
+        updateAim(
+            event.clientX,
+            event.clientY
+        );
+    }
+);
+
+
+/*
+   Hide the aiming reticle when the mouse leaves
+   the playable arena.
+
+   Touch controls are ignored here so the reticle
+   does not disappear during a touch shot.
+*/
+
+arena.addEventListener(
+    "pointerleave",
+    function(event){
+
+        if(
+            event.pointerType === "touch"
+        ){
+
+            return;
+        }
+
+        reticle.style.display =
+            "none";
+    }
+);
+
+
+arena.addEventListener(
+    "pointerenter",
+    function(event){
+
+        if(!playing){
+            return;
+        }
+
+        updateAim(
+            event.clientX,
+            event.clientY
+        );
+    }
+);
+
+
+/* =========================================================
+   MUZZLE FLASH
+========================================================= */
+
+function createMuzzleFlash(
+    x,
+    y
+){
+
+    const muzzle =
+        document.createElement(
+            "div"
+        );
+
+
+    muzzle.className =
+        "muzzleFlash";
+
+
+    muzzle.style.left =
+        x + "px";
+
+
+    muzzle.style.top =
+        y + "px";
+
+
+    game.appendChild(
+        muzzle
+    );
+
+
+    setTimeout(
+        function(){
+
+            muzzle.remove();
+
+        },
+        180
+    );
+}
+
 
 /* =========================================================
    LASER EFFECT
@@ -1759,8 +2487,10 @@ function fireLaser(
     const gameRect =
         game.getBoundingClientRect();
 
+
     const shipRect =
         ship.getBoundingClientRect();
+
 
     const startX =
         shipRect.left
@@ -1769,6 +2499,7 @@ function fireLaser(
         -
         gameRect.left;
 
+
     const startY =
         shipRect.top
         +
@@ -1776,15 +2507,18 @@ function fireLaser(
         -
         gameRect.top;
 
+
     const dx =
         targetX
         -
         startX;
 
+
     const dy =
         targetY
         -
         startY;
+
 
     const distance =
         Math.sqrt(
@@ -1792,6 +2526,7 @@ function fireLaser(
             +
             dy * dy
         );
+
 
     const angle =
         Math.atan2(
@@ -1805,16 +2540,26 @@ function fireLaser(
         +
         90;
 
+
+    createMuzzleFlash(
+        startX,
+        startY
+    );
+
+
     const laser =
         document.createElement(
             "div"
         );
 
+
     laser.className =
         "laser";
 
+
     laser.style.left =
         startX + "px";
+
 
     laser.style.top =
         (
@@ -1825,8 +2570,10 @@ function fireLaser(
         +
         "px";
 
+
     laser.style.height =
         distance + "px";
+
 
     laser.style.transform =
         "rotate("
@@ -1835,11 +2582,14 @@ function fireLaser(
         +
         "deg)";
 
+
     game.appendChild(
         laser
     );
 
+
     laserSound();
+
 
     setTimeout(
         function(){
@@ -1850,6 +2600,7 @@ function fireLaser(
         230
     );
 }
+
 
 /* =========================================================
    EXPLOSION EFFECT
@@ -1865,36 +2616,46 @@ function createExplosion(
             "div"
         );
 
+
     core.className =
         "explosionCore";
+
 
     core.style.left =
         x + "px";
 
+
     core.style.top =
         y + "px";
+
 
     game.appendChild(
         core
     );
+
 
     const shock =
         document.createElement(
             "div"
         );
 
+
     shock.className =
         "shockwave";
+
 
     shock.style.left =
         x + "px";
 
+
     shock.style.top =
         y + "px";
+
 
     game.appendChild(
         shock
     );
+
 
     for(
         let i = 0;
@@ -1907,14 +2668,18 @@ function createExplosion(
                 "div"
             );
 
+
         spark.className =
             "spark";
+
 
         spark.style.left =
             x + "px";
 
+
         spark.style.top =
             y + "px";
+
 
         const angle =
             Math.random()
@@ -1923,12 +2688,14 @@ function createExplosion(
             *
             2;
 
+
         const distance =
             45
             +
             Math.random()
             *
             80;
+
 
         spark.style.setProperty(
             "--dx",
@@ -1941,6 +2708,7 @@ function createExplosion(
             "px"
         );
 
+
         spark.style.setProperty(
             "--dy",
             (
@@ -1952,9 +2720,11 @@ function createExplosion(
             "px"
         );
 
+
         game.appendChild(
             spark
         );
+
 
         setTimeout(
             function(){
@@ -1966,37 +2736,47 @@ function createExplosion(
         );
     }
 
+
     const smoke =
         document.createElement(
             "div"
         );
 
+
     smoke.className =
         "smoke";
+
 
     smoke.style.left =
         x + "px";
 
+
     smoke.style.top =
         y + "px";
+
 
     game.appendChild(
         smoke
     );
 
+
     explosionSound();
+
 
     setTimeout(
         function(){
 
             core.remove();
+
             shock.remove();
+
             smoke.remove();
 
         },
         950
     );
 }
+
 
 /* =========================================================
    POINT EFFECT
@@ -2013,23 +2793,29 @@ function showPoints(
             "div"
         );
 
+
     points.className =
         "points";
+
 
     points.textContent =
         "+"
         +
         amount;
 
+
     points.style.left =
         x + "px";
+
 
     points.style.top =
         y + "px";
 
+
     game.appendChild(
         points
     );
+
 
     setTimeout(
         function(){
@@ -2041,8 +2827,9 @@ function showPoints(
     );
 }
 
+
 /* =========================================================
-   FLASH
+   SCREEN FLASH
 ========================================================= */
 
 function screenFlash(){
@@ -2052,16 +2839,19 @@ function screenFlash(){
             {
                 opacity:.5
             },
+
             {
                 opacity:0
             }
         ],
+
         {
             duration:180,
             easing:"ease-out"
         }
     );
 }
+
 
 /* =========================================================
    REMOVE CURRENT ENEMY
@@ -2075,19 +2865,26 @@ function clearEnemy(){
             enemyTimer
         );
 
-        enemyTimer = null;
+        enemyTimer =
+            null;
     }
+
 
     if(currentAlien){
 
         currentAlien.remove();
 
-        currentAlien = null;
+        currentAlien =
+            null;
     }
+
 
     bossHealthWrap.style.display =
         "none";
-}/* =========================================================
+}
+
+
+/* =========================================================
    LOSE LIFE
 ========================================================= */
 
@@ -2097,13 +2894,18 @@ function loseLife(){
         return;
     }
 
+
     lives--;
+
 
     updateHUD();
 
+
     loseLifeSound();
 
+
     screenFlash();
+
 
     if(lives <= 0){
 
@@ -2113,7 +2915,11 @@ function loseLife(){
     }
 }
 
+
 /* =========================================================
+   END PART 2
+   PART 3 GOES DIRECTLY BELOW
+========================================================= *//* =========================================================
    MOVE ENEMY
 ========================================================= */
 
@@ -2129,6 +2935,7 @@ function moveEnemy(
         :
         1;
 
+
     let directionY =
         Math.random() < .5
         ?
@@ -2136,8 +2943,10 @@ function moveEnemy(
         :
         1;
 
+
     let lastTime =
         performance.now();
+
 
     function animate(now){
 
@@ -2148,6 +2957,7 @@ function moveEnemy(
         ){
             return;
         }
+
 
         const delta =
             Math.min(
@@ -2161,8 +2971,10 @@ function moveEnemy(
                 16.67
             );
 
+
         lastTime =
             now;
+
 
         let x =
             parseFloat(
@@ -2171,12 +2983,14 @@ function moveEnemy(
             ||
             0;
 
+
         let y =
             parseFloat(
                 alien.style.top
             )
             ||
             0;
+
 
         x +=
             directionX
@@ -2185,6 +2999,7 @@ function moveEnemy(
             *
             delta;
 
+
         y +=
             directionY
             *
@@ -2192,11 +3007,14 @@ function moveEnemy(
             *
             delta;
 
+
         const alienWidth =
             alien.offsetWidth;
 
+
         const alienHeight =
             alien.offsetHeight;
+
 
         const maxX =
             Math.max(
@@ -2206,6 +3024,7 @@ function moveEnemy(
                 alienWidth
             );
 
+
         const maxY =
             Math.max(
                 0,
@@ -2214,12 +3033,14 @@ function moveEnemy(
                 alienHeight
             );
 
+
         if(x <= 0){
 
             x = 0;
 
             directionX = 1;
         }
+
 
         if(x >= maxX){
 
@@ -2228,12 +3049,14 @@ function moveEnemy(
             directionX = -1;
         }
 
+
         if(y <= 0){
 
             y = 0;
 
             directionY = 1;
         }
+
 
         if(y >= maxY){
 
@@ -2242,30 +3065,129 @@ function moveEnemy(
             directionY = -1;
         }
 
+
         alien.style.left =
             x + "px";
 
+
         alien.style.top =
             y + "px";
+
 
         requestAnimationFrame(
             animate
         );
     }
 
+
     requestAnimationFrame(
         animate
     );
 }
 
+
 /* =========================================================
-   HIT NORMAL ENEMY
+   AIM HIT DETECTION
+========================================================= */
+
+/*
+   This is the important V3.2 firing change.
+
+   We no longer depend on clicking the alien button itself.
+
+   Instead:
+
+   1. You aim with the mouse.
+   2. You click anywhere in the arena.
+   3. The ship fires toward that exact location.
+   4. The game checks whether that shot location
+      overlaps the current alien.
+
+   This gives us the shooter feeling we wanted.
+*/
+
+function shotHitsAlien(
+    targetX,
+    targetY,
+    alien
+){
+
+    if(
+        !alien
+        ||
+        !alien.isConnected
+    ){
+
+        return false;
+    }
+
+
+    const gameRect =
+        game.getBoundingClientRect();
+
+
+    const alienRect =
+        alien.getBoundingClientRect();
+
+
+    const left =
+        alienRect.left
+        -
+        gameRect.left;
+
+
+    const right =
+        alienRect.right
+        -
+        gameRect.left;
+
+
+    const top =
+        alienRect.top
+        -
+        gameRect.top;
+
+
+    const bottom =
+        alienRect.bottom
+        -
+        gameRect.top;
+
+
+    /*
+       Slightly forgiving hit box.
+
+       This makes aiming feel better inside
+       Second Life MOAP where mouse precision
+       can be a little different from a normal
+       browser.
+    */
+
+    const padding =
+        8;
+
+
+    return (
+        targetX >= left - padding
+        &&
+        targetX <= right + padding
+        &&
+        targetY >= top - padding
+        &&
+        targetY <= bottom + padding
+    );
+}
+
+
+/* =========================================================
+   NORMAL ENEMY HIT
 ========================================================= */
 
 function hitEnemy(
     alien,
     settings,
-    event
+    targetX,
+    targetY
 ){
 
     if(
@@ -2273,16 +3195,29 @@ function hitEnemy(
         ||
         alien !== currentAlien
     ){
+
         return;
     }
 
-    event.stopPropagation();
+
+    if(enemyTimer){
+
+        clearTimeout(
+            enemyTimer
+        );
+
+        enemyTimer =
+            null;
+    }
+
 
     const gameRect =
         game.getBoundingClientRect();
 
+
     const rect =
         alien.getBoundingClientRect();
+
 
     const centerX =
         rect.left
@@ -2291,6 +3226,7 @@ function hitEnemy(
         -
         gameRect.left;
 
+
     const centerY =
         rect.top
         +
@@ -2298,19 +3234,10 @@ function hitEnemy(
         -
         gameRect.top;
 
-    fireLaser(
-        centerX,
-        centerY
-    );
-
-    clearTimeout(
-        enemyTimer
-    );
-
-    enemyTimer = null;
 
     score +=
         settings.points;
+
 
     showPoints(
         centerX,
@@ -2318,19 +3245,25 @@ function hitEnemy(
         settings.points
     );
 
+
     createExplosion(
         centerX,
         centerY
     );
 
+
     alien.remove();
+
 
     currentAlien =
         null;
 
+
     calculateLevel();
 
+
     updateHUD();
+
 
     setTimeout(
         function(){
@@ -2345,14 +3278,16 @@ function hitEnemy(
     );
 }
 
+
 /* =========================================================
-   HIT BOSS
+   BOSS HIT
 ========================================================= */
 
 function hitBoss(
     alien,
     settings,
-    event
+    targetX,
+    targetY
 ){
 
     if(
@@ -2360,16 +3295,18 @@ function hitBoss(
         ||
         alien !== currentAlien
     ){
+
         return;
     }
 
-    event.stopPropagation();
 
     const gameRect =
         game.getBoundingClientRect();
 
+
     const rect =
         alien.getBoundingClientRect();
+
 
     const centerX =
         rect.left
@@ -2378,6 +3315,7 @@ function hitBoss(
         -
         gameRect.left;
 
+
     const centerY =
         rect.top
         +
@@ -2385,16 +3323,15 @@ function hitBoss(
         -
         gameRect.top;
 
-    fireLaser(
-        centerX,
-        centerY
-    );
 
     bossHits++;
 
+
     bossHitSound();
 
+
     screenFlash();
+
 
     const percent =
         Math.max(
@@ -2410,8 +3347,14 @@ function hitBoss(
             )
         );
 
+
     bossHealthFill.style.width =
         percent + "%";
+
+
+    /*
+       Boss reacts every time it is hit.
+    */
 
     alien.animate(
         [
@@ -2419,40 +3362,62 @@ function hitBoss(
                 transform:
                     "scale(1)"
             },
+
             {
                 transform:
                     "scale(.90)"
             },
+
             {
                 transform:
                     "scale(1.08)"
             },
+
             {
                 transform:
                     "scale(1)"
             }
         ],
+
         {
             duration:180
         }
     );
+
+
+    /*
+       Small explosion where the player
+       actually aimed on the boss.
+    */
+
+    createBossImpact(
+        targetX,
+        targetY
+    );
+
 
     if(
         bossHits >=
         bossNeeded
     ){
 
-        clearTimeout(
-            enemyTimer
-        );
+        if(enemyTimer){
 
-        enemyTimer =
-            null;
+            clearTimeout(
+                enemyTimer
+            );
+
+            enemyTimer =
+                null;
+        }
+
 
         score +=
             settings.points;
 
+
         updateHUD();
+
 
         showPoints(
             centerX,
@@ -2460,18 +3425,23 @@ function hitBoss(
             settings.points
         );
 
+
         createExplosion(
             centerX,
             centerY
         );
 
+
         alien.remove();
+
 
         currentAlien =
             null;
 
+
         bossHealthWrap.style.display =
             "none";
+
 
         setTimeout(
             function(){
@@ -2483,6 +3453,58 @@ function hitBoss(
         );
     }
 }
+
+
+/* =========================================================
+   BOSS IMPACT
+========================================================= */
+
+function createBossImpact(
+    x,
+    y
+){
+
+    const impact =
+        document.createElement(
+            "div"
+        );
+
+
+    impact.className =
+        "muzzleFlash";
+
+
+    impact.style.left =
+        x + "px";
+
+
+    impact.style.top =
+        y + "px";
+
+
+    impact.style.width =
+        "38px";
+
+
+    impact.style.height =
+        "38px";
+
+
+    game.appendChild(
+        impact
+    );
+
+
+    setTimeout(
+        function(){
+
+            impact.remove();
+
+        },
+        200
+    );
+}
+
 
 /* =========================================================
    ENEMY ESCAPED
@@ -2497,21 +3519,28 @@ function enemyEscaped(
         ||
         alien !== currentAlien
     ){
+
         return;
     }
 
+
     alien.remove();
+
 
     currentAlien =
         null;
 
+
     enemyTimer =
         null;
+
 
     bossHealthWrap.style.display =
         "none";
 
+
     loseLife();
+
 
     if(
         playing
@@ -2530,6 +3559,7 @@ function enemyEscaped(
     }
 }
 
+
 /* =========================================================
    SPAWN ENEMY
 ========================================================= */
@@ -2537,67 +3567,83 @@ function enemyEscaped(
 function spawnEnemy(){
 
     if(!playing){
+
         return;
     }
 
+
     clearEnemy();
+
 
     calculateLevel();
 
+
     const settings =
         getEnemyType();
+
 
     const alien =
         document.createElement(
             "button"
         );
 
+
     alien.type =
         "button";
+
 
     alien.className =
         "alien "
         +
         settings.type;
 
+
     const image =
         document.createElement(
             "img"
         );
 
+
     image.src =
         settings.image;
+
 
     image.alt =
         settings.type
         +
         " alien";
 
+
     image.draggable =
         false;
+
 
     alien.appendChild(
         image
     );
 
+
     arena.appendChild(
         alien
     );
 
+
     currentAlien =
         alien;
 
+
     /*
-       Wait until the browser knows the alien's
-       real displayed dimensions before positioning it.
-       This keeps the larger V3.1 aliens inside the arena.
+       Wait for the browser to calculate
+       the alien's displayed size.
     */
 
     const width =
         alien.offsetWidth;
 
+
     const height =
         alien.offsetHeight;
+
 
     const position =
         randomPosition(
@@ -2605,11 +3651,30 @@ function spawnEnemy(){
             height
         );
 
+
     alien.style.left =
         position.x + "px";
 
+
     alien.style.top =
         position.y + "px";
+
+
+    /*
+       IMPORTANT:
+
+       The aliens themselves no longer process
+       their own click-to-kill events.
+
+       The arena handles the player's shot.
+
+       This means your mouse acts like the gun
+       instead of the alien acting like a button.
+    */
+
+    alien.style.pointerEvents =
+        "none";
+
 
     if(
         settings.type
@@ -2619,45 +3684,40 @@ function spawnEnemy(){
 
         bossHits = 0;
 
+
         bossTime = 15;
+
 
         bossHealthFill.style.width =
             "100%";
 
+
         bossHealthWrap.style.display =
             "block";
-
-        alien.addEventListener(
-            "click",
-            function(event){
-
-                hitBoss(
-                    alien,
-                    settings,
-                    event
-                );
-            }
-        );
     }
+
     else{
 
-        alien.addEventListener(
-            "click",
-            function(event){
-
-                hitEnemy(
-                    alien,
-                    settings,
-                    event
-                );
-            }
-        );
+        bossHealthWrap.style.display =
+            "none";
     }
+
+
+    /*
+       Save the settings directly on the alien
+       so our shooting system knows what kind
+       of target was hit.
+    */
+
+    alien.enemySettings =
+        settings;
+
 
     moveEnemy(
         alien,
         settings
     );
+
 
     enemyTimer =
         setTimeout(
@@ -2672,47 +3732,285 @@ function spawnEnemy(){
         );
 }
 
+
 /* =========================================================
-   MISSED SHOT
+   PLAYER FIRE
 ========================================================= */
 
+function playerFire(
+    clientX,
+    clientY
+){
+
+    if(!playing){
+
+        return;
+    }
+
+
+    /*
+       Prevent the browser from accidentally
+       processing the same click twice.
+    */
+
+    if(shotLocked){
+
+        return;
+    }
+
+
+    shotLocked =
+        true;
+
+
+    setTimeout(
+        function(){
+
+            shotLocked =
+                false;
+
+        },
+        70
+    );
+
+
+    /*
+       Update the reticle to exactly where
+       the player fired.
+    */
+
+    updateAim(
+        clientX,
+        clientY
+    );
+
+
+    const targetX =
+        aimX;
+
+
+    const targetY =
+        aimY;
+
+
+    /*
+       FIRE THE LASER FIRST.
+
+       The beam always goes exactly toward
+       the mouse position.
+    */
+
+    fireLaser(
+        targetX,
+        targetY
+    );
+
+
+    /*
+       No enemy currently active.
+
+       We still show the shot but there is
+       nothing to hit.
+    */
+
+    if(
+        !currentAlien
+    ){
+
+        return;
+    }
+
+
+    const hit =
+        shotHitsAlien(
+            targetX,
+            targetY,
+            currentAlien
+        );
+
+
+    /*
+       MISS
+    */
+
+    if(!hit){
+
+        loseLife();
+
+        return;
+    }
+
+
+    /*
+       HIT
+
+       Pull the enemy's saved settings.
+    */
+
+    const settings =
+        currentAlien.enemySettings;
+
+
+    if(!settings){
+
+        return;
+    }
+
+
+    /*
+       Boss takes multiple hits.
+    */
+
+    if(
+        settings.type
+        ===
+        "boss"
+    ){
+
+        hitBoss(
+            currentAlien,
+            settings,
+            targetX,
+            targetY
+        );
+
+
+        return;
+    }
+
+
+    /*
+       Standard alien hit.
+    */
+
+    hitEnemy(
+        currentAlien,
+        settings,
+        targetX,
+        targetY
+    );
+}
+
+
+/* =========================================================
+   MOUSE / POINTER FIRING
+========================================================= */
+
+/*
+   POINTERDOWN gives the gun a faster,
+   more immediate response than waiting
+   for a normal CLICK event.
+
+   This is closer to the firing behavior
+   you liked in the earlier BumpBoy game.
+*/
+
 arena.addEventListener(
-    "click",
+    "pointerdown",
     function(event){
 
         if(!playing){
+
             return;
         }
 
+
+        /*
+           Desktop:
+           only use the main/left mouse button.
+        */
+
         if(
-            event.target.closest(
-                ".alien"
-            )
+            event.pointerType === "mouse"
+            &&
+            event.button !== 0
         ){
+
             return;
         }
+
+
+        event.preventDefault();
+
+
+        playerFire(
+            event.clientX,
+            event.clientY
+        );
+    }
+);
+
+
+/* =========================================================
+   PREVENT CONTEXT MENU IN GAME ARENA
+========================================================= */
+
+arena.addEventListener(
+    "contextmenu",
+    function(event){
+
+        event.preventDefault();
+    }
+);
+
+
+/* =========================================================
+   KEYBOARD FIRING
+========================================================= */
+
+/*
+   Optional desktop control:
+
+   SPACEBAR fires at the current crosshair.
+
+   Mouse firing is still the main control.
+*/
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(!playing){
+
+            return;
+        }
+
+
+        if(
+            event.code !== "Space"
+        ){
+
+            return;
+        }
+
+
+        event.preventDefault();
+
+
+        if(!aimActive){
+
+            return;
+        }
+
+
+        /*
+           We already have game-relative aim
+           coordinates, so convert them back
+           to browser/client coordinates for
+           playerFire().
+        */
 
         const gameRect =
             game.getBoundingClientRect();
 
-        const x =
-            event.clientX
-            -
-            gameRect.left;
 
-        const y =
-            event.clientY
-            -
-            gameRect.top;
-
-        fireLaser(
-            x,
-            y
+        playerFire(
+            gameRect.left + aimX,
+            gameRect.top + aimY
         );
-
-        loseLife();
     }
 );
+
 
 /* =========================================================
    GAME CLOCK
@@ -2727,15 +4025,19 @@ function startClock(){
         );
     }
 
+
     gameClock =
         setInterval(
             function(){
 
                 if(!playing){
+
                     return;
                 }
 
+
                 timeLeft--;
+
 
                 if(
                     level === 4
@@ -2746,7 +4048,9 @@ function startClock(){
                     bossTime--;
                 }
 
+
                 updateHUD();
+
 
                 if(
                     timeLeft <= 0
@@ -2758,13 +4062,22 @@ function startClock(){
             },
             1000
         );
-}/* =========================================================
+}
+
+
+/* =========================================================
+   END PART 3
+   PART 4 GOES DIRECTLY BELOW
+========================================================= *//* =========================================================
    START GAME
 ========================================================= */
 
 function startGame(){
 
-    clearEnemy();
+    /*
+       Stop anything left over from
+       a previous game.
+    */
 
     if(gameClock){
 
@@ -2772,35 +4085,73 @@ function startGame(){
             gameClock
         );
 
-        gameClock = null;
+        gameClock =
+            null;
     }
 
+
+    clearEnemy();
+
+
+    /*
+       Reset game values.
+    */
+
     score = 0;
+
     lives = 3;
+
     level = 1;
+
     timeLeft = 60;
 
+
     bossHits = 0;
+
     bossTime = 0;
 
+
     playing = true;
+
+    shotLocked = false;
+
+    aimActive = false;
+
+
+    /*
+       Reset visual elements.
+    */
 
     bossHealthWrap.style.display =
         "none";
 
+
     bossHealthFill.style.width =
         "100%";
+
+
+    reticle.style.display =
+        "none";
+
 
     overlay.style.display =
         "none";
 
+
     updateHUD();
+
+
+    /*
+       Start game systems.
+    */
+
+    startClock();
+
 
     showLevelMessage(
         "LEVEL 1"
     );
 
-    levelSound();
 
     setTimeout(
         function(){
@@ -2811,11 +4162,60 @@ function startGame(){
             }
 
         },
-        500
+        450
     );
-
-    startClock();
 }
+
+
+/* =========================================================
+   STOP GAME SYSTEMS
+========================================================= */
+
+function stopGame(){
+
+    playing =
+        false;
+
+
+    if(gameClock){
+
+        clearInterval(
+            gameClock
+        );
+
+        gameClock =
+            null;
+    }
+
+
+    if(enemyTimer){
+
+        clearTimeout(
+            enemyTimer
+        );
+
+        enemyTimer =
+            null;
+    }
+
+
+    if(currentAlien){
+
+        currentAlien.remove();
+
+        currentAlien =
+            null;
+    }
+
+
+    bossHealthWrap.style.display =
+        "none";
+
+
+    reticle.style.display =
+        "none";
+}
+
 
 /* =========================================================
    GAME OVER
@@ -2824,27 +4224,20 @@ function startGame(){
 function gameOver(){
 
     if(!playing){
+
         return;
     }
 
-    playing = false;
 
-    clearEnemy();
+    stopGame();
 
-    if(gameClock){
 
-        clearInterval(
-            gameClock
-        );
+    loseLifeSound();
 
-        gameClock = null;
-    }
-
-    bossHealthWrap.style.display =
-        "none";
 
     overlay.style.display =
         "flex";
+
 
     overlay.innerHTML =
         `
@@ -2855,69 +4248,88 @@ function gameOver(){
             </h1>
 
             <h2>
-                SCORE: ${score}
+                👽 THE ALIENS GOT THROUGH 👽
             </h2>
 
             <p>
-                The aliens got through this time!
+                Final Score:
+                <strong>${score}</strong>
             </p>
 
             <p>
-                Get back in your BB Star Cruiser
-                and try again.
+                You reached Level
+                <strong>${level}</strong>.
+            </p>
+
+            <p>
+                Aim with your mouse and fire again
+                to protect BumpBoy space!
             </p>
 
             <button
-                id="restartButton"
-                type="button">
+                id="playAgainButton"
+                type="button"
+            >
                 PLAY AGAIN
             </button>
 
         </div>
         `;
 
-    const restartButton =
+
+    const playAgainButton =
         document.getElementById(
-            "restartButton"
+            "playAgainButton"
         );
 
-    restartButton.style.marginTop =
+
+    playAgainButton.style.marginTop =
         "25px";
 
-    restartButton.style.padding =
+
+    playAgainButton.style.padding =
         "16px 34px";
 
-    restartButton.style.border =
+
+    playAgainButton.style.border =
         "0";
 
-    restartButton.style.borderRadius =
+
+    playAgainButton.style.borderRadius =
         "15px";
 
-    restartButton.style.background =
+
+    playAgainButton.style.background =
         "linear-gradient(135deg,#48caff,#b24cff,#ff4cbd)";
 
-    restartButton.style.color =
+
+    playAgainButton.style.color =
         "white";
 
-    restartButton.style.fontSize =
+
+    playAgainButton.style.fontSize =
         "24px";
 
-    restartButton.style.fontWeight =
+
+    playAgainButton.style.fontWeight =
         "900";
 
-    restartButton.style.cursor =
+
+    playAgainButton.style.cursor =
         "pointer";
 
-    restartButton.addEventListener(
-        "click",
-        function(e){
 
-            e.stopPropagation();
+    playAgainButton.addEventListener(
+        "click",
+        function(event){
+
+            event.stopPropagation();
 
             startGame();
         }
     );
 }
+
 
 /* =========================================================
    WIN GAME
@@ -2925,28 +4337,21 @@ function gameOver(){
 
 function winGame(){
 
-    playing = false;
+    if(!playing){
 
-    clearEnemy();
-
-    if(gameClock){
-
-        clearInterval(
-            gameClock
-        );
-
-        gameClock = null;
+        return;
     }
 
-    bossHealthWrap.style.display =
-        "none";
 
-    updateHUD();
+    stopGame();
+
 
     winSound();
 
+
     overlay.style.display =
         "flex";
+
 
     overlay.innerHTML =
         `
@@ -2957,8 +4362,12 @@ function winGame(){
             </h1>
 
             <h2>
-                👑 BOSS DEFEATED 👑
+                🚀 BOSS DESTROYED 🚀
             </h2>
+
+            <p>
+                The BumpBoy galaxy is safe!
+            </p>
 
             <p>
                 Final Score:
@@ -2966,96 +4375,140 @@ function winGame(){
             </p>
 
             <p>
-                BumpBoy space is safe!
+                You survived the invasion
+                and defeated the alien boss.
             </p>
 
             <button
-                id="restartButton"
-                type="button">
+                id="playAgainButton"
+                type="button"
+            >
                 PLAY AGAIN
             </button>
 
         </div>
         `;
 
-    const restartButton =
+
+    const playAgainButton =
         document.getElementById(
-            "restartButton"
+            "playAgainButton"
         );
 
-    restartButton.style.marginTop =
+
+    playAgainButton.style.marginTop =
         "25px";
 
-    restartButton.style.padding =
+
+    playAgainButton.style.padding =
         "16px 34px";
 
-    restartButton.style.border =
+
+    playAgainButton.style.border =
         "0";
 
-    restartButton.style.borderRadius =
+
+    playAgainButton.style.borderRadius =
         "15px";
 
-    restartButton.style.background =
+
+    playAgainButton.style.background =
         "linear-gradient(135deg,#48caff,#b24cff,#ff4cbd)";
 
-    restartButton.style.color =
+
+    playAgainButton.style.color =
         "white";
 
-    restartButton.style.fontSize =
+
+    playAgainButton.style.fontSize =
         "24px";
 
-    restartButton.style.fontWeight =
+
+    playAgainButton.style.fontWeight =
         "900";
 
-    restartButton.style.cursor =
+
+    playAgainButton.style.cursor =
         "pointer";
 
-    restartButton.addEventListener(
-        "click",
-        function(e){
 
-            e.stopPropagation();
+    playAgainButton.addEventListener(
+        "click",
+        function(event){
+
+            event.stopPropagation();
 
             startGame();
         }
     );
 }
 
+
 /* =========================================================
-   EXIT GAME — SIGNAL SECOND LIFE HUD
+   START BUTTON
+========================================================= */
+
+startButton.addEventListener(
+    "click",
+    function(event){
+
+        event.stopPropagation();
+
+
+        /*
+           Unlock WebAudio from the player's
+           first interaction.
+        */
+
+        if(soundOn){
+
+            try{
+
+                getAudio();
+
+            }
+            catch(error){
+
+                /*
+                   Game can continue without audio.
+                */
+
+            }
+        }
+
+
+        startGame();
+    }
+);
+
+
+/* =========================================================
+   EXIT GAME
 ========================================================= */
 
 exitGameButton.addEventListener(
     "click",
-    function(e){
+    function(event){
 
-        e.stopPropagation();
+        event.stopPropagation();
 
-        playing = false;
-
-        clearEnemy();
-
-        if(gameClock){
-
-            clearInterval(
-                gameClock
-            );
-
-            gameClock = null;
-        }
-
-        bossHealthWrap.style.display =
-            "none";
 
         /*
-           Signal the BUMPBOY_GAMES_HUD controller
-           by changing the MOAP page's current URL.
+           Shut the shooter down before returning
+           control to BumpBoy.
+        */
 
-           HUD Controller V1.3 will detect:
-           bumpboy_exit=1
+        stopGame();
 
-           Then it will hide the HUD and reset
-           the game URL for the next launch.
+
+        /*
+           IMPORTANT SECOND LIFE SIGNAL
+
+           Your BumpBoy HUD controller watches
+           for bumpboy_exit=1.
+
+           Keep this URL exactly connected to
+           the GitHub BumpBoy games page.
         */
 
         window.location.href =
@@ -3065,25 +4518,139 @@ exitGameButton.addEventListener(
     }
 );
 
+
 /* =========================================================
-   START BUTTON
+   WINDOW RESIZE
 ========================================================= */
 
-startButton.addEventListener(
-    "click",
-    function(e){
+window.addEventListener(
+    "resize",
+    function(){
 
-        e.stopPropagation();
+        /*
+           If the Second Life media window changes
+           size while an alien is active, make sure
+           it remains inside the arena.
+        */
 
-        startGame();
+        if(
+            !currentAlien
+            ||
+            !currentAlien.isConnected
+        ){
+
+            return;
+        }
+
+
+        let x =
+            parseFloat(
+                currentAlien.style.left
+            )
+            ||
+            0;
+
+
+        let y =
+            parseFloat(
+                currentAlien.style.top
+            )
+            ||
+            0;
+
+
+        const maxX =
+            Math.max(
+                0,
+                arena.clientWidth
+                -
+                currentAlien.offsetWidth
+            );
+
+
+        const maxY =
+            Math.max(
+                0,
+                arena.clientHeight
+                -
+                currentAlien.offsetHeight
+            );
+
+
+        x =
+            Math.max(
+                0,
+                Math.min(
+                    maxX,
+                    x
+                )
+            );
+
+
+        y =
+            Math.max(
+                0,
+                Math.min(
+                    maxY,
+                    y
+                )
+            );
+
+
+        currentAlien.style.left =
+            x + "px";
+
+
+        currentAlien.style.top =
+            y + "px";
     }
 );
+
+
+/* =========================================================
+   PREVENT IMAGE DRAGGING
+========================================================= */
+
+document.addEventListener(
+    "dragstart",
+    function(event){
+
+        event.preventDefault();
+    }
+);
+
 
 /* =========================================================
    INITIAL HUD
 ========================================================= */
 
 updateHUD();
+
+
+/* =========================================================
+   BUMPBOY ALIEN SHOOTER V3.2
+
+   V3.2 CHANGES:
+
+   - Mouse-controlled aiming restored
+   - Visible aiming crosshair
+   - Click anywhere in arena to fire
+   - Laser follows exact mouse position
+   - Alien hit detection uses mouse aim
+   - Small aim assistance for Second Life
+   - Missed shots still cost one life
+   - Normal alien retained
+   - Fast enemy retained
+   - Heavy enemy retained
+   - Boss retained
+   - Boss health retained
+   - Level progression retained
+   - Explosion effects retained
+   - Sound retained
+   - Second Life EXIT GAME signal retained
+
+========================================================= */
+
 
 </script>
 
